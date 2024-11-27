@@ -29,7 +29,7 @@ export default function SignIn() {
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    signIn({ id: '1', name: 'Eu' });
+    signIn({ email, password, rememberMe });
 
     router.push('/dashboard');
   }
@@ -59,6 +59,7 @@ export default function SignIn() {
 
             <div className='flex justify-between'>
               <Checkbox
+                defaultSelected={rememberMe}
                 checked={rememberMe}
                 size='sm'
                 onChange={(e) => setRememberMe(e.target.checked)}

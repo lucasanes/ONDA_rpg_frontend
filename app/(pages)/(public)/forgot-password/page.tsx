@@ -32,7 +32,7 @@ export default function SignUp() {
 
     try {
       //Todo: Implementar a chamada para a API
-      // const response = axios.post('/auth/send-email', { email });
+      // const response = api.post('/auth/send-email', { email });
 
       setStep(2);
 
@@ -47,7 +47,7 @@ export default function SignUp() {
     try {
       if (step == 2) {
         //Todo: Implementar a chamada para a API
-        // const response = axios.delete('/auth/code', { email });
+        // const response = api.delete('/auth/code', { email });
       }
 
       setStep(1);
@@ -62,7 +62,7 @@ export default function SignUp() {
 
     try {
       //Todo: Implementar a chamada para a API
-      // const response = axios.post('/auth/code', { email, code });
+      // const response = api.post('/auth/code', { email, code });
 
       setStep(3);
 
@@ -92,7 +92,7 @@ export default function SignUp() {
       }
 
       //Todo: Implementar a chamada para a API
-      // const response = axios.post('/auth/password', { email, password });
+      // const response = api.post('/auth/password', { email, password });
 
       toast.success('Senha alterada com sucesso');
 

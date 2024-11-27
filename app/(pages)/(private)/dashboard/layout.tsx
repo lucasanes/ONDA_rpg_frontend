@@ -6,6 +6,10 @@ export const metadata: Metadata = {
   title: 'Painel',
 };
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+export default function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return children;
 }
