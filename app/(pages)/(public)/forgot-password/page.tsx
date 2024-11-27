@@ -15,8 +15,11 @@ import { MdOutlineEmail } from 'react-icons/md';
 import { toast } from 'react-toastify';
 
 import PasswordInput from '@/components/PasswordInput';
+import { useRouter } from 'next/navigation';
 
 export default function SignUp() {
+  const router = useRouter();
+
   const [step, setStep] = useState(1);
 
   const [email, setEmail] = useState('');
@@ -80,14 +83,60 @@ export default function SignUp() {
         return;
       }
 
+      if (!passwordValidation(password)) {
+        toast.error(
+          'A senha deve ter entre 8 e 24 caracteres, e conter pelo menos uma letra maiúscula, uma letra minúscula, e um número.'
+        );
+
+        return;
+      }
+
       //Todo: Implementar a chamada para a API
       // const response = axios.post('/auth/password', { email, password });
 
       toast.success('Senha alterada com sucesso');
+
+      router.push('/');
     } catch (error) {
       console.error(error);
       toast.error('Erro ao alterar senha');
     }
+  }
+
+  function codeValidation(code: string) {
+    if (code.length > 6) {
+      return false;
+    }
+
+    if (code.length % 2 === 0) {
+      if (code.charAt(code.length - 1).match(/[A-Za-z]/)) {
+        return false;
+      }
+    } else {
+      if (code.charAt(code.length - 1).match(/[0-9]/)) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  function passwordValidation(password: string) {
+    if (password.length < 8) {
+      return false;
+    }
+
+    if (password.length > 24) {
+      return false;
+    }
+
+    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,24}$/;
+
+    if (!regex.test(password)) {
+      return false;
+    }
+
+    return true;
   }
 
   return (
@@ -138,7 +187,11 @@ export default function SignUp() {
                 startContent={<CgPassword size={20} />}
                 type='text'
                 value={code}
-                onChange={(e) => setCode(e.target.value)}
+                onChange={(e) => {
+                  if (codeValidation(e.target.value)) {
+                    setCode(e.target.value.toUpperCase());
+                  }
+                }}
               />
             </CardBody>
             <Divider />
