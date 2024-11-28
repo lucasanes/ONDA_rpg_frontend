@@ -11,7 +11,9 @@ import {
   CardFooter,
   CardHeader,
   Divider,
+  Image,
   Progress,
+  Spinner,
   useDisclosure,
 } from '@nextui-org/react';
 import Link from 'next/link';
@@ -22,6 +24,8 @@ import { toast } from 'react-toastify';
 export default function Dashboard() {
   const [sessions, setSessions] = useState<SessionInterface[]>([]);
   const [characters, setCharacters] = useState<CharacterInterface[]>([]);
+
+  const [loading, setLoading] = useState(true);
 
   async function fetchData() {
     try {
@@ -74,6 +78,8 @@ export default function Dashboard() {
     } catch (error) {
       console.log(error);
       toast.error('Erro ao carregar dados');
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -83,18 +89,24 @@ export default function Dashboard() {
 
   return (
     <div className='w-full h-full flex flex-col items-center p-5 gap-5 overflow-y-auto'>
-      <Container title='Sessões'>
-        <AddSessionCard setSessions={setSessions} />
-        {sessions.map((session) => (
-          <SessionCard key={session.id} session={session} />
-        ))}
-      </Container>
-      <Container title='Personagens'>
-        <AddCharacterCard setCharacters={setCharacters} />
-        {characters.map((character) => (
-          <CharacterCard key={character.id} character={character} />
-        ))}
-      </Container>
+      {loading ? (
+        <Spinner />
+      ) : (
+        <>
+          <Container title='Sessões'>
+            <AddSessionCard setSessions={setSessions} />
+            {sessions.map((session) => (
+              <SessionCard key={session.id} session={session} />
+            ))}
+          </Container>
+          <Container title='Personagens'>
+            <AddCharacterCard setCharacters={setCharacters} />
+            {characters.map((character) => (
+              <CharacterCard key={character.id} character={character} />
+            ))}
+          </Container>
+        </>
+      )}
     </div>
   );
 }
@@ -212,22 +224,28 @@ function CharacterCard({ character }: { character: CharacterInterface }) {
       </CardHeader>
       <Divider className='h-0.5 !bg-gray-500' />
       <CardBody className='gap-4'>
-        <div className='w-full flex items-center gap-8'>
-          <img
+        <div className='w-full flex flex-col sm:flex-row items-center gap-6 sm:gap-8'>
+          <Image
+            width={128}
+            height={128}
+            radius='full'
             onClick={() => router.push(`/character/${character.id}/portrait`)}
-            className='w-32 h-32 aspect-square object-cover border-2 rounded-full cursor-pointer'
+            className='aspect-square object-cover border-2 cursor-pointer'
             src={character.portrait || '/noportrait.png'}
           />
-          <div className='w-full flex flex-col gap-4'>
+          <div
+            className='w-full sm:w-[calc(100%-128px)] flex flex-col gap-4'
+            // style={{ width: 'calc(100% - 128px)' }}
+          >
             <Progress
-              label='Pontos de Vida'
+              label={`PV: ${character.pvA}/${character.pv}`}
               color='danger'
               maxValue={character.pv}
               value={character.pvA}
             />
 
             <Progress
-              label='Pontos de Mana'
+              label={`PM: ${character.pmA}/${character.pm}`}
               classNames={{
                 indicator: 'bg-blue-500',
               }}

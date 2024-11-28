@@ -29,18 +29,18 @@ export default function MenuLayout({
   return (
     <div className='w-full h-full flex flex-col'>
       {!pathname.includes('portrait') && (
-        <div className='w-full h-14 bg-menu flex justify-between items-center px-16'>
-          <div className='w-1/3 flex gap-2 justify-start items-center'>
+        <div className='w-full h-14 bg-menu flex justify-between items-center px-4 sm:px-16'>
+          <div className='md:w-1/3 hidden md:flex flex-none gap-2 justify-start items-center'>
             <img className='size-12' src='/favicon.webp' />
             <h1 className={`text-3xl ${protestRevolution.className}`}>
               ONDA RPG
             </h1>
           </div>
-          <div className='w-1/3 flex justify-center'>
+          <div className='md:w-1/3 flex justify-center'>
             <Button
               as={Link}
               href='/dashboard'
-              className='transparent'
+              className='transparent text-base'
               variant='light'
             >
               Painel
@@ -48,14 +48,14 @@ export default function MenuLayout({
             <Button
               as={Link}
               href='/account'
-              className='transparent'
+              className='transparent text-base'
               variant='light'
             >
               Conta
             </Button>
           </div>
-          <div className='w-1/3 flex justify-end items-center gap-2'>
-            <div className='flex items-center gap-1'>
+          <div className='md:w-1/3 flex justify-end items-center gap-2'>
+            <div className='hidden sm:flex items-center gap-1'>
               <BiUserCircle size={24} />
               {user ? <p>{user.username}</p> : <Spinner size='sm' />}
             </div>

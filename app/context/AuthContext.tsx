@@ -14,7 +14,8 @@ type UserType = {
   username: string;
 };
 
-type SignInType = UserType & {
+type SignInType = {
+  email: string;
   password: string;
   rememberMe: boolean;
 };
@@ -50,7 +51,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       // });
 
       setUser({
-        username: userData.username,
+        username: 'Teste',
         email: userData.email,
       });
 

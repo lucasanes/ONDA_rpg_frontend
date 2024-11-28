@@ -15,19 +15,38 @@ import { MdOutlineEmail } from 'react-icons/md';
 import { toast } from 'react-toastify';
 
 import PasswordInput from '@/components/PasswordInput';
+import { useRouter } from 'next/navigation';
+import { BiUserCircle } from 'react-icons/bi';
 
 export default function SignUp() {
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
+  const router = useRouter();
+
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    if (password !== confirmPassword) {
-      toast.error('As senhas não coincidem');
+    try {
+      if (password !== confirmPassword) {
+        toast.error('As senhas não coincidem');
+        return;
+      }
 
-      return;
+      //Todo: Implementar chamada a API
+      // const response = await api.post('/auth/signup', {
+      //   username,
+      //   email,
+      //   password,
+      // });
+
+      toast.success('Cadastro realizado com sucesso');
+      router.push('/');
+    } catch (error) {
+      console.error(error);
+      toast.error('Erro ao fazer cadastro');
     }
   }
 
@@ -40,6 +59,18 @@ export default function SignUp() {
           </CardHeader>
           <Divider />
           <CardBody className='flex gap-4'>
+            <Input
+              isRequired
+              required
+              label='Nome de usuário'
+              labelPlacement='outside'
+              placeholder='OndaRPG'
+              startContent={<BiUserCircle size={20} />}
+              type='text'
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+
             <Input
               isRequired
               required
