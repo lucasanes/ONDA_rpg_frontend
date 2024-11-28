@@ -39,15 +39,31 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<UserType | null>(null);
 
   useEffect(() => {
+    fetchToken();
+  }, []);
+
+  async function fetchToken() {
     const token = Cookies.get('token');
 
     if (token) {
-      setUser({
-        email: 'onda.rpg@gmail.com',
-        username: 'Onda RPG',
-      });
+      try {
+        //ToDo: Implementar chamada a API
+
+        // const response = await api.get('/auth/me', {
+        //   headers: {
+        //     Authorization: `Bearer ${token}`,
+        //   },
+        // });
+
+        setUser({
+          email: 'developer@gmail.com',
+          username: 'Developer',
+        });
+      } catch (error) {
+        console.log(error);
+      }
     }
-  }, []);
+  }
 
   async function signIn(userData: SignInType) {
     try {
@@ -58,7 +74,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       // });
 
       setUser({
-        username: 'Teste',
+        username: 'Developer',
         email: userData.email,
       });
 

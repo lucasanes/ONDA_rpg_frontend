@@ -5,7 +5,7 @@ import { CharacterPortraitInterface } from '@/types/character';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
-const imageSize = 650;
+const imageSize = 600;
 
 export default function Portrait() {
   const [character, setCharacter] = useState<CharacterPortraitInterface>(
@@ -27,10 +27,13 @@ export default function Portrait() {
         name: 'Naksu Hanna',
         pvA: 17,
         pv: 20,
+        money: 9854,
         pmA: 5,
         pm: 10,
         dying: false,
-        fight: false,
+        munA: 10,
+        fighting: false,
+        hurted: false,
         tired: false,
         unconscious: false,
         portrait:
@@ -53,11 +56,33 @@ export default function Portrait() {
           onClick={() =>
             setCharacter((prev) => ({
               ...prev,
-              fight: !prev.fight,
+              fighting: !prev.fighting,
             }))
           }
         >
           combate
+        </button>
+
+        <button
+          onClick={() =>
+            setCharacter((prev) => ({
+              ...prev,
+              tired: !prev.tired,
+            }))
+          }
+        >
+          cansado
+        </button>
+
+        <button
+          onClick={() =>
+            setCharacter((prev) => ({
+              ...prev,
+              hurted: !prev.hurted,
+            }))
+          }
+        >
+          machucado
         </button>
 
         <button
@@ -88,13 +113,15 @@ export default function Portrait() {
           style={{ width: imageSize, height: imageSize }}
           className='absolute z-30 bg-transparent border-8 border-black rounded-full'
         ></div>
-        <Blood dying={character.dying} />
+        <Hurted hurted={character.hurted} unconscious={character.unconscious} />
+        <Money money={character.money} />
+        <Munition munition={character.munA} />
         <PortraitImage
-          portrait={character.portrait || '/noportrait'}
+          portrait={character.portrait}
           unconscious={character.unconscious}
         />
         <div
-          style={{ width: imageSize, height: imageSize }}
+          style={{ minWidth: imageSize, minHeight: imageSize }}
           className='z-10 bg-gray-400 rounded-full'
         ></div>
         <NameOrStatus character={character} />
@@ -103,13 +130,41 @@ export default function Portrait() {
   );
 }
 
-function Blood({ dying }: { dying: boolean }) {
+function Money({ money }: { money: number }) {
+  return (
+    <div
+      className={`absolute z-40 flex items-center justify-center w-16 h-16 rounded-full shadow-md`}
+    >
+      <img width={32} height={32} src='/money.jpeg' />
+      <span className={`text-2xl font-bold text-white`}>{money}</span>
+    </div>
+  );
+}
+
+function Munition({ munition }: { munition: number }) {
+  return (
+    <div
+      className={`absolute z-40 flex items-center justify-center w-16 h-16 rounded-full shadow-md`}
+    >
+      <img width={32} height={32} src='/munition.png' />
+      <span className={`text-2xl font-bold text-white`}>{munition}</span>
+    </div>
+  );
+}
+
+function Hurted({
+  hurted,
+  unconscious,
+}: {
+  hurted: boolean;
+  unconscious: boolean;
+}) {
   return (
     <img
       width={imageSize}
       height={imageSize}
       src='/blood.png'
-      className={`absolute z-40 rotate-90 transition duration-700 ease-in-out ${dying ? 'opacity-100' : 'opacity-0'}`}
+      className={`absolute z-40 rotate-90 transition duration-700 ease-in-out ${hurted ? 'opacity-75' : 'opacity-0'} ${unconscious ? 'blur-sm' : ''}`}
     />
   );
 }
@@ -118,15 +173,15 @@ function PortraitImage({
   portrait,
   unconscious,
 }: {
-  portrait: string;
+  portrait: string | null;
   unconscious: boolean;
 }) {
   return (
     <img
       width={imageSize}
       height={imageSize}
-      className={`absolute z-20 aspect-square object-cover rounded-full transition duration-700 ease-in-out ${unconscious ? 'brightness-0' : 'brightness-100'}`}
-      src={portrait}
+      className={`absolute z-20 aspect-square object-cover rounded-full transition duration-700 ease-in-out ${unconscious ? 'brightness-0 blur-sm' : 'brightness-100 blur-0'}`}
+      src={portrait || '/noportrait.png'}
     />
   );
 }
@@ -146,7 +201,7 @@ function NameOrStatus({
   return (
     <>
       <div
-        className={`flex flex-col ml-12 mt-4 ${!character.fight ? 'opacity-100' : 'opacity-0'} transition ${!character.fight ? 'duration-1000' : 'duration-500'} ease-in-out`}
+        className={`flex flex-col ml-12 mt-4 ${!character.fighting ? 'opacity-100' : 'opacity-0'} transition ${!character.fighting ? 'duration-1000' : 'duration-500'} ease-in-out`}
       >
         <p
           style={{
@@ -167,7 +222,7 @@ function NameOrStatus({
       </div>
 
       <div
-        className={`relative -left-96 flex flex-col ml-12 mt-8 ${character.fight ? 'opacity-100' : 'opacity-0'} transition ${character.fight ? 'duration-1000' : 'duration-500'} ease-in-out`}
+        className={`relative -left-96 flex flex-col ml-12 mt-8 ${character.fighting ? 'opacity-100' : 'opacity-0'} transition ${character.fighting ? 'duration-1000' : 'duration-500'} ease-in-out`}
       >
         <span
           style={{

@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ToDo: Arrumar o bug do celular */
+
 * {
   box-sizing: border-box;
   margin: 0;
