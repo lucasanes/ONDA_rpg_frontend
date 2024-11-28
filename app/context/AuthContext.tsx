@@ -14,14 +14,22 @@ type UserType = {
   username: string;
 };
 
-type SignInType = UserType & {
+type SignInType = {
+  email: string;
   password: string;
   rememberMe: boolean;
 };
 
+type SignUpType = {
+  email: string;
+  password: string;
+  username: string;
+};
+
 type AuthContextType = {
   user: UserType | null;
-  signIn: (userData: SignInType) => void;
+  signIn: (userData: SignInType) => Promise<void>;
+  signUp: (userData: SignUpType) => Promise<void>;
   signOut: () => void;
 };
 
@@ -41,7 +49,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }, []);
 
-  function signIn(userData: SignInType) {
+  async function signIn(userData: SignInType) {
     try {
       //Todo: Implementar chamada a API
       // const response = await api.post('/auth/signin', {
@@ -50,7 +58,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       // });
 
       setUser({
-        username: userData.username,
+        username: 'Teste',
         email: userData.email,
       });
 
@@ -65,6 +73,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }
 
+  async function signUp(userData: SignUpType) {
+    try {
+      //Todo: Implementar chamada a API
+      // const response = await api.post('/auth/signup', {
+      //   email: userData.email,
+      //   password: userData.password,
+      //   username: userData.username,
+      // });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   function signOut() {
     setUser(null);
 
@@ -72,7 +93,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }
 
   return (
-    <AuthContext.Provider value={{ user, signIn, signOut }}>
+    <AuthContext.Provider value={{ user, signIn, signOut, signUp }}>
       {children}
     </AuthContext.Provider>
   );
