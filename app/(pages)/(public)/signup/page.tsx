@@ -14,6 +14,7 @@ import { FormEvent, useState } from 'react';
 import { MdOutlineEmail } from 'react-icons/md';
 import { toast } from 'react-toastify';
 
+import { useAuth } from '@/app/context/AuthContext';
 import PasswordInput from '@/components/PasswordInput';
 import { useRouter } from 'next/navigation';
 import { BiUserCircle } from 'react-icons/bi';
@@ -26,7 +27,9 @@ export default function SignUp() {
 
   const router = useRouter();
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  const { signUp } = useAuth();
+
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     try {
@@ -35,12 +38,11 @@ export default function SignUp() {
         return;
       }
 
-      //Todo: Implementar chamada a API
-      // const response = await api.post('/auth/signup', {
-      //   username,
-      //   email,
-      //   password,
-      // });
+      await signUp({
+        email,
+        password,
+        username,
+      });
 
       toast.success('Cadastro realizado com sucesso');
       router.push('/');

@@ -27,11 +27,11 @@ export default function SignIn() {
   const router = useRouter();
   const { signIn } = useAuth();
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     try {
-      signIn({ email, password, rememberMe });
+      await signIn({ email, password, rememberMe });
 
       router.push('/dashboard');
     } catch (error) {
