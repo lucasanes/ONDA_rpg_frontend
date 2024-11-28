@@ -1,0 +1,119 @@
+import { CharacterInterface } from '@/types/character';
+import { Button, Input } from '@nextui-org/react';
+import { FormEvent, useState } from 'react';
+import { toast } from 'react-toastify';
+import ModalComponent from './Modal';
+
+export default function ModalAddCharacter({
+  isOpen,
+  onClose,
+  onOpenChange,
+  setCharacters,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  onOpenChange: () => void;
+  setCharacters: React.Dispatch<React.SetStateAction<CharacterInterface[]>>;
+}) {
+  const [name, setName] = useState('');
+  const [pv, setPv] = useState(0);
+  const [pm, setPm] = useState(0);
+  const [portrait, setPortrait] = useState('');
+
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    try {
+      //ToDo: Implementar chamada a API
+
+      //const response = await api.post('/characters', {
+      //  name,
+      //  pv,
+      //  pm,
+      //  portrait,
+      //});
+
+      setCharacters((characters) => [
+        ...characters,
+        {
+          id: Math.random(),
+          name,
+          pvA: pv,
+          pv,
+          pmA: pm,
+          pm,
+          portrait,
+        },
+      ]);
+
+      onClose();
+    } catch (error) {
+      console.error(error);
+      toast.error('Erro ao adicionar personagem');
+    }
+  }
+
+  return (
+    <ModalComponent
+      title='Adicionar Sessão'
+      isOpen={isOpen}
+      onOpenChange={onOpenChange}
+      handleSubmit={handleSubmit}
+      bodyContent={
+        <>
+          <Input
+            isRequired
+            required
+            label='Nome'
+            labelPlacement='outside'
+            placeholder='ONDA'
+            type='text'
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+
+          <Input
+            isRequired
+            required
+            label='PV'
+            labelPlacement='outside'
+            placeholder='999'
+            type='number'
+            value={pv.toString()}
+            onChange={(e) => setPv(Number(e.target.value))}
+          />
+
+          <Input
+            isRequired
+            required
+            label='PM'
+            labelPlacement='outside'
+            placeholder='999'
+            type='number'
+            value={pm.toString()}
+            onChange={(e) => setPm(Number(e.target.value))}
+          />
+
+          <Input
+            isRequired
+            required
+            label='Portrait'
+            labelPlacement='outside'
+            placeholder='https://site.com/onda.png'
+            type='url'
+            value={portrait}
+            onChange={(e) => setPortrait(e.target.value)}
+          />
+        </>
+      }
+      footerContent={
+        <>
+          <Button onPress={onClose} variant='flat' color='danger'>
+            Cancelar
+          </Button>
+          <Button color='primary'>Adicionar</Button>
+        </>
+      }
+    />
+  );
+}

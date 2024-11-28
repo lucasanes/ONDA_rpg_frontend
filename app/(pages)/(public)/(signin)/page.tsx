@@ -13,12 +13,15 @@ import {
 } from '@nextui-org/react';
 import { useRouter } from 'next/navigation';
 import { FormEvent, useState } from 'react';
+import { BiUserCircle } from 'react-icons/bi';
 import { MdOutlineEmail } from 'react-icons/md';
 
 import { useAuth } from '@/app/context/AuthContext';
 import PasswordInput from '@/components/PasswordInput';
+import { toast } from 'react-toastify';
 
 export default function SignIn() {
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(true);
@@ -29,9 +32,14 @@ export default function SignIn() {
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    signIn({ id: '1', name: 'Eu' });
+    try {
+      signIn({ username, email, password, rememberMe });
 
-    router.push('/dashboard');
+      router.push('/dashboard');
+    } catch (error) {
+      console.error(error);
+      toast.error('Erro ao fazer login');
+    }
   }
 
   return (
@@ -43,6 +51,18 @@ export default function SignIn() {
           </CardHeader>
           <Divider />
           <CardBody className='flex gap-4'>
+            <Input
+              isRequired
+              required
+              label='Nome de usuário'
+              labelPlacement='outside'
+              placeholder='OndaRPG'
+              startContent={<BiUserCircle size={20} />}
+              type='text'
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+
             <Input
               isRequired
               required
@@ -59,6 +79,7 @@ export default function SignIn() {
 
             <div className='flex justify-between'>
               <Checkbox
+                defaultSelected={rememberMe}
                 checked={rememberMe}
                 size='sm'
                 onChange={(e) => setRememberMe(e.target.checked)}
