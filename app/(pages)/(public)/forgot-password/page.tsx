@@ -45,6 +45,10 @@ export default function SignUp() {
 
   async function handleReturn() {
     try {
+      if (step == 1) {
+        router.push('/');
+      }
+
       if (step == 2) {
         //Todo: Implementar a chamada para a API
         // const response = api.delete('/auth/code', { email });
@@ -163,6 +167,9 @@ export default function SignUp() {
             </CardBody>
             <Divider />
             <CardFooter className='flex gap-3'>
+              <Button color='danger' variant='solid' onPress={handleReturn}>
+                Voltar
+              </Button>
               <Button color='primary' type='submit' variant='solid'>
                 Enviar
               </Button>
