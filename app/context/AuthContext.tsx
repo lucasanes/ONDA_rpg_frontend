@@ -1,14 +1,21 @@
 'use client';
 
 import Cookies from 'js-cookie';
-import { createContext, ReactNode, useContext, useState } from 'react';
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 
 type UserType = {
   email: string;
-  password: string;
+  username: string;
 };
 
 type SignInType = UserType & {
+  password: string;
   rememberMe: boolean;
 };
 
@@ -23,24 +30,39 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<UserType | null>(null);
 
+  useEffect(() => {
+    const token = Cookies.get('token');
+
+    if (token) {
+      setUser({
+        email: 'onda.rpg@gmail.com',
+        username: 'Onda RPG',
+      });
+    }
+  }, []);
+
   function signIn(userData: SignInType) {
-    //Todo: Implementar API
-    // const response = await api.post('/auth/signin', {
-    //   email: userData.email,
-    //   password: userData.password,
-    // });
+    try {
+      //Todo: Implementar chamada a API
+      // const response = await api.post('/auth/signin', {
+      //   email: userData.email,
+      //   password: userData.password,
+      // });
 
-    setUser({
-      email: userData.email,
-      password: userData.password,
-    });
+      setUser({
+        username: userData.username,
+        email: userData.email,
+      });
 
-    Cookies.set('token', 'my-secret-token', {
-      path: '/',
-      secure: true,
-      sameSite: 'strict',
-      expires: userData.rememberMe ? 14 : undefined,
-    });
+      Cookies.set('token', 'my-secret-token', {
+        path: '/',
+        secure: true,
+        sameSite: 'strict',
+        expires: userData.rememberMe ? 14 : undefined,
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   function signOut() {

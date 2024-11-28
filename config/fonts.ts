@@ -1,4 +1,10 @@
-import { Fira_Code, Poppins, Protest_Revolution } from 'next/font/google';
+import {
+  Fira_Code,
+  IM_Fell_English,
+  Poppins,
+  Protest_Revolution,
+  Special_Elite,
+} from 'next/font/google';
 
 export const firaCode = Fira_Code({
   subsets: ['latin'],
@@ -11,6 +17,17 @@ export const poppins = Poppins({
 });
 
 export const protestRevolution = Protest_Revolution({
+  subsets: ['latin'],
+  weight: ['400'],
+});
+
+export const imFellEnglish = IM_Fell_English({
+  subsets: ['latin'],
+  style: ['italic'],
+  weight: ['400'],
+});
+
+export const specialElite = Special_Elite({
   subsets: ['latin'],
   weight: ['400'],
 });
