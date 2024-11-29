@@ -45,6 +45,26 @@ module.exports = {
         blue: {
           700: '#2828c9',
         },
+        fighting: {
+          DEFAULT: '#ffee00',
+          50: '#ffee0050',
+        },
+        tired: {
+          DEFAULT: '#ffb700',
+          50: '#ffb70040',
+        },
+        hurted: {
+          DEFAULT: '#ff4242',
+          50: '#ff424240',
+        },
+        dying: {
+          DEFAULT: '#ff0000',
+          50: '#ff000040',
+        },
+        unconscious: {
+          DEFAULT: '#000000',
+          50: '#00000080',
+        },
       },
     },
   },

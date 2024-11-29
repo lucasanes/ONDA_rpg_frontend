@@ -4,9 +4,10 @@ import { specialElite } from '@/config/fonts';
 import { CharacterInterface } from '@/types/character';
 import { convertMoney } from '@/utils/convertMoney';
 import { Input } from '@nextui-org/input';
-import { Button, Divider, Image, Progress, Spinner } from '@nextui-org/react';
+import { Button, Divider, Progress, Spinner } from '@nextui-org/react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { BiCoin } from 'react-icons/bi';
 import { toast } from 'react-toastify';
 
 export default function Character() {
@@ -89,9 +90,9 @@ function MainContainer({ character }: { character: CharacterInterface }) {
   const { name, level, xp, divinity, race, ts, to, tp } = character;
 
   return (
-    <div className='border-2 border-gray-500 rounded-sm flex flex-col p-4 gap-2'>
-      <h1>Principal</h1>
-      <Divider />
+    <div className='border-2 rounded-md border-gray-300 flex flex-col p-4 gap-2'>
+      <h1 className='text-xl'>Principal</h1>
+      <Divider className='bg-gray-300 -ml-4 mt-2 mb-2 h-0.5 w-[calc(100%+2rem)]' />
       <Input variant='bordered' size='md' disabled label='Nome' value={name} />
       <Input
         variant='bordered'
@@ -123,24 +124,27 @@ function MainContainer({ character }: { character: CharacterInterface }) {
         value={divinity}
       />
       <Input
+        startContent={<BiCoin className='mb-0.5' />}
         variant='bordered'
         size='md'
         disabled
-        label='T$'
+        label='$ Tibar $'
         value={ts.toString()}
       />
       <Input
+        startContent={<BiCoin className='mb-0.5' />}
         variant='bordered'
         size='md'
         disabled
-        label='TP'
+        label='$ Tibar de Prata $'
         value={tp.toString()}
       />
       <Input
+        startContent={<BiCoin className='mb-0.5' />}
         variant='bordered'
         size='md'
         disabled
-        label='TO'
+        label='$ Tibar de Ouro $'
         value={to.toString()}
       />
     </div>
@@ -154,50 +158,95 @@ function StatusContainer({
   character: CharacterInterface;
   onUpdate: (field: keyof CharacterInterface, value: any) => void;
 }) {
-  const { id, pv, pvA, pm, pmA, portrait, dying, fighting, unconscious } =
-    character;
+  const {
+    id,
+    pv,
+    pvA,
+    pm,
+    pmA,
+    mun,
+    munA,
+    portrait,
+    dying,
+    fighting,
+    unconscious,
+    tired,
+    hurted,
+  } = character;
 
   const router = useRouter();
 
-  function handleFight() {
+  function handleFighting() {
     //ToDo: Implementar chamada Socket
 
     onUpdate('fighting', !fighting);
   }
 
   return (
-    <div className='border-2 border-gray-500 rounded-sm flex flex-col p-4 gap-2'>
-      <div className='flex gap-10'>
+    <div className='border-2 rounded-md border-gray-300 flex flex-col p-4 gap-2'>
+      <h1 className='text-xl'>Status</h1>
+      <Divider className='bg-gray-300 -ml-4 mt-2 mb-2 h-0.5 w-[calc(100%+2rem)]' />
+      <div className='flex flex-col-reverse xl:flex-row gap-10 justify-evenly items-center'>
         <div className='border-2 border-gray-400 rounded-md flex flex-col items-center'>
           <h1 className='my-1 text-lg text-center'>Status</h1>
           <Divider />
-          <div className='flex flex-col gap-4 p-4'>
+          <div className='min-w-60 flex flex-col gap-4 p-4'>
             <Button
-              className={`bg-fight ${fighting ? 'opacity-100' : 'opacity-50'}`}
-              onPress={handleFight}
+              className={`border-2 border-fighting text-gray-200 ${fighting ? 'bg-fighting-50' : 'bg-transparent'}`}
+              onPress={handleFighting}
             >
               Combate
             </Button>
             <Button
-              className='bg-red-500'
-              onPress={() => onUpdate('dying', !dying)}
+              className={`border-2 border-tired text-gray-200 ${tired ? 'bg-tired-50' : 'bg-transparent'}`}
+              onPress={() => onUpdate('tired', !tired)}
             >
-              Morrendo
+              Cansado
             </Button>
             <Button
-              className='bg-red-500'
+              className={`border-2 border-hurted text-gray-200 ${hurted ? 'bg-hurted-50' : 'bg-transparent'}`}
+              onPress={() => onUpdate('hurted', !hurted)}
+            >
+              Ferimento Médio
+            </Button>
+            <Button
+              className={`border-2 border-dying text-gray-200 ${dying ? 'bg-dying-50' : 'bg-transparent'}`}
+              onPress={() => onUpdate('dying', !dying)}
+            >
+              Ferimento Grave
+            </Button>
+            <Button
+              className={`border-2 border-unconscious text-gray-200 ${unconscious ? 'bg-unconscious-50' : 'bg-transparent'}`}
               onPress={() => onUpdate('unconscious', !unconscious)}
             >
               Inconsciente
             </Button>
           </div>
         </div>
-        <Image
-          radius='full'
-          onClick={() => router.push(`/character/${id}/portrait`)}
-          className='min-w-64 min-h-64 max-w-64 max-h-64 aspect-square object-cover border-2 cursor-pointer'
-          src={portrait || '/noportrait.png'}
-        />
+        <div className='relative min-w-64 min-h-64 max-w-64 max-h-64 cursor-pointer'>
+          <div className='z-10 absolute min-w-64 min-h-64 max-w-64 max-h-64 rounded-full aspect-square object-cover border-2'></div>
+          <img
+            style={{
+              width: 250,
+              height: 250,
+            }}
+            src='/blood2.png'
+            className={`absolute z-20 left-12 top-12 rotate-90 transition duration-700 ease-in-out ${dying ? 'opacity-90' : 'opacity-0'} ${unconscious ? 'blur-sm' : ''}`}
+          />
+          <img
+            style={{
+              width: 250,
+              height: 250,
+            }}
+            src='/blood1.png'
+            className={`absolute z-20 left-12 top-12 rotate-90 transition duration-700 ease-in-out ${hurted ? 'opacity-80' : `opacity-0`} ${unconscious ? 'blur-sm' : ''}`}
+          />
+          <img
+            onClick={() => router.push(`/character/${id}/portrait`)}
+            className={`z-0 min-w-64 min-h-64 max-w-64 max-h-64 rounded-full aspect-square object-cover transition duration-700 ease-in-out ${unconscious ? 'brightness-0 blur-sm' : 'brightness-100 blur-0'} ${tired ? 'grayscale' : ''}`}
+            src={portrait || '/noportrait.png'}
+          />
+        </div>
       </div>
 
       <Progress
@@ -216,6 +265,15 @@ function StatusContainer({
         }}
         maxValue={pm}
         value={pmA}
+      />
+
+      <Progress
+        label={`Munição: ${munA}/${mun}`}
+        classNames={{
+          indicator: 'bg-green-400',
+        }}
+        maxValue={mun}
+        value={munA}
       />
       <div className='flex items-center gap-1'>
         <img src='/coin.png' width={25} height={25} />

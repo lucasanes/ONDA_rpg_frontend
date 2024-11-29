@@ -1,3 +1,21 @@
+export interface CharactersInterface {
+  id: number;
+  name: string;
+  level: number;
+  xp: number;
+  pv: number;
+  pvA: number;
+  pm: number;
+  pmA: number;
+  to: number;
+  ts: number;
+  tp: number;
+  mun: number;
+  portrait: string | null;
+  munA: number;
+  sessionId?: number;
+}
+
 export interface CharacterInterface {
   id: number;
   name: string;

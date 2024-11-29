@@ -262,7 +262,7 @@ function PortraitImage({
         src={portrait || '/noportrait.png'}
       />
       <img
-        src={'/moldure.png'}
+        src={'/moldure1.png'}
         style={{
           minWidth: IMAGE_SIZE + 50,
           minHeight: IMAGE_SIZE + 50,

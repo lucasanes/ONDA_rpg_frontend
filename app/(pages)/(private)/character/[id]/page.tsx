@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import Portrait from './Character';
+import Character from './Character';
 
 export async function generateMetadata({
   params,
@@ -27,5 +27,5 @@ async function getCharacterName(id: string): Promise<string> {
 }
 
 export default function Page() {
-  return <Portrait />;
+  return <Character />;
 }
