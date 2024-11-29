@@ -36,6 +36,9 @@ module.exports = {
           800: '#234E52',
           900: '#1D4044',
         },
+        background: {
+          DEFAULT: '#1A202C',
+        },
         red: {
           700: '#951818',
         },
@@ -115,19 +118,6 @@ module.exports = {
               700: '#9B2C2C',
               800: '#822727',
               900: '#63171B',
-            },
-            background: {
-              DEFAULT: '#1A202C', // Fundo escuro para o tema dark
-              foreground: '#E2E8F0', // Texto claro
-            },
-            cardBackground: {
-              DEFAULT: '#2D3748', // Fundo para painéis ou cartões
-            },
-            border: {
-              DEFAULT: '#4A5568', // Bordas sutis
-            },
-            highlight: {
-              DEFAULT: '#38B2AC', // Destaque em verde água
             },
           },
         },
