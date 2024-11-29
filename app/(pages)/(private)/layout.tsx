@@ -27,9 +27,9 @@ export default function MenuLayout({
   }
 
   return (
-    <div className='w-full h-full flex flex-col'>
+    <div className='fixed w-full h-full flex flex-col'>
       {!pathname.includes('portrait') && (
-        <div className='w-full h-14 bg-menu flex justify-between items-center px-4 sm:px-16'>
+        <div className='fixedw-full h-14 bg-menu flex justify-between items-center px-4 sm:px-16'>
           <div className='md:w-1/3 hidden md:flex flex-none gap-2 justify-start items-center'>
             <img className='size-12' src='/favicon.webp' />
             <h1 className={`text-3xl ${protestRevolution.className}`}>
@@ -63,7 +63,6 @@ export default function MenuLayout({
               onPress={handleSignOut}
               className='transparent'
               variant='light'
-              color='danger'
             >
               Sair
             </Button>

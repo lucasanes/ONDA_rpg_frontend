@@ -7,4 +7,5 @@ export interface CharacterInterface {
   pmA: number;
   money: number;
   portrait: string | null;
+  sessionId?: number;
 }

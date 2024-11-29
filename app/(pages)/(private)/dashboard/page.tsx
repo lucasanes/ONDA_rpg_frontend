@@ -64,6 +64,7 @@ export default function Dashboard() {
           pmA: 5,
           pm: 10,
           money: 100,
+          sessionId: 1,
           portrait:
             'https://firebasestorage.googleapis.com/v0/b/registro-paranormal.appspot.com/o/site%2Flightz%2F4%2FNaksu.png?alt=media&token=59a4d04b-990a-4d49-81d0-eebd9cbd3201',
         },
@@ -105,7 +106,13 @@ export default function Dashboard() {
           <Container title='Personagens'>
             <AddCharacterCard setCharacters={setCharacters} />
             {characters.map((character) => (
-              <CharacterCard key={character.id} character={character} />
+              <CharacterCard
+                key={character.id}
+                character={character}
+                session={sessions.find(
+                  (session) => session.id === character.sessionId
+                )}
+              />
             ))}
           </Container>
         </>
@@ -164,27 +171,6 @@ function AddSessionCard({
   );
 }
 
-function SessionCard({ session }: { session: SessionInterface }) {
-  return (
-    <Card className='min-w-64 bg-transparent border-2 rounded border-gray-500 '>
-      <CardHeader>
-        <h1>{session.name}</h1>
-      </CardHeader>
-      <Divider className='h-0.5 !bg-gray-500' />
-      <CardBody>
-        <p>{session.description}</p>
-        <p>Jogadores: {session.players.join(', ')}</p>
-      </CardBody>
-      <Divider className='h-0.5 !bg-gray-500' />
-      <CardFooter>
-        <Button as={Link} href={`/session/${session.id}`} className='w-full'>
-          Acessar Painel
-        </Button>
-      </CardFooter>
-    </Card>
-  );
-}
-
 function AddCharacterCard({
   setCharacters,
 }: {
@@ -217,13 +203,43 @@ function AddCharacterCard({
   );
 }
 
-function CharacterCard({ character }: { character: CharacterInterface }) {
+function SessionCard({ session }: { session: SessionInterface }) {
+  return (
+    <Card className='min-w-64 bg-transparent border-2 rounded border-gray-500 '>
+      <CardHeader>
+        <h1 className='capitalize'>{session.name}</h1>
+      </CardHeader>
+      <Divider className='h-0.5 !bg-gray-500' />
+      <CardBody>
+        <p>{session.description}</p>
+        <p>Jogadores: {session.players.join(', ')}</p>
+      </CardBody>
+      <Divider className='h-0.5 !bg-gray-500' />
+      <CardFooter>
+        <Button as={Link} href={`/session/${session.id}`} className='w-full'>
+          Acessar Painel
+        </Button>
+      </CardFooter>
+    </Card>
+  );
+}
+
+function CharacterCard({
+  character,
+  session,
+}: {
+  character: CharacterInterface;
+  session?: SessionInterface;
+}) {
   const router = useRouter();
 
   return (
     <Card className='min-w-64 bg-transparent border-2 rounded border-gray-500 '>
       <CardHeader>
-        <h1>{character.name}</h1>
+        <h1 className='capitalize'>
+          {character.name}
+          {session && ` - ${session?.name}`}
+        </h1>
       </CardHeader>
       <Divider className='h-0.5 !bg-gray-500' />
       <CardBody className='gap-4'>
@@ -236,10 +252,7 @@ function CharacterCard({ character }: { character: CharacterInterface }) {
             className='aspect-square object-cover border-2 cursor-pointer'
             src={character.portrait || '/noportrait.png'}
           />
-          <div
-            className='w-full sm:w-[calc(100%-128px)] flex flex-col gap-4'
-            // style={{ width: 'calc(100% - 128px)' }}
-          >
+          <div className='w-full sm:w-[calc(100%-128px)] flex flex-col gap-4'>
             <Progress
               label={`PV: ${character.pvA}/${character.pv}`}
               classNames={{
