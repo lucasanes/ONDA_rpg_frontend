@@ -2,6 +2,7 @@ import { CharacterInterface } from '@/types/character';
 import { Button, Input } from '@nextui-org/react';
 import { FormEvent, useState } from 'react';
 import { toast } from 'react-toastify';
+import FileInput from '../FileInput';
 import ModalComponent from './Modal';
 
 export default function ModalAddCharacter({
@@ -94,15 +95,13 @@ export default function ModalAddCharacter({
             onChange={(e) => setPm(Number(e.target.value))}
           />
 
-          <Input
+          <FileInput
             isRequired
             required
             label='Portrait'
-            labelPlacement='outside'
             placeholder='https://site.com/onda.png'
-            type='url'
             value={portrait}
-            onChange={(e) => setPortrait(e.target.value)}
+            setValue={(value) => setPortrait(value)}
           />
         </>
       }

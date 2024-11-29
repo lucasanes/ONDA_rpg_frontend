@@ -15,9 +15,12 @@ export interface CharacterPortraitInterface {
   pvA: number;
   pm: number;
   pmA: number;
-  fight: boolean;
+  munA: number;
+  money: number;
+  fighting: boolean;
   unconscious: boolean;
   tired: boolean;
+  hurted: boolean;
   dying: boolean;
   portrait: string | null;
 }
