@@ -9,9 +9,22 @@ module.exports = {
   ],
   theme: {
     extend: {
+      keyframes: {
+        breathing: {
+          '0%, 100%': {
+            transform: 'scale(1) rotate(0deg) translateY(0)',
+          },
+          '40%': {
+            transform: 'scale(1.05) rotate(-2.5deg) translateY(-5px)',
+          },
+        },
+      },
+      animation: {
+        breathing: 'breathing 5s ease-in-out infinite',
+      },
       colors: {
         menu: {
-          DEFAULT: '#2C7A7B', // Verde suave para elementos primários
+          DEFAULT: '#B0C4DE50', // Verde suave para elementos primários
           50: '#E6FFFA',
           100: '#B2F5EA',
           200: '#81E6D9',
@@ -22,6 +35,12 @@ module.exports = {
           700: '#285E61',
           800: '#234E52',
           900: '#1D4044',
+        },
+        red: {
+          700: '#951818',
+        },
+        blue: {
+          700: '#2828c9',
         },
       },
     },
