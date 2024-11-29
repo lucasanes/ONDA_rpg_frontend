@@ -2,6 +2,7 @@
 
 import ModalAddCharacter from '@/components/modals/ModalAddCharacter';
 import ModalAddSession from '@/components/modals/ModalAddSession';
+import { specialElite } from '@/config/fonts';
 import { CharacterInterface } from '@/types/character';
 import { SessionInterface } from '@/types/session';
 import {
@@ -62,6 +63,7 @@ export default function Dashboard() {
           pv: 20,
           pmA: 5,
           pm: 10,
+          money: 100,
           portrait:
             'https://firebasestorage.googleapis.com/v0/b/registro-paranormal.appspot.com/o/site%2Flightz%2F4%2FNaksu.png?alt=media&token=59a4d04b-990a-4d49-81d0-eebd9cbd3201',
         },
@@ -72,6 +74,7 @@ export default function Dashboard() {
           pv: 20,
           pmA: 3,
           pm: 10,
+          money: 50,
           portrait: null,
         },
       ]);
@@ -239,7 +242,9 @@ function CharacterCard({ character }: { character: CharacterInterface }) {
           >
             <Progress
               label={`PV: ${character.pvA}/${character.pv}`}
-              color='danger'
+              classNames={{
+                indicator: 'bg-red-700',
+              }}
               maxValue={character.pv}
               value={character.pvA}
             />
@@ -247,11 +252,17 @@ function CharacterCard({ character }: { character: CharacterInterface }) {
             <Progress
               label={`PM: ${character.pmA}/${character.pm}`}
               classNames={{
-                indicator: 'bg-blue-500',
+                indicator: 'bg-blue-700',
               }}
               maxValue={character.pm}
               value={character.pmA}
             />
+            <div className='flex items-center gap-1'>
+              <img src='/coin.png' width={25} height={25} />
+              <span className={`text-xl mt-1 ${specialElite.className}`}>
+                {character.money}
+              </span>
+            </div>
           </div>
         </div>
       </CardBody>

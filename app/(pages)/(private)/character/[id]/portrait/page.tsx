@@ -33,8 +33,6 @@ export default function Portrait() {
 
       //const response = await api.get(`/characters/${id}`);
 
-      //setCharacter(response.data);
-
       setName('Naksu Hanna');
       setPortrait(
         'https://firebasestorage.googleapis.com/v0/b/registro-paranormal.appspot.com/o/site%2Flightz%2F4%2FNaksu.png?alt=media&token=59a4d04b-990a-4d49-81d0-eebd9cbd3201'
@@ -115,8 +113,8 @@ export default function Portrait() {
             }}
             className='fixed z-40 flex flex-col gap-2 justify-center items-start'
           >
-            <Munition munition={munA} showMun={showMun} />
             <Money money={money} showMoney={showMoney} />
+            <Munition munition={munA} showMun={showMun} />
           </div>
           <PortraitImage
             portrait={portrait}
@@ -145,7 +143,9 @@ function Munition({
   showMun: boolean;
 }) {
   return (
-    <div className={`ml-3 z-40 flex items-center justify-center`}>
+    <div
+      className={`ml-3 z-40 flex items-center justify-center transition duration-1000 ease-in-out  ${showMun ? 'opacity-100' : 'opacity-0'}`}
+    >
       <img width={17} src='/munition.png' />
       <span
         style={{
@@ -161,7 +161,9 @@ function Munition({
 
 function Money({ money, showMoney }: { money: number; showMoney: boolean }) {
   return (
-    <div className={`z-40 flex items-center justify-center`}>
+    <div
+      className={`z-40 flex items-center justify-center transition duration-1000 ease-in-out  ${showMoney ? 'opacity-100' : 'opacity-0'}`}
+    >
       <img width={50} height={50} src='/coin.png' />
       <span
         style={{
@@ -229,7 +231,7 @@ function PortraitImage({
           width: imageSize,
           height: imageSize,
         }}
-        className={`absolute left-6 top-6 aspect-square object-cover rounded-full transition duration-700 ease-in-out ${unconscious ? 'brightness-0 blur-sm' : 'brightness-100 blur-0'} ${tired ? 'grayscale rotate-12' : ''}`}
+        className={`absolute left-6 top-6 aspect-square object-cover rounded-full transition duration-700 ease-in-out ${unconscious ? 'brightness-0 blur-sm' : 'brightness-100 blur-0  animate-breathing'} ${tired ? 'grayscale rotate-12' : ''}`}
         src={portrait || '/noportrait.png'}
       />
       <img
