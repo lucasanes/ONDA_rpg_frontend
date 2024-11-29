@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import Portrait from './Portrait';
+import Portrait from './Character';
 
 export async function generateMetadata({
   params,
@@ -11,8 +11,8 @@ export async function generateMetadata({
   const characterName = await getCharacterName(id);
 
   return {
-    title: `Portrait ${characterName}`,
-    description: `Portrait do personagem ${characterName}.`,
+    title: `${characterName}`,
+    description: `Ficha do personagem ${characterName}.`,
   };
 }
 
@@ -23,9 +23,7 @@ async function getCharacterName(id: string): Promise<string> {
 
   const name = 'Naksu Hanna';
 
-  const firstName = name.split(' ')[0];
-
-  return firstName;
+  return name;
 }
 
 export default function Page() {
