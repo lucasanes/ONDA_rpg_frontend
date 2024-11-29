@@ -19,7 +19,7 @@ export function Providers({ children }: ProvidersProps) {
   return (
     <AuthProvider>
       <NextUIProvider navigate={router.push}>
-        <NextThemesProvider attribute='class' defaultTheme='dark'>
+        <NextThemesProvider>
           <ToastContainer closeOnClick newestOnTop theme='dark' />
           {children}
         </NextThemesProvider>

@@ -5,6 +5,7 @@ import ModalAddSession from '@/components/modals/ModalAddSession';
 import { specialElite } from '@/config/fonts';
 import { CharacterInterface } from '@/types/character';
 import { SessionInterface } from '@/types/session';
+import { convertMoney } from '@/utils/convertMoney';
 import {
   Button,
   Card,
@@ -63,7 +64,16 @@ export default function Dashboard() {
           pv: 20,
           pmA: 5,
           pm: 10,
-          money: 100,
+          mun: 30,
+          class: 'Arcanista',
+          divinity: 'Aisha',
+          level: 1,
+          munA: 30,
+          race: 'Humano',
+          to: 1,
+          tp: 10,
+          ts: 100,
+          xp: 10,
           sessionId: 1,
           portrait:
             'https://firebasestorage.googleapis.com/v0/b/registro-paranormal.appspot.com/o/site%2Flightz%2F4%2FNaksu.png?alt=media&token=59a4d04b-990a-4d49-81d0-eebd9cbd3201',
@@ -75,7 +85,16 @@ export default function Dashboard() {
           pv: 20,
           pmA: 3,
           pm: 10,
-          money: 50,
+          class: 'Arcanista',
+          divinity: 'Aisha',
+          level: 1,
+          munA: 30,
+          race: 'Humano',
+          to: 1,
+          mun: 30,
+          tp: 10,
+          ts: 100,
+          xp: 10,
           portrait: null,
         },
       ]);
@@ -94,7 +113,7 @@ export default function Dashboard() {
   return (
     <div className='w-full h-full flex flex-col items-center p-5 gap-5 overflow-y-auto'>
       {loading ? (
-        <Spinner />
+        <Spinner size='lg' className='mt-6' />
       ) : (
         <>
           <Container title='Sessões'>
@@ -273,7 +292,7 @@ function CharacterCard({
             <div className='flex items-center gap-1'>
               <img src='/coin.png' width={25} height={25} />
               <span className={`text-xl mt-1 ${specialElite.className}`}>
-                {character.money}
+                {convertMoney(character)}
               </span>
             </div>
           </div>
