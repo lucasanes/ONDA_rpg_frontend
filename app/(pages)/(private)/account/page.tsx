@@ -25,8 +25,8 @@ export default function Account() {
 
   return (
     <div className='w-full h-full p-5 flex flex-col items-center overflow-y-auto'>
-      <div className='w-60 xs:min-w-96 xs:w-full xs:max-w-2xl'>
-        <Card className='w-60 xs:min-w-96 xs:w-full xs:max-w-2xl mt-6'>
+      <div className='w-72 xs:min-w-96 xs:w-full xs:max-w-2xl'>
+        <Card className='w-72 xs:min-w-96 xs:w-full xs:max-w-2xl mt-6'>
           <CardHeader className='flex flex-col items-start'>
             <h1 className='text-xl font-bold'>Minha Conta</h1>
             <p className='text-sm text-gray-300'>
@@ -50,7 +50,7 @@ export default function Account() {
         </Card>
       </div>
 
-      <Card className='w-60 xs:min-w-96 xs:w-full xs:max-w-2xl mt-6'>
+      <Card className='w-72 xs:min-w-96 xs:w-full xs:max-w-2xl mt-6'>
         <CardHeader>
           <h1 className='text-xl font-bold'>Editar Conta</h1>
         </CardHeader>

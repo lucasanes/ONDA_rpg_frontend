@@ -238,8 +238,8 @@ function CharacterCard({
   return (
     <Card className='bg-transparent border-2 border-gray-300 rounded-sm'>
       <CardHeader className='justify-between items-center'>
-        <div className='flex gap-2'>
-          <h1 className='text-lg'>{name}</h1>
+        <div className='flex justify-center items-center gap-2'>
+          <h1 className='w-min sm:w-fit text-lg'>{name}</h1>
           <Button
             as={Link}
             href={`/character/${id}`}
