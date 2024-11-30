@@ -74,8 +74,8 @@ export default function Dashboard() {
           xp: 10,
           isPublic: true,
           sessionId: 1,
+          sessionName: 'ONDA',
           userId: 1,
-
           portrait:
             'https://firebasestorage.googleapis.com/v0/b/registro-paranormal.appspot.com/o/site%2Flightz%2F4%2FNaksu.png?alt=media&token=59a4d04b-990a-4d49-81d0-eebd9cbd3201',
         },
@@ -125,13 +125,7 @@ export default function Dashboard() {
           <Container title='Personagens'>
             <AddCharacterCard setCharacters={setCharacters} />
             {characters.map((character) => (
-              <CharacterCard
-                key={character.id}
-                character={character}
-                session={sessions.find(
-                  (session) => session.id === character.sessionId
-                )}
-              />
+              <CharacterCard key={character.id} character={character} />
             ))}
           </Container>
         </>
@@ -243,13 +237,7 @@ function SessionCard({ session }: { session: SessionInterface }) {
   );
 }
 
-function CharacterCard({
-  character,
-  session,
-}: {
-  character: CharactersInterface;
-  session?: SessionInterface;
-}) {
+function CharacterCard({ character }: { character: CharactersInterface }) {
   const router = useRouter();
 
   return (
@@ -257,7 +245,7 @@ function CharacterCard({
       <CardHeader>
         <h1 className='capitalize'>
           {character.name}
-          {session && ` - ${session?.name}`}
+          {character.sessionId && ` - ${character.sessionName}`}
         </h1>
       </CardHeader>
       <Divider className='h-0.5 !bg-gray-500' />

@@ -14,6 +14,7 @@ export interface CharactersInterface {
   portrait: string | null;
   munA: number;
   sessionId?: number;
+  sessionName?: string;
   userId: number;
   isPublic: boolean;
 }
@@ -50,6 +51,7 @@ export interface MainCharacterInterface {
   class: string;
   race: string;
   level: number;
+  age: number;
   divinity: string;
   xp: number;
   to: number;
@@ -64,10 +66,37 @@ export interface StatusCharacterInterface {
   pmA: number;
   mun: number;
   portrait: string | null;
+  cd: number;
+  defense: number;
   unconscious: boolean;
   tired: boolean;
   dying: boolean;
   fighting: boolean;
   munA: number;
   hurted: boolean;
+}
+
+export interface SessionCharactersInterface {
+  id: number;
+  userId: number;
+  isPublic: boolean;
+  name: string;
+  age: number;
+  portrait: string | null;
+  xp: number;
+  level: number;
+  class: string;
+  race: string;
+  divinity: string;
+  pvA: number;
+  pmA: number;
+  munA: number;
+  pv: number;
+  pm: number;
+  mun: number;
+  ts: number;
+  tp: number;
+  to: number;
+  cd: number;
+  defense: number;
 }

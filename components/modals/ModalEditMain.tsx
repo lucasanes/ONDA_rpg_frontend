@@ -18,6 +18,7 @@ export default function ModalEditMain({
   setMainCharacter: Dispatch<SetStateAction<MainCharacterInterface>>;
 }) {
   const [name, setName] = useState(mainCharacter.name);
+  const [age, setAge] = useState(mainCharacter.age);
   const [level, setLevel] = useState(mainCharacter.level);
   const [xp, setXp] = useState(mainCharacter.xp);
   const [mainCharacterClass, setMainCharacterClass] = useState(
@@ -40,6 +41,7 @@ export default function ModalEditMain({
       setMainCharacter((prev) => ({
         ...prev,
         name,
+        age,
         level,
         xp,
         class: mainCharacterClass,
@@ -74,6 +76,17 @@ export default function ModalEditMain({
             type='text'
             value={name}
             onChange={(e) => setName(e.target.value)}
+          />
+
+          <Input
+            isRequired
+            required
+            label='Idade'
+            labelPlacement='outside'
+            placeholder='1'
+            type='number'
+            value={age.toString()}
+            onChange={(e) => setAge(Number(e.target.value))}
           />
 
           <Input

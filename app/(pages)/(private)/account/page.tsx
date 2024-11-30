@@ -26,29 +26,33 @@ export default function Account() {
   return (
     <div className='w-full h-full p-5 flex flex-col items-center overflow-y-auto'>
       <div className='w-60 xs:min-w-96 xs:w-full xs:max-w-2xl'>
-        <h1 className='text-2xl font-bold'>Minha conta</h1>
-        <p className='text-sm text-gray-300'>
-          Aqui você pode alterar suas informações de conta
-        </p>
+        <Card className='w-60 xs:min-w-96 xs:w-full xs:max-w-2xl mt-6'>
+          <CardHeader className='flex flex-col items-start'>
+            <h1 className='text-xl font-bold'>Minha Conta</h1>
+            <p className='text-sm text-gray-300'>
+              Aqui você pode alterar suas informações de conta
+            </p>
+          </CardHeader>
+          <Divider />
+          <CardBody>
+            <span>
+              <strong>Nome de Usuário:</strong>
+            </span>
 
-        <div className='flex flex-col border-2 border-gray-300 rounded-md mt-5 p-3'>
-          <span>
-            <strong>Nome de Usuário:</strong>
-          </span>
+            <p>{user?.username}</p>
 
-          <p>{user?.username}</p>
+            <span className='mt-3'>
+              <strong>Email:</strong>
+            </span>
 
-          <span className='mt-3'>
-            <strong>Email:</strong>
-          </span>
-
-          <p>{user?.email}</p>
-        </div>
+            <p>{user?.email}</p>
+          </CardBody>
+        </Card>
       </div>
 
       <Card className='w-60 xs:min-w-96 xs:w-full xs:max-w-2xl mt-6'>
         <CardHeader>
-          <h1>Editar Conta</h1>
+          <h1 className='text-xl font-bold'>Editar Conta</h1>
         </CardHeader>
         <Divider />
         <CardBody className='gap-5'>

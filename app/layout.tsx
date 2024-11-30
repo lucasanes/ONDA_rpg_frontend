@@ -36,7 +36,7 @@ export default function RootLayout({
       className={`dark ${poppins.className}`}
       lang='pt-BR'
     >
-      <body>
+      <body className='bg-background'>
         <Providers>
           <main>{children}</main>
         </Providers>

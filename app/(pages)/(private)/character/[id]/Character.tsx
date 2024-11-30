@@ -1,14 +1,10 @@
 'use client';
 
-import { useAuth } from '@/app/context/AuthContext';
 import { useDisabled } from '@/app/context/DisabledContext';
-import AddButton from '@/components/AddButton';
 import EditButton from '@/components/EditButton';
-import ModalAddItem from '@/components/modals/ModalAddItem';
-import ModalEditItem from '@/components/modals/ModalEditItem';
+import InventoryContainer from '@/components/InventarioContainer';
 import ModalEditMain from '@/components/modals/ModalEditMain';
 import ModalEditStatus from '@/components/modals/ModalEditStatus';
-import ModalImage from '@/components/modals/ModalImage';
 import StatusBar from '@/components/StatusBar';
 import { specialElite } from '@/config/fonts';
 import {
@@ -21,24 +17,22 @@ import { convertMoney } from '@/utils/convertMoney';
 import { Input } from '@nextui-org/input';
 import {
   Button,
+  Chip,
   Divider,
-  Image,
   Spinner,
   useDisclosure,
 } from '@nextui-org/react';
 import { useRouter } from 'next/navigation';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { AiOutlineClear } from 'react-icons/ai';
 import { BiCoin } from 'react-icons/bi';
-import { RiShareForwardLine } from 'react-icons/ri';
 import { toast } from 'react-toastify';
 
 export default function Character() {
-  const router = useRouter();
-  const { user } = useAuth();
-  const { disabled, setDisabled } = useDisabled();
-
   const [loading, setLoading] = useState(true);
+
+  const [charactersOfSession, setCharactersOfSession] = useState<
+    { id: number; name: string }[]
+  >([]);
 
   const [character, setCharacter] = useState<CharacterInterface>(
     {} as CharacterInterface
@@ -55,6 +49,28 @@ export default function Character() {
       //ToDo: Implementar chamada a API
 
       //const response = await api.get(`/characters/${id}`);
+
+      //if (response.data.sessionId) {
+      //  const charactersOfSession = await api.get(`/characters/session/${response.data.sessionId}`);
+      setCharactersOfSession([
+        {
+          id: 1,
+          name: 'Mestre',
+        },
+        {
+          id: 1,
+          name: 'Naksu Hanna',
+        },
+        {
+          id: 2,
+          name: 'Naksu Hanna',
+        },
+        {
+          id: 3,
+          name: 'Naksu Hanna',
+        },
+      ]);
+      //}
 
       // if (response.data.userId !== user.id) {
       //   const sessionsOfUser = await api.get(`/sessions/user/${user.id}`);
@@ -83,6 +99,7 @@ export default function Character() {
         xp: 10,
         to: 1,
         ts: 100,
+        age: 20,
         tp: 10,
       });
 
@@ -92,6 +109,8 @@ export default function Character() {
         pv: 100,
         pvA: 70,
         pm: 50,
+        cd: 10,
+        defense: 10,
         pmA: 40,
         munA: 30,
         mun: 30,
@@ -101,6 +120,16 @@ export default function Character() {
         tired: false,
         unconscious: false,
       });
+
+      setInventory([
+        {
+          id: 1,
+          name: 'Espada Longa',
+          image:
+            'https://firebasestorage.googleapis.com/v0/b/registro-paranormal.appspot.com/o/site%2Flightz%2F4%2FNaksu.png?alt=media&token=59a4d04b-990a-4d49-81d0-eebd9cbd3201',
+          characterId: 1,
+        },
+      ]);
     } catch (error) {
       console.log(error);
       toast.error('Erro ao carregar dados');
@@ -142,6 +171,7 @@ export default function Character() {
         </div>
         <div>
           <InventoryContainer
+            charactersOfSession={charactersOfSession}
             inventory={inventory}
             setInventory={setInventory}
           />
@@ -158,7 +188,7 @@ function MainContainer({
   mainCharacter: MainCharacterInterface;
   setMainCharacter: Dispatch<SetStateAction<MainCharacterInterface>>;
 }) {
-  const { name, level, xp, divinity, race, ts, to, tp } = mainCharacter;
+  const { name, level, xp, divinity, race, ts, to, tp, age } = mainCharacter;
 
   const { onOpen, isOpen, onClose, onOpenChange } = useDisclosure();
 
@@ -177,6 +207,13 @@ function MainContainer({
       </div>
       <Divider className='bg-gray-300 -ml-4 mt-2 mb-2 h-0.5 w-[calc(100%+2rem)]' />
       <Input variant='bordered' size='md' disabled label='Nome' value={name} />
+      <Input
+        variant='bordered'
+        size='md'
+        disabled
+        label='Idade'
+        value={age.toString()}
+      />
       <Input
         variant='bordered'
         size='md'
@@ -265,6 +302,8 @@ function StatusContainer({
     unconscious,
     tired,
     hurted,
+    cd,
+    defense,
   } = statusCharacter;
 
   const router = useRouter();
@@ -422,128 +461,12 @@ function StatusContainer({
           />
         </>
       )}
-    </div>
-  );
-}
-
-function InventoryContainer({
-  inventory,
-  setInventory,
-}: {
-  inventory: InventoryInterface[];
-  setInventory: Dispatch<SetStateAction<InventoryInterface[]>>;
-}) {
-  const router = useRouter();
-  const { disabled } = useDisabled();
-
-  const { onOpen, isOpen, onClose, onOpenChange } = useDisclosure();
-
-  function handleClean() {
-    //ToDO: Implementar Socket
-  }
-
-  function Item({ item }: { item: InventoryInterface }) {
-    const {
-      onOpen: onImageModalOpen,
-      isOpen: isImageModalOpen,
-      onClose: onImageModalClose,
-      onOpenChange: onImageModalOpenChange,
-    } = useDisclosure();
-
-    const {
-      onOpen: onEditModalOpen,
-      isOpen: isEditModalOpen,
-      onClose: onEditModalClose,
-      onOpenChange: onEditModalOpenChange,
-    } = useDisclosure();
-
-    function handleSend() {
-      //ToDO: Implementar Socket
-
-      onImageModalOpen();
-    }
-
-    function handleDelete() {
-      //ToDo: Implementar chamada a API
-
-      //api.delete(`/inventory/${item.id}`);
-
-      setInventory((prev) => prev.filter((each) => each.id !== item.id));
-
-      onEditModalClose();
-    }
-
-    return (
-      <div className='min-w-64 max-w-lg flex flex-col justify-center items-center border-2 border-gray-300 rounded-sm'>
-        <ModalImage
-          isOpen={isImageModalOpen}
-          onClose={onImageModalClose}
-          onOpenChange={onImageModalOpenChange}
-          image={item.image}
-        />
-        <ModalEditItem
-          isOpen={isEditModalOpen}
-          onClose={onEditModalClose}
-          onOpenChange={onEditModalOpenChange}
-          item={item}
-          setInventory={setInventory}
-          handleDelete={handleDelete}
-        />
-        <div className='w-full flex px-2 justify-between items-center'>
-          <Button
-            className='min-w-1 text-cyan-400'
-            variant='light'
-            size='sm'
-            isDisabled={disabled}
-            onPress={handleSend}
-          >
-            <RiShareForwardLine size={21} />
-          </Button>
-          <span className='m-2 text-center break-words whitespace-break-spaces capitalize'>
-            {item.name}
-          </span>
-          <EditButton onPress={onEditModalOpen} size={16} />
+      {(defense || cd) && (
+        <div className='w-full flex flex-wrap justify-center gap-5 mt-5'>
+          {defense && <Chip>{`Defesa (CA): ${defense}`}</Chip>}
+          {cd && <Chip>{`Classe de Dificuldade (CD): ${cd}`}</Chip>}
         </div>
-        <Divider className='h-0.5 bg-gray-300' />
-        <div className='m-5 rounded-sm'>
-          <Image
-            onClick={onImageModalOpen}
-            isZoomed
-            src={item.image}
-            className='aspect-square object-cover cursor-pointer'
-          />
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className='border-2 rounded-md border-gray-300 flex flex-col p-4 gap-2'>
-      <ModalAddItem
-        isOpen={isOpen}
-        onClose={onClose}
-        onOpenChange={onOpenChange}
-        setInventory={setInventory}
-      />
-      <div className='flex justify-between'>
-        <Button
-          className='min-w-1 text-cyan-400'
-          variant='light'
-          size='sm'
-          isDisabled={disabled}
-          onPress={handleClean}
-        >
-          <AiOutlineClear size={21} />
-        </Button>
-        <h1 className='text-xl'>Inventário</h1>
-        <AddButton onPress={onOpen} />
-      </div>
-      <Divider className='bg-gray-300 -ml-4 mt-2 mb-2 h-0.5 w-[calc(100%+2rem)]' />
-      <div className='grid grid-cols-[repeat(auto-fit,minmax(16rem,1fr))] gap-4'>
-        {inventory.map((item) => (
-          <Item item={item} />
-        ))}
-      </div>
+      )}
     </div>
   );
 }
