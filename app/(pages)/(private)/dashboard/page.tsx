@@ -72,7 +72,9 @@ export default function Dashboard() {
           tp: 10,
           ts: 100,
           xp: 10,
+          isPublic: true,
           sessionId: 1,
+          userId: 1,
 
           portrait:
             'https://firebasestorage.googleapis.com/v0/b/registro-paranormal.appspot.com/o/site%2Flightz%2F4%2FNaksu.png?alt=media&token=59a4d04b-990a-4d49-81d0-eebd9cbd3201',
@@ -88,6 +90,8 @@ export default function Dashboard() {
           munA: 30,
           to: 1,
           mun: 30,
+          isPublic: false,
+          userId: 1,
           tp: 10,
           ts: 100,
           xp: 10,

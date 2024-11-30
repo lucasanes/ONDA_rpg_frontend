@@ -7,6 +7,7 @@ import {
   ModalHeader,
 } from '@nextui-org/react';
 import { FormEvent } from 'react';
+import DeleteButton from '../DeleteButton';
 
 export default function ModalComponent({
   isOpen,
@@ -15,6 +16,7 @@ export default function ModalComponent({
   bodyContent,
   footerContent,
   handleSubmit,
+  handleDelete,
 }: {
   isOpen: boolean;
   onOpenChange: () => void;
@@ -22,6 +24,7 @@ export default function ModalComponent({
   bodyContent: React.ReactNode;
   footerContent: React.ReactNode;
   handleSubmit: (event: FormEvent<HTMLFormElement>) => void;
+  handleDelete?: () => void;
 }) {
   return (
     <Modal
@@ -32,7 +35,10 @@ export default function ModalComponent({
     >
       <ModalContent>
         <form onSubmit={handleSubmit}>
-          <ModalHeader>{title}</ModalHeader>
+          <ModalHeader className='flex justify-between'>
+            {title}
+            {handleDelete && <DeleteButton onPress={handleDelete} />}
+          </ModalHeader>
           <Divider />
           <ModalBody className='p-5'>{bodyContent}</ModalBody>
           <Divider />

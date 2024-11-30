@@ -9,6 +9,10 @@ module.exports = {
   ],
   theme: {
     extend: {
+      screens: {
+        xs: '480px',
+        xxs: '400px',
+      },
       keyframes: {
         breathing: {
           '0%, 100%': {
@@ -50,8 +54,8 @@ module.exports = {
           50: '#ffee0050',
         },
         tired: {
-          DEFAULT: '#ffb700',
-          50: '#ffb70040',
+          DEFAULT: '#ff9500',
+          50: '#ff950040',
         },
         hurted: {
           DEFAULT: '#ff4242',

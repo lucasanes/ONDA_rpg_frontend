@@ -117,7 +117,9 @@ export default function ModalAddCharacter({
           <Button onPress={onClose} variant='flat' color='danger'>
             Cancelar
           </Button>
-          <Button color='primary'>Adicionar</Button>
+          <Button type='submit' color='primary'>
+            Adicionar
+          </Button>
         </>
       }
     />

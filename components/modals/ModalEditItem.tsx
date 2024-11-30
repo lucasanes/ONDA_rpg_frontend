@@ -1,22 +1,27 @@
-import { SessionInterface } from '@/types/session';
-import { Button, Input, Textarea } from '@nextui-org/react';
+import { InventoryInterface } from '@/types/inventory';
+import { Button, Input } from '@nextui-org/react';
 import { Dispatch, FormEvent, SetStateAction, useState } from 'react';
 import { toast } from 'react-toastify';
+import FileInput from '../FileInput';
 import ModalComponent from './Modal';
 
-export default function ModalAddSession({
+export default function ModalEditItem({
   isOpen,
   onClose,
   onOpenChange,
-  setSessions,
+  item,
+  setInventory,
+  handleDelete,
 }: {
   isOpen: boolean;
   onClose: () => void;
   onOpenChange: () => void;
-  setSessions: Dispatch<SetStateAction<SessionInterface[]>>;
+  item: InventoryInterface;
+  setInventory: Dispatch<SetStateAction<InventoryInterface[]>>;
+  handleDelete: () => void;
 }) {
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
+  const [name, setName] = useState(item.name);
+  const [image, setImage] = useState(item.image);
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -24,53 +29,53 @@ export default function ModalAddSession({
     try {
       //ToDo: Implementar chamada a API
 
-      //const response = await api.post('/sessions', { name, description });
+      //const response = await api.put('/inventory/${id}', {  });
 
-      setSessions((prevSessions) => [
-        ...prevSessions,
-        {
-          id: Math.random(),
+      setInventory((prev) => {
+        const index = prev.findIndex((each) => item.id === each.id);
+
+        prev[index] = {
+          ...prev[index],
           name,
-          description,
-          players: [],
-        },
-      ]);
+          image,
+        };
+
+        return [...prev];
+      });
 
       onClose();
     } catch (error) {
       console.error(error);
-      toast.error('Erro ao adicionar sessão');
+      toast.error('Erro ao editar personagem');
     }
   }
 
   return (
     <ModalComponent
-      title='Adicionar Sessão'
+      title='Editar Item'
       isOpen={isOpen}
       onOpenChange={onOpenChange}
       handleSubmit={handleSubmit}
+      handleDelete={handleDelete}
       bodyContent={
         <>
           <Input
-            isRequired
             required
-            label='Nome'
+            isRequired
+            label={'Nome'}
             labelPlacement='outside'
-            placeholder='ONDA'
-            type='text'
+            placeholder='Espada'
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
 
-          <Textarea
-            isRequired
+          <FileInput
             required
-            label='Descrição'
-            labelPlacement='outside'
-            placeholder='ONDA é um RPG de mesa...'
-            type='text'
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            isRequired
+            label={'Imagem'}
+            placeholder='Selecione uma imagem'
+            value={image}
+            setValue={setImage}
           />
         </>
       }
@@ -80,7 +85,7 @@ export default function ModalAddSession({
             Cancelar
           </Button>
           <Button type='submit' color='primary'>
-            Adicionar
+            Salvar
           </Button>
         </>
       }
