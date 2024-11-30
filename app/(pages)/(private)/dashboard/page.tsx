@@ -3,7 +3,7 @@
 import ModalAddCharacter from '@/components/modals/ModalAddCharacter';
 import ModalAddSession from '@/components/modals/ModalAddSession';
 import { specialElite } from '@/config/fonts';
-import { CharacterInterface } from '@/types/character';
+import { CharactersInterface } from '@/types/character';
 import { SessionInterface } from '@/types/session';
 import { convertMoney } from '@/utils/convertMoney';
 import {
@@ -12,6 +12,7 @@ import {
   CardBody,
   CardFooter,
   CardHeader,
+  Chip,
   Divider,
   Image,
   Progress,
@@ -25,7 +26,7 @@ import { toast } from 'react-toastify';
 
 export default function Dashboard() {
   const [sessions, setSessions] = useState<SessionInterface[]>([]);
-  const [characters, setCharacters] = useState<CharacterInterface[]>([]);
+  const [characters, setCharacters] = useState<CharactersInterface[]>([]);
 
   const [loading, setLoading] = useState(true);
 
@@ -65,16 +66,16 @@ export default function Dashboard() {
           pmA: 5,
           pm: 10,
           mun: 30,
-          class: 'Arcanista',
-          divinity: 'Aisha',
           level: 1,
           munA: 30,
-          race: 'Humano',
           to: 1,
           tp: 10,
           ts: 100,
           xp: 10,
+          isPublic: true,
           sessionId: 1,
+          userId: 1,
+
           portrait:
             'https://firebasestorage.googleapis.com/v0/b/registro-paranormal.appspot.com/o/site%2Flightz%2F4%2FNaksu.png?alt=media&token=59a4d04b-990a-4d49-81d0-eebd9cbd3201',
         },
@@ -85,13 +86,12 @@ export default function Dashboard() {
           pv: 20,
           pmA: 3,
           pm: 10,
-          class: 'Arcanista',
-          divinity: 'Aisha',
           level: 1,
           munA: 30,
-          race: 'Humano',
           to: 1,
           mun: 30,
+          isPublic: false,
+          userId: 1,
           tp: 10,
           ts: 100,
           xp: 10,
@@ -193,7 +193,7 @@ function AddSessionCard({
 function AddCharacterCard({
   setCharacters,
 }: {
-  setCharacters: React.Dispatch<React.SetStateAction<CharacterInterface[]>>;
+  setCharacters: React.Dispatch<React.SetStateAction<CharactersInterface[]>>;
 }) {
   const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
 
@@ -247,7 +247,7 @@ function CharacterCard({
   character,
   session,
 }: {
-  character: CharacterInterface;
+  character: CharactersInterface;
   session?: SessionInterface;
 }) {
   const router = useRouter();
@@ -263,16 +263,30 @@ function CharacterCard({
       <Divider className='h-0.5 !bg-gray-500' />
       <CardBody className='gap-4'>
         <div className='w-full flex flex-col sm:flex-row items-center gap-6 sm:gap-8'>
-          <Image
-            width={128}
-            height={128}
-            radius='full'
-            onClick={() => router.push(`/character/${character.id}/portrait`)}
-            className='aspect-square object-cover border-2 cursor-pointer'
-            src={character.portrait || '/noportrait.png'}
-          />
-          <div className='w-full sm:w-[calc(100%-128px)] flex flex-col gap-4'>
+          <div
+            className={`flex flex-row sm:flex-col items-center gap-4 ${specialElite.className}`}
+          >
+            {/* //ToDo: Adicionar Barra XP em volta do portrait */}
+            <Image
+              width={128}
+              height={128}
+              radius='full'
+              onClick={() => router.push(`/character/${character.id}/portrait`)}
+              className='aspect-square object-cover border-2 cursor-pointer'
+              src={character.portrait || '/noportrait.png'}
+            />
+            <div className='flex flex-col gap-2'>
+              <Chip className='text-center min-w-full pt-1'>
+                Nível {character.level}
+              </Chip>
+              <Chip className='text-center min-w-full pt-1'>
+                {character.xp} XP
+              </Chip>
+            </div>
+          </div>
+          <div className='w-full sm:w-[calc(100%-128px)] flex flex-col mt-1 gap-4'>
             <Progress
+              className={specialElite.className}
               label={`PV: ${character.pvA}/${character.pv}`}
               classNames={{
                 indicator: 'bg-red-700',
@@ -282,6 +296,7 @@ function CharacterCard({
             />
 
             <Progress
+              className={specialElite.className}
               label={`PM: ${character.pmA}/${character.pm}`}
               classNames={{
                 indicator: 'bg-blue-700',
@@ -289,9 +304,18 @@ function CharacterCard({
               maxValue={character.pm}
               value={character.pmA}
             />
+
+            {character.mun && (
+              <div className='flex items-center gap-3 ml-1'>
+                <img src='/munition.png' width={10} height={10} />
+                <span className={`text-md mt-1 ${specialElite.className}`}>
+                  {character.munA}/{character.mun}
+                </span>
+              </div>
+            )}
             <div className='flex items-center gap-1'>
               <img src='/coin.png' width={25} height={25} />
-              <span className={`text-xl mt-1 ${specialElite.className}`}>
+              <span className={`text-md mt-1 ${specialElite.className}`}>
                 {convertMoney(character)}
               </span>
             </div>

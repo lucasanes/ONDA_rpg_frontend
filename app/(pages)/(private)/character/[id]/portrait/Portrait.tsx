@@ -1,5 +1,6 @@
 'use client';
 
+import { useDisabled } from '@/app/context/DisabledContext';
 import { imFellEnglish, specialElite } from '@/config/fonts';
 import { CharacterPortraitInterface } from '@/types/character';
 import { IMAGE_SIZE } from '@/utils/image';
@@ -7,6 +8,8 @@ import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
 export default function Portrait() {
+  const { disabled, setDisabled } = useDisabled();
+
   const [loading, setLoading] = useState(true);
 
   const [character, setCharacter] = useState<CharacterPortraitInterface>(
@@ -22,6 +25,17 @@ export default function Portrait() {
 
       //const response = await api.get(`/characters/${id}`);
 
+      // if (response.data.userId !== user.id) {
+      //   const sessionsOfUser = await api.get(`/sessions/user/${user.id}`);
+      //   if (!sessionOfUser.data.find((session) => session.id === response.data.sessionId)) {
+      //     if (!response.data.isPublic) {
+      //       setDisabled(true)
+      //       setLoading(false)
+      //       return
+      //     }
+      //   }
+      // }
+
       setCharacter({
         id: 1,
         name: 'Naksu Hanna',
@@ -30,6 +44,9 @@ export default function Portrait() {
         pm: 10,
         pmA: 6,
         munA: 10,
+        isPublic: true,
+        userId: 1,
+        sessionId: 1,
         money: 100,
         portrait:
           'https://firebasestorage.googleapis.com/v0/b/registro-paranormal.appspot.com/o/site%2Flightz%2F4%2FNaksu.png?alt=media&token=59a4d04b-990a-4d49-81d0-eebd9cbd3201',
@@ -62,7 +79,10 @@ export default function Portrait() {
   }
 
   return (
-    !loading && (
+    !loading &&
+    (disabled ? (
+      <h1 className='my-auto mx-24 text-8xl text-red-700'>Portrait Privado</h1>
+    ) : (
       <>
         <div className='flex gap-10'>
           <button
@@ -150,7 +170,7 @@ export default function Portrait() {
           />
         </div>
       </>
-    )
+    ))
   );
 }
 
@@ -262,7 +282,7 @@ function PortraitImage({
         src={portrait || '/noportrait.png'}
       />
       <img
-        src={'/moldure.png'}
+        src={'/moldure1.png'}
         style={{
           minWidth: IMAGE_SIZE + 50,
           minHeight: IMAGE_SIZE + 50,

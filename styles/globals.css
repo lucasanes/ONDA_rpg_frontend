@@ -41,3 +41,17 @@ main {
   background-color: #5b5b5b;
   border-radius: 5px;
 }
+
+button:disabled {
+  opacity: 1;
+}
+
+.opacity-disabled {
+  opacity: 1;
+}
+
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}

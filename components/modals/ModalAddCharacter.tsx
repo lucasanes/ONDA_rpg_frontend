@@ -1,4 +1,4 @@
-import { CharacterInterface } from '@/types/character';
+import { CharactersInterface } from '@/types/character';
 import { Button, Input } from '@nextui-org/react';
 import { FormEvent, useState } from 'react';
 import { toast } from 'react-toastify';
@@ -14,7 +14,7 @@ export default function ModalAddCharacter({
   isOpen: boolean;
   onClose: () => void;
   onOpenChange: () => void;
-  setCharacters: React.Dispatch<React.SetStateAction<CharacterInterface[]>>;
+  setCharacters: React.Dispatch<React.SetStateAction<CharactersInterface[]>>;
 }) {
   const [name, setName] = useState('');
   const [pv, setPv] = useState(0);
@@ -41,8 +41,17 @@ export default function ModalAddCharacter({
           name,
           pvA: pv,
           pv,
+          isPublic: false,
+          userId: 1,
           pmA: pm,
           pm,
+          level: 1,
+          mun: 0,
+          munA: 0,
+          to: 0,
+          tp: 0,
+          ts: 0,
+          xp: 0,
           portrait,
         },
       ]);
@@ -110,7 +119,9 @@ export default function ModalAddCharacter({
           <Button onPress={onClose} variant='flat' color='danger'>
             Cancelar
           </Button>
-          <Button color='primary'>Adicionar</Button>
+          <Button type='submit' color='primary'>
+            Adicionar
+          </Button>
         </>
       }
     />
