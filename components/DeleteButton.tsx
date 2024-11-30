@@ -14,9 +14,11 @@ import { BiTrash } from 'react-icons/bi';
 export default function DeleteButton({
   onPress,
   size = 18,
+  children,
 }: {
   onPress: () => void;
   size?: number;
+  children?: React.ReactNode;
 }) {
   const { disabled } = useDisabled();
 
@@ -58,7 +60,7 @@ export default function DeleteButton({
         size='sm'
         isDisabled={disabled}
       >
-        <BiTrash className='text-red-800' size={size} />
+        {children ? children : <BiTrash className='text-danger' size={size} />}
       </Button>
     </>
   );

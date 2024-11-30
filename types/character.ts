@@ -1,7 +1,6 @@
 export interface CharactersInterface {
   id: number;
   name: string;
-  level: number;
   xp: number;
   pv: number;
   pvA: number;
@@ -50,7 +49,6 @@ export interface MainCharacterInterface {
   name: string;
   class: string;
   race: string;
-  level: number;
   age: number;
   divinity: string;
   xp: number;
@@ -84,7 +82,6 @@ export interface SessionCharactersInterface {
   age: number;
   portrait: string | null;
   xp: number;
-  level: number;
   class: string;
   race: string;
   divinity: string;

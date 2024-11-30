@@ -21,46 +21,50 @@ export default function StatusBar({
 
   return (
     <>
-      <div className='flex items-center justify-between'>
-        <div>
-          <Button
-            variant='light'
-            className='min-w-10 hidden xs:inline-block md:hidden lg:inline-block'
-            onPress={() => {
-              onCurrentValueUpdate(0);
-            }}
-            isDisabled={disabled}
-          >
-            {'<<'}
-          </Button>
-
-          <Button
-            variant='light'
-            className='min-w-10 hidden xxs:inline-block'
-            onPress={() => {
-              if (currentValue - 5 < 0) {
+      <div
+        className={`flex items-center ${maxValue > 0 ? 'justify-between' : 'justify-center'}`}
+      >
+        {maxValue > 0 && (
+          <div>
+            <Button
+              variant='light'
+              className='min-w-10 hidden xs:inline-block md:hidden lg:inline-block'
+              onPress={() => {
                 onCurrentValueUpdate(0);
-                return;
-              }
-              onCurrentValueUpdate(currentValue - 5);
-            }}
-            isDisabled={disabled}
-          >
-            - 5
-          </Button>
+              }}
+              isDisabled={disabled}
+            >
+              {'<<'}
+            </Button>
 
-          <Button
-            variant='light'
-            className='min-w-10'
-            onPress={() => {
-              if (currentValue == 0) return;
-              onCurrentValueUpdate(currentValue - 1);
-            }}
-            isDisabled={disabled}
-          >
-            - 1
-          </Button>
-        </div>
+            <Button
+              variant='light'
+              className='min-w-10 hidden xxs:inline-block'
+              onPress={() => {
+                if (currentValue - 5 < 0) {
+                  onCurrentValueUpdate(0);
+                  return;
+                }
+                onCurrentValueUpdate(currentValue - 5);
+              }}
+              isDisabled={disabled}
+            >
+              - 5
+            </Button>
+
+            <Button
+              variant='light'
+              className='min-w-10'
+              onPress={() => {
+                if (currentValue == 0) return;
+                onCurrentValueUpdate(currentValue - 1);
+              }}
+              isDisabled={disabled}
+            >
+              - 1
+            </Button>
+          </div>
+        )}
 
         <div className='flex items-center justify-center'>
           <Input
@@ -87,58 +91,67 @@ export default function StatusBar({
               if (e.target.value.length > 3) {
                 return;
               }
+
+              if (Number(e.target.value) < currentValue) {
+                onCurrentValueUpdate(Number(e.target.value));
+              }
+
               onMaxValueUpdate(Number(e.target.value));
             }}
           />
         </div>
 
-        <div>
-          <Button
-            variant='light'
-            className='min-w-10'
-            onPress={() => {
-              if (currentValue == maxValue) return;
-              onCurrentValueUpdate(currentValue + 1);
-            }}
-            isDisabled={disabled}
-          >
-            + 1
-          </Button>
+        {maxValue > 0 && (
+          <div>
+            <Button
+              variant='light'
+              className='min-w-10'
+              onPress={() => {
+                if (currentValue == maxValue) return;
+                onCurrentValueUpdate(currentValue + 1);
+              }}
+              isDisabled={disabled}
+            >
+              + 1
+            </Button>
 
-          <Button
-            variant='light'
-            className='min-w-10 hidden xxs:inline-block'
-            onPress={() => {
-              if (currentValue + 5 > maxValue) {
+            <Button
+              variant='light'
+              className='min-w-10 hidden xxs:inline-block'
+              onPress={() => {
+                if (currentValue + 5 > maxValue) {
+                  onCurrentValueUpdate(maxValue);
+                  return;
+                }
+                onCurrentValueUpdate(currentValue + 5);
+              }}
+              isDisabled={disabled}
+            >
+              + 5
+            </Button>
+
+            <Button
+              variant='light'
+              className='min-w-10 hidden xs:inline-block md:hidden lg:inline-block'
+              onPress={() => {
                 onCurrentValueUpdate(maxValue);
-                return;
-              }
-              onCurrentValueUpdate(currentValue + 5);
-            }}
-            isDisabled={disabled}
-          >
-            + 5
-          </Button>
-
-          <Button
-            variant='light'
-            className='min-w-10 hidden xs:inline-block md:hidden lg:inline-block'
-            onPress={() => {
-              onCurrentValueUpdate(maxValue);
-            }}
-            isDisabled={disabled}
-          >
-            {'>>'}
-          </Button>
-        </div>
+              }}
+              isDisabled={disabled}
+            >
+              {'>>'}
+            </Button>
+          </div>
+        )}
       </div>
-      <Progress
-        classNames={{
-          indicator: color,
-        }}
-        maxValue={maxValue}
-        value={currentValue}
-      />
+      {maxValue > 0 && (
+        <Progress
+          classNames={{
+            indicator: color,
+          }}
+          maxValue={maxValue}
+          value={currentValue}
+        />
+      )}
     </>
   );
 }

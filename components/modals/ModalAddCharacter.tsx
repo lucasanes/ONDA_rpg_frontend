@@ -17,6 +17,11 @@ export default function ModalAddCharacter({
   setCharacters: React.Dispatch<React.SetStateAction<CharactersInterface[]>>;
 }) {
   const [name, setName] = useState('');
+  const [xp, setXp] = useState(0);
+  const [age, setAge] = useState(0);
+  const [characterClass, setCharacterClass] = useState('');
+  const [race, setRace] = useState('');
+  const [divinity, setDivinity] = useState('');
   const [pv, setPv] = useState(0);
   const [pm, setPm] = useState(0);
   const [portrait, setPortrait] = useState('');
@@ -29,6 +34,11 @@ export default function ModalAddCharacter({
 
       //const response = await api.post('/characters', {
       //  name,
+      //  xp,
+      //  age,
+      //  class: characterClass,
+      //  race,
+      //  divinity,
       //  pv,
       //  pm,
       //  portrait,
@@ -85,9 +95,64 @@ export default function ModalAddCharacter({
           <Input
             isRequired
             required
-            label='PV'
+            label='XP'
             labelPlacement='outside'
             placeholder='999'
+            type='number'
+            value={xp.toString()}
+            onChange={(e) => setXp(Number(e.target.value))}
+          />
+
+          <Input
+            isRequired
+            required
+            label='Idade'
+            labelPlacement='outside'
+            placeholder='24'
+            type='number'
+            value={age.toString()}
+            onChange={(e) => setAge(Number(e.target.value))}
+          />
+
+          <Input
+            isRequired
+            required
+            label='Classe'
+            labelPlacement='outside'
+            placeholder='Arcanista'
+            type='text'
+            value={characterClass}
+            onChange={(e) => setCharacterClass(e.target.value)}
+          />
+
+          <Input
+            isRequired
+            required
+            label='Raça'
+            labelPlacement='outside'
+            placeholder='Elfo'
+            type='text'
+            value={race}
+            onChange={(e) => setRace(e.target.value)}
+          />
+
+          <Input
+            isRequired
+            required
+            label='Divindade'
+            labelPlacement='outside'
+            placeholder='Nimb'
+            type='text'
+            value={divinity}
+            onChange={(e) => setDivinity(e.target.value)}
+          />
+
+          <Input
+            isRequired
+            required
+            label='Vida (PV)'
+            labelPlacement='outside'
+            placeholder='16'
             type='number'
             value={pv.toString()}
             onChange={(e) => setPv(Number(e.target.value))}
@@ -96,9 +161,9 @@ export default function ModalAddCharacter({
           <Input
             isRequired
             required
-            label='PM'
+            label='Mana (PM)'
             labelPlacement='outside'
-            placeholder='999'
+            placeholder='8'
             type='number'
             value={pm.toString()}
             onChange={(e) => setPm(Number(e.target.value))}
