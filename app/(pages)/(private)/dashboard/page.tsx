@@ -20,6 +20,8 @@ import {
   Divider,
   Image,
   Progress,
+  Select,
+  SelectItem,
   Spinner,
   useDisclosure,
 } from '@nextui-org/react';
@@ -30,6 +32,7 @@ import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import { toast } from 'react-toastify';
 
 export default function Dashboard() {
+  const [invites, setInvites] = useState<SessionInterface[]>([]);
   const [sessions, setSessions] = useState<SessionInterface[]>([]);
   const [characters, setCharacters] = useState<CharactersInterface[]>([]);
 
@@ -46,6 +49,15 @@ export default function Dashboard() {
       //setSessions(sessionsResponse.data);
 
       //setCharacters(charactersResponse.data);
+
+      setInvites([
+        {
+          id: 1,
+          name: 'Sessão 1',
+          description: 'Descrição da sessão 1',
+          players: ['Player 1'],
+        },
+      ]);
 
       setSessions([
         {
@@ -126,6 +138,14 @@ export default function Dashboard() {
                 key={session.id}
                 session={session}
                 setSessions={setSessions}
+              />
+            ))}
+            {invites.map((invite) => (
+              <Invite
+                key={invite.id}
+                invite={invite}
+                setInvites={setInvites}
+                characters={characters}
               />
             ))}
           </Container>
@@ -272,7 +292,7 @@ function SessionCard({
       </CardHeader>
       <Divider className='h-0.5 !bg-gray-500' />
       <CardBody>
-        <p>{session.description}</p>
+        <p>Descrição: {session.description}</p>
         <p>Jogadores: {session.players.join(', ')}</p>
       </CardBody>
       <Divider className='h-0.5 !bg-gray-500' />
@@ -455,6 +475,89 @@ function CharacterCard({
       <CardFooter>
         <Button as={Link} href={`character/${character.id}`} className='w-full'>
           Acessar Ficha
+        </Button>
+      </CardFooter>
+    </Card>
+  );
+}
+
+function Invite({
+  invite,
+  setInvites,
+  characters,
+}: {
+  invite: SessionInterface;
+  setInvites: React.Dispatch<React.SetStateAction<SessionInterface[]>>;
+  characters: CharactersInterface[];
+}) {
+  const [characterId, setCharacterId] = useState<number | null>(null);
+
+  async function handleDelete() {
+    try {
+      //ToDo: Implementar chamada a API
+
+      //await api.delete(`/invites/${session.id}`);
+
+      toast.success('Convite deletado com sucesso');
+
+      setInvites((invites) => invites.filter((each) => each.id !== invite.id));
+    } catch (error) {
+      console.log(error);
+      toast.error('Erro ao deletar convite');
+    }
+  }
+
+  async function handleJoin() {
+    try {
+      if (!characterId) {
+        toast.error('Selecione uma ficha');
+        return;
+      }
+
+      //ToDo: Implementar chamada a API
+
+      //await api.put(`/characters/${characterId}`, {
+      //  sessionId: invite.id,
+      //});
+
+      toast.success('Personagem adicionado com sucesso');
+
+      setInvites((invites) => invites.filter((each) => each.id !== invite.id));
+    } catch (error) {
+      console.log(error);
+      toast.error('Erro ao adicionar personagem');
+    }
+  }
+
+  return (
+    <Card className='min-w-64 bg-transparent border-2 rounded border-gray-500 '>
+      <CardHeader className='justify-between'>
+        <h1 className='capitalize'>Convite - {invite.name}</h1>
+
+        <DeleteButton onPress={handleDelete}>
+          <span className='text-danger'>Recusar</span>
+        </DeleteButton>
+      </CardHeader>
+      <Divider className='h-0.5 !bg-gray-500' />
+      <CardBody>
+        <p>Descrição: {invite.description}</p>
+        <p>Jogadores: {invite.players.join(', ')}</p>
+      </CardBody>
+      <Divider className='h-0.5 !bg-gray-500' />
+      <CardFooter className='flex justify-center items-baseline gap-3'>
+        <Select
+          onChange={(e) => setCharacterId(Number(e.target.value))}
+          size='sm'
+          placeholder='Escolher ficha'
+        >
+          {characters.map((char) => (
+            <SelectItem key={char.id} value={char.id}>
+              {char.name}
+            </SelectItem>
+          ))}
+        </Select>
+        <Button size='sm' className='w-20 sm:w-44 mt-2' onPress={handleJoin}>
+          Entrar
         </Button>
       </CardFooter>
     </Card>

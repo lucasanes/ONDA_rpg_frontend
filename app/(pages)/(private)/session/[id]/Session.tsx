@@ -144,13 +144,15 @@ function CharacterContainer({
         <AddButton onPress={onOpen} />
       </div>
       <Divider className='bg-gray-300 -ml-4 mt-2 mb-2 h-0.5 w-[calc(100%+2rem)]' />
-      {characters.map((character) => (
-        <CharacterCard
-          key={character.id}
-          character={character}
-          setCharacters={setCharacters}
-        />
-      ))}
+      <div className='grid grid-cols-1 lg:grid-cols-2'>
+        {characters.map((character) => (
+          <CharacterCard
+            key={character.id}
+            character={character}
+            setCharacters={setCharacters}
+          />
+        ))}
+      </div>
     </div>
   );
 }
@@ -290,7 +292,7 @@ function CharacterCard({
       </CardHeader>
       <Divider className='h-0.5 bg-gray-300' />
       {section == 'details' && (
-        <CardBody className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4'>
+        <CardBody className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
           <Input
             variant='bordered'
             size='md'
@@ -345,7 +347,7 @@ function CharacterCard({
             variant='bordered'
             size='md'
             disabled
-            label='$ Tibar $'
+            label='$ TS $'
             value={ts.toString()}
           />
           <Input
@@ -353,7 +355,7 @@ function CharacterCard({
             variant='bordered'
             size='md'
             disabled
-            label='$ Tibar de Prata $'
+            label='$ TP $'
             value={tp.toString()}
           />
           <Input
@@ -361,7 +363,7 @@ function CharacterCard({
             variant='bordered'
             size='md'
             disabled
-            label='$ Tibar de Ouro $'
+            label='$ TO $'
             value={to.toString()}
           />
 
