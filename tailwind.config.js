@@ -27,6 +27,9 @@ module.exports = {
         breathing: 'breathing 5s ease-in-out infinite',
       },
       colors: {
+        background: {
+          DEFAULT: '#1a202c',
+        },
         menu: {
           DEFAULT: '#B0C4DE50', // Verde suave para elementos primários
           50: '#E6FFFA',
