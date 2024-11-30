@@ -34,7 +34,7 @@ export default function InventoryContainer({
   const [characterSelected, setCharacterSelected] = useState<number>(0);
   const [itemSelected, setItemSelected] = useState<number>(0);
 
-  const showSender = inventory.length && charactersOfSession.length;
+  const showSender = inventory.length > 0 && charactersOfSession.length > 0;
 
   function handleClean() {
     //ToDO: Implementar Socket
@@ -162,14 +162,17 @@ export default function InventoryContainer({
         <h1 className='text-xl'>Inventário</h1>
         <AddButton onPress={onOpen} />
       </div>
-      {inventory.length && (
-        <Divider className='bg-gray-300 -ml-4 mt-2 mb-2 h-0.5 w-[calc(100%+2rem)]' />
+      {inventory.length > 0 && (
+        <>
+          <Divider className='bg-gray-300 -ml-4 mt-2 mb-2 h-0.5 w-[calc(100%+2rem)]' />
+
+          <div className='grid grid-cols-[repeat(auto-fit,minmax(16rem,1fr))] gap-4'>
+            {inventory.map((item) => (
+              <Item item={item} />
+            ))}
+          </div>
+        </>
       )}
-      <div className='grid grid-cols-[repeat(auto-fit,minmax(16rem,1fr))] gap-4'>
-        {inventory.map((item) => (
-          <Item item={item} />
-        ))}
-      </div>
       {showSender && (
         <>
           <Divider className='bg-gray-300 -ml-4 mt-2 mb-2 h-0.5 w-[calc(100%+2rem)]' />
