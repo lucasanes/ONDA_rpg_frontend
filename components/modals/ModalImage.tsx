@@ -13,15 +13,16 @@ export default function ModalImage({
 }) {
   return (
     <Modal
-      placement='top'
+      placement='center'
       backdrop='blur'
       hideCloseButton
       isOpen={isOpen}
       onOpenChange={onOpenChange}
-      size='5xl'
+      size='full'
+      onClick={onClose}
     >
-      <ModalContent>
-        <Image src={image} width='100%' height='100%' />
+      <ModalContent className='bg-transparent flex items-center'>
+        <Image src={image} className='' />
       </ModalContent>
     </Modal>
   );

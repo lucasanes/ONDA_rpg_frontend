@@ -14,6 +14,7 @@ import {
 } from '@/types/character';
 import { InventoryInterface } from '@/types/inventory';
 import { convertMoney } from '@/utils/convertMoney';
+import { xpToLevel } from '@/utils/xp-level';
 import { Input } from '@nextui-org/input';
 import {
   Button,
@@ -31,7 +32,7 @@ export default function Character() {
   const [loading, setLoading] = useState(true);
 
   const [charactersOfSession, setCharactersOfSession] = useState<
-    { id: number; name: string }[]
+    { value: string | number; name: string }[]
   >([]);
 
   const [character, setCharacter] = useState<CharacterInterface>(
@@ -54,19 +55,19 @@ export default function Character() {
       //  const charactersOfSession = await api.get(`/characters/session/${response.data.sessionId}`);
       setCharactersOfSession([
         {
-          id: 1,
+          value: 'Mestre',
           name: 'Mestre',
         },
         {
-          id: 1,
+          value: 1,
           name: 'Naksu Hanna',
         },
         {
-          id: 2,
+          value: 2,
           name: 'Naksu Hanna',
         },
         {
-          id: 3,
+          value: 3,
           name: 'Naksu Hanna',
         },
       ]);
@@ -94,7 +95,6 @@ export default function Character() {
         name: 'Naksu Hanna',
         class: 'Arcanista',
         divinity: 'Aisha',
-        level: 1,
         race: 'Humano',
         xp: 10,
         to: 1,
@@ -188,7 +188,7 @@ function MainContainer({
   mainCharacter: MainCharacterInterface;
   setMainCharacter: Dispatch<SetStateAction<MainCharacterInterface>>;
 }) {
-  const { name, level, xp, divinity, race, ts, to, tp, age } = mainCharacter;
+  const { name, xp, divinity, race, ts, to, tp, age } = mainCharacter;
 
   const { onOpen, isOpen, onClose, onOpenChange } = useDisclosure();
 
@@ -202,7 +202,7 @@ function MainContainer({
         setMainCharacter={setMainCharacter}
       />
       <div className='flex justify-between'>
-        <h1 className='text-xl'>Principal</h1>
+        <h1 className='text-xl'>Detalhes</h1>
         <EditButton onPress={onOpen} />
       </div>
       <Divider className='bg-gray-300 -ml-4 mt-2 mb-2 h-0.5 w-[calc(100%+2rem)]' />
@@ -211,15 +211,8 @@ function MainContainer({
         variant='bordered'
         size='md'
         disabled
-        label='Idade'
-        value={age.toString()}
-      />
-      <Input
-        variant='bordered'
-        size='md'
-        disabled
         label='Level'
-        value={level.toString()}
+        value={xpToLevel(xp).toString()}
       />
       <Input
         variant='bordered'
@@ -227,6 +220,13 @@ function MainContainer({
         disabled
         label='XP'
         value={xp.toString()}
+      />
+      <Input
+        variant='bordered'
+        size='md'
+        disabled
+        label='Idade'
+        value={age.toString()}
       />
       <Input
         variant='bordered'
@@ -357,8 +357,8 @@ function StatusContainer({
       <Divider className='bg-gray-300 -ml-4 mt-2 mb-2 h-0.5 w-[calc(100%+2rem)]' />
       <div className='flex flex-col-reverse xl:flex-row gap-10 justify-evenly items-center'>
         <div className='border-2 border-gray-400 rounded-md flex flex-col items-center'>
-          <h1 className='my-1 text-lg text-center'>Status</h1>
-          <Divider />
+          <h1 className='my-1 text-lg text-center'>Portrait</h1>
+          <Divider className='bg-gray-300' />
           <div className='min-w-60 flex flex-col gap-4 p-4'>
             <Button
               className={`border-2 border-fighting text-gray-200 ${fighting ? 'bg-fighting-50' : 'bg-transparent'}`}
@@ -447,20 +447,17 @@ function StatusContainer({
         color='bg-blue-700'
       />
 
-      {mun && (
-        <>
-          <span className='mt-3 text-center'>Munição</span>
+      <span className='mt-3 text-center'>Munição</span>
 
-          <StatusBar
-            title='Munição'
-            currentValue={munA}
-            maxValue={mun}
-            onCurrentValueUpdate={(value) => onUpdate('munA', value)}
-            onMaxValueUpdate={(value) => onUpdate('mun', value)}
-            color='bg-green-400'
-          />
-        </>
-      )}
+      <StatusBar
+        title='Munição'
+        currentValue={munA}
+        maxValue={mun}
+        onCurrentValueUpdate={(value) => onUpdate('munA', value)}
+        onMaxValueUpdate={(value) => onUpdate('mun', value)}
+        color='bg-green-400'
+      />
+
       {(defense || cd) && (
         <div className='w-full flex flex-wrap justify-center gap-5 mt-5'>
           {defense && <Chip>{`Defesa (CA): ${defense}`}</Chip>}

@@ -10,6 +10,7 @@ import { FormEvent } from 'react';
 import DeleteButton from '../DeleteButton';
 
 export default function ModalComponent({
+  placement,
   isOpen,
   onOpenChange,
   title,
@@ -18,6 +19,13 @@ export default function ModalComponent({
   handleSubmit,
   handleDelete,
 }: {
+  placement?:
+    | 'top'
+    | 'top-center'
+    | 'bottom'
+    | 'bottom-center'
+    | 'center'
+    | 'auto';
   isOpen: boolean;
   onOpenChange: () => void;
   title: string;
@@ -28,6 +36,8 @@ export default function ModalComponent({
 }) {
   return (
     <Modal
+      scrollBehavior='outside'
+      placement={placement}
       backdrop='blur'
       hideCloseButton
       isOpen={isOpen}

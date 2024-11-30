@@ -23,7 +23,7 @@ export default function InventoryContainer({
   inventory,
   setInventory,
 }: {
-  charactersOfSession: { id: number; name: string }[];
+  charactersOfSession: { value: string | number; name: string }[];
   inventory: InventoryInterface[];
   setInventory: Dispatch<SetStateAction<InventoryInterface[]>>;
 }) {
@@ -31,7 +31,9 @@ export default function InventoryContainer({
 
   const { onOpen, isOpen, onClose, onOpenChange } = useDisclosure();
 
-  const [characterSelected, setCharacterSelected] = useState<number>(0);
+  const [characterSelected, setCharacterSelected] = useState<string | number>(
+    ''
+  );
   const [itemSelected, setItemSelected] = useState<number>(0);
 
   const showSender = inventory.length > 0 && charactersOfSession.length > 0;
@@ -51,10 +53,10 @@ export default function InventoryContainer({
 
       //ToDo: Implementar chamada a API
 
-      // if (charactersOfSession.find((each) => each.id === characterSelected)?.name === 'Mestre') {
-      //   api.post(`/inventory/${itemSelected}/session/${characterSelected}`);
+      // if (characterSelected.value === 'Mestre') {
+      //   api.put(`/inventory/${itemSelected}`);
       // } else {
-      //   api.post(`/inventory/${itemSelected}/character/${characterSelected}`);
+      //   api.put(`/inventory/${itemSelected}`);
       // }
 
       setInventory((prev) => prev.filter((each) => each.id !== itemSelected));
@@ -64,81 +66,6 @@ export default function InventoryContainer({
       console.log(error);
       toast.error('Erro ao enviar item');
     }
-  }
-
-  function Item({ item }: { item: InventoryInterface }) {
-    const {
-      onOpen: onImageModalOpen,
-      isOpen: isImageModalOpen,
-      onClose: onImageModalClose,
-      onOpenChange: onImageModalOpenChange,
-    } = useDisclosure();
-
-    const {
-      onOpen: onEditModalOpen,
-      isOpen: isEditModalOpen,
-      onClose: onEditModalClose,
-      onOpenChange: onEditModalOpenChange,
-    } = useDisclosure();
-
-    function handleSend() {
-      //ToDO: Implementar Socket
-
-      onImageModalOpen();
-    }
-
-    function handleDelete() {
-      //ToDo: Implementar chamada a API
-
-      //api.delete(`/inventory/${item.id}`);
-
-      setInventory((prev) => prev.filter((each) => each.id !== item.id));
-
-      onEditModalClose();
-    }
-
-    return (
-      <div className='min-w-64 max-w-lg flex flex-col justify-center items-center border-2 border-gray-300 rounded-sm'>
-        <ModalImage
-          isOpen={isImageModalOpen}
-          onClose={onImageModalClose}
-          onOpenChange={onImageModalOpenChange}
-          image={item.image}
-        />
-        <ModalEditItem
-          isOpen={isEditModalOpen}
-          onClose={onEditModalClose}
-          onOpenChange={onEditModalOpenChange}
-          item={item}
-          setInventory={setInventory}
-          handleDelete={handleDelete}
-        />
-        <div className='w-full flex px-2 justify-between items-center'>
-          <Button
-            className='min-w-1 text-cyan-400'
-            variant='light'
-            size='sm'
-            isDisabled={disabled}
-            onPress={handleSend}
-          >
-            <RiShareForwardLine size={21} />
-          </Button>
-          <span className='m-2 text-center break-words whitespace-break-spaces capitalize'>
-            {item.name}
-          </span>
-          <EditButton onPress={onEditModalOpen} size={16} />
-        </div>
-        <Divider className='h-0.5 bg-gray-300' />
-        <div className='m-5 rounded-sm'>
-          <Image
-            onClick={onImageModalOpen}
-            isZoomed
-            src={item.image}
-            className='aspect-square object-cover cursor-pointer'
-          />
-        </div>
-      </div>
-    );
   }
 
   return (
@@ -166,9 +93,14 @@ export default function InventoryContainer({
         <>
           <Divider className='bg-gray-300 -ml-4 mt-2 mb-2 h-0.5 w-[calc(100%+2rem)]' />
 
-          <div className='grid grid-cols-[repeat(auto-fit,minmax(16rem,1fr))] gap-4'>
+          <div className='grid grid-cols-1 sm:grid-cols-2 min-[880px]:grid-cols-3 xl:grid-cols-4 gap-4'>
             {inventory.map((item) => (
-              <Item item={item} />
+              <Item
+                key={item.id}
+                item={item}
+                setInventory={setInventory}
+                disabled={disabled}
+              />
             ))}
           </div>
         </>
@@ -186,10 +118,8 @@ export default function InventoryContainer({
                 label='Item'
                 onChange={(e) => setItemSelected(Number(e.target.value))}
               >
-                {inventory.map((item, index) => (
-                  <SelectItem key={`${item.id}${index}`}>
-                    {item.name}
-                  </SelectItem>
+                {inventory.map((item) => (
+                  <SelectItem key={`${item.id}`}>{item.name}</SelectItem>
                 ))}
               </Select>
 
@@ -198,10 +128,16 @@ export default function InventoryContainer({
                 className='w-40'
                 size='sm'
                 label='Personagem'
-                onChange={(e) => setCharacterSelected(Number(e.target.value))}
+                onChange={(e) => {
+                  const value = isNaN(parseInt(e.target.value, 10))
+                    ? e.target.value
+                    : Number(e.target.value);
+
+                  setCharacterSelected(value);
+                }}
               >
-                {charactersOfSession.map((character, index) => (
-                  <SelectItem key={`${character.id}${index}`}>
+                {charactersOfSession.map((character) => (
+                  <SelectItem key={character.value}>
                     {character.name}
                   </SelectItem>
                 ))}
@@ -221,6 +157,89 @@ export default function InventoryContainer({
           </div>
         </>
       )}
+    </div>
+  );
+}
+
+function Item({
+  item,
+  setInventory,
+  disabled,
+}: {
+  item: InventoryInterface;
+  setInventory: Dispatch<SetStateAction<InventoryInterface[]>>;
+  disabled: boolean;
+}) {
+  const {
+    onOpen: onImageModalOpen,
+    isOpen: isImageModalOpen,
+    onClose: onImageModalClose,
+    onOpenChange: onImageModalOpenChange,
+  } = useDisclosure();
+
+  const {
+    onOpen: onEditModalOpen,
+    isOpen: isEditModalOpen,
+    onClose: onEditModalClose,
+    onOpenChange: onEditModalOpenChange,
+  } = useDisclosure();
+
+  function handleSend() {
+    //ToDO: Implementar Socket
+
+    onImageModalOpen();
+  }
+
+  function handleDelete() {
+    //ToDo: Implementar chamada a API
+
+    //api.delete(`/inventory/${item.id}`);
+
+    setInventory((prev) => prev.filter((each) => each.id !== item.id));
+
+    onEditModalClose();
+  }
+
+  return (
+    <div className='min-w-64 flex flex-col justify-center items-center border-2 border-gray-300 rounded-sm'>
+      <ModalImage
+        isOpen={isImageModalOpen}
+        onClose={onImageModalClose}
+        onOpenChange={onImageModalOpenChange}
+        image={item.image}
+      />
+      <ModalEditItem
+        isOpen={isEditModalOpen}
+        onClose={onEditModalClose}
+        onOpenChange={onEditModalOpenChange}
+        item={item}
+        setInventory={setInventory}
+        handleDelete={handleDelete}
+      />
+      <div className='w-full flex px-2 justify-between items-center'>
+        <Button
+          className='min-w-1 text-cyan-400'
+          variant='light'
+          size='sm'
+          isDisabled={disabled}
+          onPress={handleSend}
+        >
+          <RiShareForwardLine size={21} />
+        </Button>
+        <span className='m-2 text-center break-words whitespace-break-spaces capitalize'>
+          {item.name}
+        </span>
+        <EditButton onPress={onEditModalOpen} size={16} />
+      </div>
+      <Divider className='h-0.5 bg-gray-300' />
+      <div className='m-5 rounded-sm'>
+        <Image
+          onClick={onImageModalOpen}
+          isZoomed
+          src={item.image}
+          className='aspect-square object-cover cursor-pointer'
+        />
+      </div>
     </div>
   );
 }
