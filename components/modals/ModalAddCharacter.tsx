@@ -41,6 +41,8 @@ export default function ModalAddCharacter({
           name,
           pvA: pv,
           pv,
+          isPublic: false,
+          userId: 1,
           pmA: pm,
           pm,
           level: 1,
