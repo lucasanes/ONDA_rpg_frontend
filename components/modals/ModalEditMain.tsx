@@ -24,6 +24,7 @@ export default function ModalEditMain({
     mainCharacter.class
   );
   const [race, setRace] = useState(mainCharacter.race);
+  const [origin, setOrigin] = useState(mainCharacter.origin);
   const [divinity, setDivinity] = useState(mainCharacter.divinity);
   const [ts, setTs] = useState(mainCharacter.ts);
   const [tp, setTp] = useState(mainCharacter.tp);
@@ -43,6 +44,7 @@ export default function ModalEditMain({
         age,
         xp,
         class: mainCharacterClass,
+        origin,
         race,
         divinity,
         ts,
@@ -118,6 +120,17 @@ export default function ModalEditMain({
             type='text'
             value={race}
             onChange={(e) => setRace(e.target.value)}
+          />
+
+          <Input
+            isRequired
+            required
+            label='Origem'
+            labelPlacement='outside'
+            placeholder='Charlatão'
+            type='text'
+            value={origin}
+            onChange={(e) => setOrigin(e.target.value)}
           />
 
           <Input
