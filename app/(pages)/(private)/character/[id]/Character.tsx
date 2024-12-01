@@ -96,6 +96,7 @@ export default function Character() {
         class: 'Arcanista',
         divinity: 'Aisha',
         race: 'Humano',
+        origin: 'Chartlatão',
         xp: 10,
         to: 1,
         ts: 100,
@@ -188,7 +189,7 @@ function MainContainer({
   mainCharacter: MainCharacterInterface;
   setMainCharacter: Dispatch<SetStateAction<MainCharacterInterface>>;
 }) {
-  const { name, xp, divinity, race, ts, to, tp, age } = mainCharacter;
+  const { name, xp, divinity, origin, race, ts, to, tp, age } = mainCharacter;
 
   const { onOpen, isOpen, onClose, onOpenChange } = useDisclosure();
 
@@ -236,6 +237,13 @@ function MainContainer({
         value={mainCharacter.class}
       />
       <Input variant='bordered' size='md' disabled label='Raça' value={race} />
+      <Input
+        variant='bordered'
+        size='md'
+        disabled
+        label='Origem'
+        value={origin}
+      />
       <Input
         variant='bordered'
         size='md'
@@ -310,6 +318,36 @@ function StatusContainer({
   const { disabled } = useDisabled();
 
   const { onOpen, isOpen, onClose, onOpenChange } = useDisclosure();
+
+  useEffect(() => {
+    if (pvA < pv / 2 && pvA > 0 && !hurted) {
+      handleHurted();
+    }
+
+    if (pvA >= pv / 2 && hurted) {
+      handleHurted();
+    }
+
+    if (pvA < pv / 4 && !dying) {
+      handleDying();
+
+      if (hurted) {
+        handleHurted();
+      }
+    }
+
+    if (pvA >= pv / 4 && dying) {
+      handleDying();
+    }
+
+    if (pmA < pm / 4 && !tired) {
+      handleTired();
+    }
+
+    if (pmA >= pm / 4 && tired) {
+      handleTired();
+    }
+  }, [pvA, pv, pmA, pm]);
 
   function handleFighting() {
     //ToDo: Implementar chamada Socket

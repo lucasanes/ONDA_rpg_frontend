@@ -61,6 +61,7 @@ export default function Session() {
           class: 'Arcanista',
           divinity: 'Aisha',
           race: 'Humano',
+          origin: 'Charlatão',
           xp: 10,
           to: 1,
           ts: 100,
@@ -170,6 +171,7 @@ function CharacterCard({
     age,
     cd,
     class: characterClass,
+    origin,
     defense,
     divinity,
     id,
@@ -334,6 +336,13 @@ function CharacterCard({
             disabled
             label='Raça'
             value={race}
+          />
+          <Input
+            variant='bordered'
+            size='md'
+            disabled
+            label='Origem'
+            value={origin}
           />
           <Input
             variant='bordered'

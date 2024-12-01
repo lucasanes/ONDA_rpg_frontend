@@ -21,6 +21,7 @@ export default function ModalAddCharacter({
   const [age, setAge] = useState(0);
   const [characterClass, setCharacterClass] = useState('');
   const [race, setRace] = useState('');
+  const [origin, setOrigin] = useState('');
   const [divinity, setDivinity] = useState('');
   const [pv, setPv] = useState(0);
   const [pm, setPm] = useState(0);
@@ -38,6 +39,7 @@ export default function ModalAddCharacter({
       //  age,
       //  class: characterClass,
       //  race,
+      //  origin,
       //  divinity,
       //  pv,
       //  pm,
@@ -134,6 +136,17 @@ export default function ModalAddCharacter({
             type='text'
             value={race}
             onChange={(e) => setRace(e.target.value)}
+          />
+
+          <Input
+            isRequired
+            required
+            label='Origem'
+            labelPlacement='outside'
+            placeholder='Charlatão'
+            type='text'
+            value={origin}
+            onChange={(e) => setOrigin(e.target.value)}
           />
 
           <Input

@@ -50,6 +50,7 @@ export interface MainCharacterInterface {
   class: string;
   race: string;
   age: number;
+  origin: string;
   divinity: string;
   xp: number;
   to: number;
@@ -85,6 +86,7 @@ export interface SessionCharactersInterface {
   class: string;
   race: string;
   divinity: string;
+  origin: string;
   pvA: number;
   pmA: number;
   munA: number;
