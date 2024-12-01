@@ -39,11 +39,11 @@ export default function Portrait() {
       setCharacter({
         id: 1,
         name: 'Naksu Hanna',
-        pv: 20,
-        pvA: 12,
-        pm: 10,
-        pmA: 6,
-        munA: 10,
+        hp: 20,
+        currentHp: 12,
+        mp: 10,
+        currentMp: 6,
+        currentMun: 10,
         isPublic: true,
         userId: 1,
         sessionId: 1,
@@ -116,7 +116,7 @@ export default function Portrait() {
           </button>
           <button
             onClick={() => {
-              updateCharacterField('munA', character.munA - 1);
+              updateCharacterField('currentMun', character.currentMun - 1);
               setShowMun(true);
               setTimeout(() => setShowMun(false), 5000);
             }}
@@ -152,7 +152,7 @@ export default function Portrait() {
               className='fixed z-40 flex flex-col gap-2 justify-center items-start'
             >
               <Money money={character.money} showMoney={showMoney} />
-              <Munition munition={character.munA} showMun={showMun} />
+              <Munition munition={character.currentMun} showMun={showMun} />
             </div>
             <PortraitImage
               portrait={character.portrait}
@@ -163,10 +163,10 @@ export default function Portrait() {
           <NameOrStatus
             name={character.name}
             fighting={character.fighting}
-            pm={character.pm}
-            pmA={character.pmA}
-            pv={character.pv}
-            pvA={character.pvA}
+            mp={character.mp}
+            currentMp={character.currentMp}
+            hp={character.hp}
+            currentHp={character.currentHp}
           />
         </div>
       </>
@@ -298,17 +298,17 @@ function PortraitImage({
 function NameOrStatus({
   name,
   fighting,
-  pvA,
-  pv,
-  pmA,
-  pm,
+  currentHp,
+  hp,
+  currentMp,
+  mp,
 }: {
   name: string;
   fighting: boolean;
-  pvA: number;
-  pv: number;
-  pmA: number;
-  pm: number;
+  currentHp: number;
+  hp: number;
+  currentMp: number;
+  mp: number;
 }) {
   const splitedName = name.split(' ');
 
@@ -347,7 +347,7 @@ function NameOrStatus({
           }}
           className={`text-9xl italic text-red-500 rotate-6 shadow-white ${specialElite.className}`}
         >
-          {pvA}/{pv}
+          {currentHp}/{hp}
         </span>
         <span
           style={{
@@ -355,7 +355,7 @@ function NameOrStatus({
           }}
           className={`text-9xl italic text-blue-500 rotate-6 ${specialElite.className}`}
         >
-          {pmA}/{pm}
+          {currentMp}/{mp}
         </span>
       </div>
     </>

@@ -78,12 +78,12 @@ export default function Dashboard() {
         {
           id: 1,
           name: 'Personagem 1',
-          pvA: 17,
-          pv: 20,
-          pmA: 5,
-          pm: 10,
+          currentHp: 17,
+          hp: 20,
+          currentMp: 5,
+          mp: 10,
           mun: 30,
-          munA: 30,
+          currentMun: 30,
           to: 1,
           tp: 10,
           ts: 100,
@@ -98,11 +98,11 @@ export default function Dashboard() {
         {
           id: 2,
           name: 'Personagem 2',
-          pvA: 12,
-          pv: 20,
-          pmA: 3,
-          pm: 10,
-          munA: 30,
+          currentHp: 12,
+          hp: 20,
+          currentMp: 3,
+          mp: 10,
+          currentMun: 30,
           to: 1,
           mun: 30,
           isPublic: false,
@@ -436,29 +436,29 @@ function CharacterCard({
           <div className='w-full sm:w-[calc(100%-128px)] flex flex-col mt-1 gap-4'>
             <Progress
               className={specialElite.className}
-              label={`Vida: ${character.pvA}/${character.pv}`}
+              label={`Vida: ${character.currentHp}/${character.hp}`}
               classNames={{
                 indicator: 'bg-red-700',
               }}
-              maxValue={character.pv}
-              value={character.pvA}
+              maxValue={character.hp}
+              value={character.currentHp}
             />
 
             <Progress
               className={specialElite.className}
-              label={`Mana: ${character.pmA}/${character.pm}`}
+              label={`Mana: ${character.currentMp}/${character.mp}`}
               classNames={{
                 indicator: 'bg-blue-700',
               }}
-              maxValue={character.pm}
-              value={character.pmA}
+              maxValue={character.mp}
+              value={character.currentMp}
             />
 
             {character.mun && (
               <div className='flex items-center gap-3 ml-1'>
                 <img src='/munition.png' width={10} height={10} />
                 <span className={`text-md mt-1 ${specialElite.className}`}>
-                  {character.munA}/{character.mun}
+                  {character.currentMun}/{character.mun}
                 </span>
               </div>
             )}

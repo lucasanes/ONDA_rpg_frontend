@@ -68,11 +68,11 @@ export default function Session() {
           tp: 10,
           portrait:
             'https://firebasestorage.googleapis.com/v0/b/registro-paranormal.appspot.com/o/site%2Flightz%2F4%2FNaksu.png?alt=media&token=59a4d04b-990a-4d49-81d0-eebd9cbd3201',
-          pv: 100,
-          pvA: 70,
-          pm: 50,
-          pmA: 40,
-          munA: 30,
+          hp: 100,
+          currentHp: 70,
+          mp: 50,
+          currentMp: 40,
+          currentMun: 30,
           mun: 30,
           cd: 10,
           defense: 10,
@@ -177,13 +177,13 @@ function CharacterCard({
     id,
     isPublic,
     mun,
-    munA,
+    currentMun,
     name,
-    pm,
-    pmA,
+    mp,
+    currentMp,
     portrait,
-    pv,
-    pvA,
+    hp,
+    currentHp,
     race,
     to,
     tp,
@@ -430,29 +430,29 @@ function CharacterCard({
             <div className='w-full sm:w-[calc(100%-128px)] flex flex-col mt-1 gap-4'>
               <Progress
                 className={specialElite.className}
-                label={`Vida: ${pvA}/${pv}`}
+                label={`Vida: ${currentHp}/${hp}`}
                 classNames={{
                   indicator: 'bg-red-700',
                 }}
-                maxValue={pv}
-                value={pvA}
+                maxValue={hp}
+                value={currentHp}
               />
 
               <Progress
                 className={specialElite.className}
-                label={`Mana: ${pmA}/${pm}`}
+                label={`Mana: ${currentMp}/${mp}`}
                 classNames={{
                   indicator: 'bg-blue-700',
                 }}
-                maxValue={pm}
-                value={pmA}
+                maxValue={mp}
+                value={currentMp}
               />
 
               {mun && (
                 <div className='flex items-center gap-3 ml-1'>
                   <img src='/munition.png' width={10} height={10} />
                   <span className={`text-md mt-1 ${specialElite.className}`}>
-                    {munA}/{mun}
+                    {currentMun}/{mun}
                   </span>
                 </div>
               )}

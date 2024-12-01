@@ -23,8 +23,8 @@ export default function ModalAddCharacter({
   const [race, setRace] = useState('');
   const [origin, setOrigin] = useState('');
   const [divinity, setDivinity] = useState('');
-  const [pv, setPv] = useState(0);
-  const [pm, setPm] = useState(0);
+  const [hp, setPv] = useState(0);
+  const [mp, setPm] = useState(0);
   const [portrait, setPortrait] = useState('');
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -41,8 +41,8 @@ export default function ModalAddCharacter({
       //  race,
       //  origin,
       //  divinity,
-      //  pv,
-      //  pm,
+      //  hp,
+      //  mp,
       //  portrait,
       //});
 
@@ -51,15 +51,15 @@ export default function ModalAddCharacter({
         {
           id: Math.random(),
           name,
-          pvA: pv,
-          pv,
+          currentHp: hp,
+          hp,
           isPublic: false,
           userId: 1,
-          pmA: pm,
-          pm,
+          currentMp: mp,
+          mp,
           level: 1,
           mun: 0,
-          munA: 0,
+          currentMun: 0,
           to: 0,
           tp: 0,
           ts: 0,
@@ -167,7 +167,7 @@ export default function ModalAddCharacter({
             labelPlacement='outside'
             placeholder='16'
             type='number'
-            value={pv.toString()}
+            value={hp.toString()}
             onChange={(e) => setPv(Number(e.target.value))}
           />
 
@@ -178,7 +178,7 @@ export default function ModalAddCharacter({
             labelPlacement='outside'
             placeholder='8'
             type='number'
-            value={pm.toString()}
+            value={mp.toString()}
             onChange={(e) => setPm(Number(e.target.value))}
           />
 
