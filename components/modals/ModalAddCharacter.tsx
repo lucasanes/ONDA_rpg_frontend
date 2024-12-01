@@ -77,7 +77,7 @@ export default function ModalAddCharacter({
 
   return (
     <ModalComponent
-      title='Adicionar Sessão'
+      title='Adicionar Personagem'
       isOpen={isOpen}
       onOpenChange={onOpenChange}
       handleSubmit={handleSubmit}
