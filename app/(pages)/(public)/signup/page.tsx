@@ -16,6 +16,7 @@ import { toast } from 'react-toastify';
 
 import { useAuth } from '@/app/context/AuthContext';
 import PasswordInput from '@/components/PasswordInput';
+import { passwordValidation } from '@/utils/validations';
 import { useRouter } from 'next/navigation';
 import { BiUserCircle } from 'react-icons/bi';
 
@@ -35,6 +36,14 @@ export default function SignUp() {
     try {
       if (password !== confirmPassword) {
         toast.error('As senhas não coincidem');
+        return;
+      }
+
+      if (!passwordValidation(password)) {
+        toast.error(
+          'A senha deve ter entre 8 e 24 caracteres, e conter pelo menos uma letra maiúscula, uma letra minúscula, e um número.'
+        );
+
         return;
       }
 
