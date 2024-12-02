@@ -1,5 +1,6 @@
 'use client';
 
+import { api } from '@/providers/api';
 import Cookies from 'js-cookie';
 import {
   createContext,
@@ -8,10 +9,14 @@ import {
   useEffect,
   useState,
 } from 'react';
+import { toast } from 'react-toastify';
 
 type UserType = {
+  id: number;
   email: string;
   username: string;
+  createdAt?: string;
+  updatedAt?: string;
 };
 
 type SignInType = {
@@ -47,58 +52,61 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     if (token) {
       try {
-        //ToDo: Implementar chamada a API
-
-        // const response = await api.get('/auth/me', {
-        //   headers: {
-        //     Authorization: `Bearer ${token}`,
-        //   },
-        // });
+        const response = await api.get('/auth/me', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
         setUser({
-          email: 'developer@gmail.com',
-          username: 'Developer',
+          id: response.data.id,
+          email: response.data.email,
+          username: response.data.username,
+          createdAt: response.data.createdAt,
+          updatedAt: response.data.updatedAt,
         });
       } catch (error) {
-        console.log(error);
+        Cookies.remove('token');
+        window.location.href = '/';
       }
     }
   }
 
   async function signIn(userData: SignInType) {
     try {
-      //Todo: Implementar chamada a API
-      // const response = await api.post('/auth/signin', {
-      //   email: userData.email,
-      //   password: userData.password,
-      // });
-
-      setUser({
-        username: 'Developer',
+      const response = await api.post('/auth/sign-in', {
         email: userData.email,
+        password: userData.password,
       });
 
-      Cookies.set('token', 'my-secret-token', {
+      setUser({
+        id: response.data.user.id,
+        username: response.data.user.username,
+        email: response.data.user.email,
+      });
+
+      Cookies.set('token', response.data.token, {
         path: '/',
         secure: true,
         sameSite: 'strict',
         expires: userData.rememberMe ? 14 : undefined,
       });
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      console.error(error);
+      toast.error('Email ou senha inválidos');
     }
   }
 
   async function signUp(userData: SignUpType) {
     try {
-      //Todo: Implementar chamada a API
-      // const response = await api.post('/auth/signup', {
-      //   email: userData.email,
-      //   password: userData.password,
-      //   username: userData.username,
-      // });
-    } catch (error) {
-      console.log(error);
+      await api.post('/auth/sign-up', {
+        email: userData.email,
+        password: userData.password,
+        username: userData.username,
+      });
+    } catch (error: any) {
+      console.error(error);
+      toast.error(error.response.data.message);
     }
   }
 

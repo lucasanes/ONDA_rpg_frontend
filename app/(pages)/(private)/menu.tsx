@@ -59,7 +59,11 @@ export default function Menu() {
             <DropdownTrigger>
               <Button variant='light'>
                 <BiUserCircle size={24} />
-                {user ? <p>{user.username}</p> : <Spinner size='sm' />}
+                {user ? (
+                  <p className='capitalize'>{user.username}</p>
+                ) : (
+                  <Spinner size='sm' />
+                )}
               </Button>
             </DropdownTrigger>
             <DropdownMenu aria-label='Static Actions'>

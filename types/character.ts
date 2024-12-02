@@ -2,16 +2,16 @@ export interface CharactersInterface {
   id: number;
   name: string;
   xp: number;
-  pv: number;
-  pvA: number;
-  pm: number;
-  pmA: number;
+  hp: number;
+  currentHp: number;
+  mp: number;
+  currentMp: number;
   to: number;
   ts: number;
   tp: number;
   mun: number;
   portrait: string | null;
-  munA: number;
+  currentMun: number;
   sessionId?: number;
   sessionName?: string;
   userId: number;
@@ -21,10 +21,10 @@ export interface CharactersInterface {
 export interface CharacterPortraitInterface {
   id: number;
   name: string;
-  pv: number;
-  pvA: number;
-  pm: number;
-  pmA: number;
+  hp: number;
+  currentHp: number;
+  mp: number;
+  currentMp: number;
   money: number;
   portrait: string | null;
   sessionId?: number;
@@ -32,7 +32,7 @@ export interface CharacterPortraitInterface {
   tired: boolean;
   dying: boolean;
   fighting: boolean;
-  munA: number;
+  currentMun: number;
   hurted: boolean;
   userId: number;
   isPublic: boolean;
@@ -59,10 +59,10 @@ export interface MainCharacterInterface {
 }
 
 export interface StatusCharacterInterface {
-  pv: number;
-  pvA: number;
-  pm: number;
-  pmA: number;
+  hp: number;
+  currentHp: number;
+  mp: number;
+  currentMp: number;
   mun: number;
   portrait: string | null;
   cd: number;
@@ -71,7 +71,7 @@ export interface StatusCharacterInterface {
   tired: boolean;
   dying: boolean;
   fighting: boolean;
-  munA: number;
+  currentMun: number;
   hurted: boolean;
 }
 
@@ -87,11 +87,11 @@ export interface SessionCharactersInterface {
   race: string;
   divinity: string;
   origin: string;
-  pvA: number;
-  pmA: number;
-  munA: number;
-  pv: number;
-  pm: number;
+  currentHp: number;
+  currentMp: number;
+  currentMun: number;
+  hp: number;
+  mp: number;
   mun: number;
   ts: number;
   tp: number;

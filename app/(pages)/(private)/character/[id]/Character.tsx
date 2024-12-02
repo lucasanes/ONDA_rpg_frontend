@@ -107,13 +107,13 @@ export default function Character() {
       setStatusCharacter({
         portrait:
           'https://firebasestorage.googleapis.com/v0/b/registro-paranormal.appspot.com/o/site%2Flightz%2F4%2FNaksu.png?alt=media&token=59a4d04b-990a-4d49-81d0-eebd9cbd3201',
-        pv: 100,
-        pvA: 70,
-        pm: 50,
+        hp: 100,
+        currentHp: 70,
+        mp: 50,
         cd: 10,
         defense: 10,
-        pmA: 40,
-        munA: 30,
+        currentMp: 40,
+        currentMun: 30,
         mun: 30,
         dying: false,
         fighting: false,
@@ -298,12 +298,12 @@ function StatusContainer({
   setStatusCharacter: Dispatch<SetStateAction<StatusCharacterInterface>>;
 }) {
   const {
-    pv,
-    pvA,
-    pm,
-    pmA,
+    hp,
+    currentHp,
+    mp,
+    currentMp,
     mun,
-    munA,
+    currentMun,
     portrait,
     dying,
     fighting,
@@ -320,15 +320,15 @@ function StatusContainer({
   const { onOpen, isOpen, onClose, onOpenChange } = useDisclosure();
 
   useEffect(() => {
-    if (pvA < pv / 2 && pvA > 0 && !hurted) {
+    if (currentHp < hp / 2 && currentHp > 0 && !hurted) {
       handleHurted();
     }
 
-    if (pvA >= pv / 2 && hurted) {
+    if (currentHp >= hp / 2 && hurted) {
       handleHurted();
     }
 
-    if (pvA < pv / 4 && !dying) {
+    if (currentHp < hp / 4 && !dying) {
       handleDying();
 
       if (hurted) {
@@ -336,18 +336,18 @@ function StatusContainer({
       }
     }
 
-    if (pvA >= pv / 4 && dying) {
+    if (currentHp >= hp / 4 && dying) {
       handleDying();
     }
 
-    if (pmA < pm / 4 && !tired) {
+    if (currentMp < mp / 4 && !tired) {
       handleTired();
     }
 
-    if (pmA >= pm / 4 && tired) {
+    if (currentMp >= mp / 4 && tired) {
       handleTired();
     }
-  }, [pvA, pv, pmA, pm]);
+  }, [currentHp, hp, currentMp, mp]);
 
   function handleFighting() {
     //ToDo: Implementar chamada Socket
@@ -467,10 +467,10 @@ function StatusContainer({
 
       <StatusBar
         title='Vida'
-        currentValue={pvA}
-        maxValue={pv}
-        onCurrentValueUpdate={(value) => onUpdate('pvA', value)}
-        onMaxValueUpdate={(value) => onUpdate('pv', value)}
+        currentValue={currentHp}
+        maxValue={hp}
+        onCurrentValueUpdate={(value) => onUpdate('currentHp', value)}
+        onMaxValueUpdate={(value) => onUpdate('hp', value)}
         color='bg-red-700'
       />
 
@@ -478,10 +478,10 @@ function StatusContainer({
 
       <StatusBar
         title='Mana'
-        currentValue={pmA}
-        maxValue={pm}
-        onCurrentValueUpdate={(value) => onUpdate('pmA', value)}
-        onMaxValueUpdate={(value) => onUpdate('pm', value)}
+        currentValue={currentMp}
+        maxValue={mp}
+        onCurrentValueUpdate={(value) => onUpdate('currentMp', value)}
+        onMaxValueUpdate={(value) => onUpdate('mp', value)}
         color='bg-blue-700'
       />
 
@@ -489,9 +489,9 @@ function StatusContainer({
 
       <StatusBar
         title='Munição'
-        currentValue={munA}
+        currentValue={currentMun}
         maxValue={mun}
-        onCurrentValueUpdate={(value) => onUpdate('munA', value)}
+        onCurrentValueUpdate={(value) => onUpdate('currentMun', value)}
         onMaxValueUpdate={(value) => onUpdate('mun', value)}
         color='bg-green-400'
       />
