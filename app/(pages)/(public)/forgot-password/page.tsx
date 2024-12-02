@@ -15,12 +15,15 @@ import { MdOutlineEmail } from 'react-icons/md';
 import { toast } from 'react-toastify';
 
 import PasswordInput from '@/components/PasswordInput';
+import { api } from '@/providers/api';
 import { useRouter } from 'next/navigation';
 
 export default function SignUp() {
   const router = useRouter();
 
   const [step, setStep] = useState(1);
+
+  const [userId, setUserId] = useState(0);
 
   const [email, setEmail] = useState('');
   const [code, setCode] = useState('');
@@ -31,15 +34,14 @@ export default function SignUp() {
     event.preventDefault();
 
     try {
-      //Todo: Implementar a chamada para a API
-      // const response = api.post('/auth/send-email', { email });
+      await api.post('/auth/send-recovery', { email });
 
       setStep(2);
 
       toast.success('Email enviado com sucesso');
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      toast.error('Erro ao buscar email');
+      toast.error(error.response.data.message);
     }
   }
 
@@ -47,11 +49,6 @@ export default function SignUp() {
     try {
       if (step == 1) {
         router.push('/');
-      }
-
-      if (step == 2) {
-        //Todo: Implementar a chamada para a API
-        // const response = api.delete('/auth/code', { email });
       }
 
       setStep(1);
@@ -65,8 +62,12 @@ export default function SignUp() {
     event.preventDefault();
 
     try {
-      //Todo: Implementar a chamada para a API
-      // const response = api.post('/auth/code', { email, code });
+      const response = await api.post('/auth/validate-recovery', {
+        email,
+        code,
+      });
+
+      setUserId(response.data.userId);
 
       setStep(3);
 
@@ -95,8 +96,7 @@ export default function SignUp() {
         return;
       }
 
-      //Todo: Implementar a chamada para a API
-      // const response = api.post('/auth/password', { email, password });
+      await api.post('/auth/change-password', { userId, password });
 
       toast.success('Senha alterada com sucesso');
 
