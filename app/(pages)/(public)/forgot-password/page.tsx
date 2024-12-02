@@ -16,6 +16,7 @@ import { toast } from 'react-toastify';
 
 import PasswordInput from '@/components/PasswordInput';
 import { api } from '@/providers/api';
+import { passwordValidation } from '@/utils/validations';
 import { useRouter } from 'next/navigation';
 
 export default function SignUp() {
@@ -120,24 +121,6 @@ export default function SignUp() {
       if (code.charAt(code.length - 1).match(/[0-9]/)) {
         return false;
       }
-    }
-
-    return true;
-  }
-
-  function passwordValidation(password: string) {
-    if (password.length < 8) {
-      return false;
-    }
-
-    if (password.length > 24) {
-      return false;
-    }
-
-    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,24}$/;
-
-    if (!regex.test(password)) {
-      return false;
     }
 
     return true;
