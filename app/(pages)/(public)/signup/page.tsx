@@ -16,7 +16,7 @@ import { toast } from 'react-toastify';
 
 import { useAuth } from '@/app/context/AuthContext';
 import PasswordInput from '@/components/PasswordInput';
-import { passwordValidation } from '@/utils/validations';
+import { passwordValidation, usernameValidation } from '@/utils/validations';
 import { useRouter } from 'next/navigation';
 import { BiUserCircle } from 'react-icons/bi';
 
@@ -34,11 +34,7 @@ export default function SignUp() {
     event.preventDefault();
 
     try {
-      if (
-        username.length < 3 ||
-        username.length > 24 ||
-        username.includes(' ')
-      ) {
+      if (!usernameValidation(username)) {
         toast.error(
           'O nome de usuário deve ter no mínimo 3 caracteres, no máximo 24 caracteres, e não pode conter espaços'
         );

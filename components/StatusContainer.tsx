@@ -267,12 +267,10 @@ export function StatusContainer({
         color='bg-green-400'
       />
 
-      {(defense > 0 || cd > 0) && (
-        <div className='w-full flex flex-wrap justify-center gap-5 mt-5'>
-          {defense && <Chip>{`Defesa (CA): ${defense}`}</Chip>}
-          {cd && <Chip>{`Classe de Dificuldade (CD): ${cd}`}</Chip>}
-        </div>
-      )}
+      <div className='w-full flex flex-wrap justify-center gap-5 mt-5'>
+        <Chip>{`Defesa (CA): ${defense}`}</Chip>
+        <Chip>{`Classe de Dificuldade (CD): ${cd}`}</Chip>
+      </div>
     </div>
   );
 }

@@ -1,3 +1,4 @@
+import { api } from '@/providers/api';
 import { InventoryInterface } from '@/types/inventory';
 import { Button, Input } from '@nextui-org/react';
 import { useParams, usePathname } from 'next/navigation';
@@ -23,30 +24,38 @@ export default function ModalAddItem({
   const [name, setName] = useState('');
   const [image, setImage] = useState('');
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     try {
-      //ToDo: Implementar chamada a API
-
-      //const response = await api.post('/inventory', {  });
-
       if (pathname.includes('character')) {
+        const response = await api.post('/items', {
+          name,
+          image,
+          characterId: Number(id),
+        });
+
         setInventory((prev) => [
           ...prev,
           {
-            id: 1,
+            id: response.data.id,
             name,
             characterId: Number(id),
             image,
           },
         ]);
       } else {
+        const response = await api.post('/items', {
+          name,
+          image,
+          sessionId: Number(id),
+        });
+
         setInventory((prev) => [
           ...prev,
           {
             ...prev,
-            id: 1,
+            id: response.data.id,
             name,
             sessionId: Number(id),
             image,

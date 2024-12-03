@@ -1,31 +1,145 @@
-import { Metadata } from 'next';
-import Character from './Character';
+'use client';
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { id: string };
-}): Promise<Metadata> {
-  const { id } = params;
+import { useDisabled } from '@/app/context/DisabledContext';
+import InventoryContainer from '@/components/InventoryContainer';
+import { MainContainer } from '@/components/MainContainer';
+import { StatusContainer } from '@/components/StatusContainer';
+import { api } from '@/providers/api';
+import {
+  CharacterInterface,
+  MainCharacterInterface,
+  StatusCharacterInterface,
+} from '@/types/character';
+import { InventoryInterface } from '@/types/inventory';
+import { Spinner } from '@nextui-org/react';
+import { redirect, useParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 
-  const characterName = await getCharacterName(id);
+type Select = {
+  value: number;
+  name: string;
+};
 
-  return {
-    title: `${characterName}`,
-    description: `Ficha do personagem ${characterName}.`,
-  };
-}
+export default function Character() {
+  const [loading, setLoading] = useState(true);
 
-async function getCharacterName(id: string): Promise<string> {
-  //ToDo: Implementar chamada a API
+  const [charactersOfSession, setCharactersOfSession] = useState<
+    { value: string | number; name: string }[]
+  >([]);
 
-  //const response = await api.get(`/characters/${id}`);
+  const [character, setCharacter] = useState<CharacterInterface>(
+    {} as CharacterInterface
+  );
+  const [initialMainCharacter, setInitialMainCharacter] =
+    useState<MainCharacterInterface>({} as MainCharacterInterface);
+  const [initialStatusCharacter, setInitialStatusCharacter] =
+    useState<StatusCharacterInterface>({} as StatusCharacterInterface);
+  const [inventory, setInventory] = useState<InventoryInterface[]>([]);
 
-  const name = 'Naksu Hanna';
+  const { id } = useParams();
+  const { setDisabled } = useDisabled();
 
-  return name;
-}
+  async function fetchData() {
+    try {
+      const response = await api.get(`/characters/${id}`);
 
-export default function Page() {
-  return <Character />;
+      const character = response.data.character;
+
+      if (!response.data.hasPermission) {
+        if (character.isPublic) {
+          setDisabled(false);
+        } else {
+          redirect('/dashboard');
+        }
+      }
+
+      window.document.title = `${character.mainCharacter.name} - ONDA RPG`;
+
+      const charactersOfSession: Select[] = character.session.characters
+        .filter((char: { id: number }) => char.id !== character.id)
+        .map((char: { id: number; mainCharacter: { name: string } }) => ({
+          value: char.id,
+          name: char.mainCharacter.name,
+        }));
+
+      setCharactersOfSession([
+        {
+          value: `sessionId:${character.sessionId}`,
+          name: 'Mestre',
+        },
+        ...charactersOfSession.sort((a: Select, b: Select) =>
+          a.name.localeCompare(b.name)
+        ),
+      ]);
+
+      setCharacter({
+        id: character.id,
+        isPublic: character.isPublic,
+        sessionId: character.sessionId,
+        userId: character.userId,
+      });
+
+      setInitialMainCharacter({
+        ...character.mainCharacter,
+      });
+
+      setInitialStatusCharacter({
+        ...character.statusCharacter,
+        dying: false,
+        fighting: false,
+        hurted: false,
+        tired: false,
+        unconscious: false,
+      });
+
+      setInventory(character.items);
+    } catch (error: any) {
+      console.log(error);
+      toast.error(error.response.data.message);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function updateInventory() {
+    try {
+      const response = await api.get(`/items/character/${id}`);
+
+      setInventory(response.data);
+    } catch (error: any) {
+      console.log(error);
+      toast.error(error.response.data.message);
+    }
+  }
+
+  useEffect(() => {
+    fetchData();
+
+    //ToDo: Implementar Socket para atualizar o inventario em tempo real
+    // updateInventory();
+  }, []);
+
+  return loading ? (
+    <Spinner size='lg' className='mt-6' />
+  ) : (
+    <>
+      <div className='flex flex-col p-4 gap-4 overflow-y-auto overflow-x-hidden'>
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+          <MainContainer initialMainCharacter={initialMainCharacter} />
+          <StatusContainer
+            id={character.id}
+            initialStatusCharacter={initialStatusCharacter}
+          />
+        </div>
+        <div>
+          <InventoryContainer
+            charactersOfSession={charactersOfSession}
+            inventory={inventory}
+            setInventory={setInventory}
+          />
+        </div>
+      </div>
+    </>
+  );
 }

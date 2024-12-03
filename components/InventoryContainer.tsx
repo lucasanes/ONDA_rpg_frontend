@@ -1,5 +1,7 @@
 import { useDisabled } from '@/app/context/DisabledContext';
+import { api } from '@/providers/api';
 import { InventoryInterface } from '@/types/inventory';
+import { capitalizeWord } from '@/utils/capitalizeWord';
 import {
   Button,
   Divider,
@@ -42,7 +44,7 @@ export default function InventoryContainer({
     //ToDO: Implementar Socket
   }
 
-  function handleSend() {
+  async function handleSend() {
     try {
       if (!itemSelected || !characterSelected) {
         toast.error('Selecione um item e um personagem');
@@ -51,17 +53,35 @@ export default function InventoryContainer({
 
       //ToDO: Implementar Socket
 
-      //ToDo: Implementar chamada a API
+      const isToSession = characterSelected.toString().startsWith('sessionId:');
 
-      // if (characterSelected.value === 'Mestre') {
-      //   api.put(`/inventory/${itemSelected}`);
-      // } else {
-      //   api.put(`/inventory/${itemSelected}`);
-      // }
+      if (isToSession) {
+        const sessionId = characterSelected.toString().split(':')[1];
+
+        await api.put(`/items/${itemSelected}`, {
+          sessionId: Number(sessionId),
+          characterId: null,
+          name: inventory.find((item) => item.id === itemSelected)?.name,
+          image: inventory.find((item) => item.id === itemSelected)?.image,
+        });
+      } else {
+        await api.put(`/items/${itemSelected}`, {
+          sessionId: null,
+          characterId: Number(characterSelected),
+          name: inventory.find((item) => item.id === itemSelected)?.name,
+          image: inventory.find((item) => item.id === itemSelected)?.image,
+        });
+      }
 
       setInventory((prev) => prev.filter((each) => each.id !== itemSelected));
 
-      toast.success('Item enviado com sucesso');
+      toast.success(
+        `Item enviado com sucesso para ${
+          charactersOfSession.find(
+            (character) => character.value === characterSelected
+          )?.name
+        }`
+      );
     } catch (error) {
       console.log(error);
       toast.error('Erro ao enviar item');
@@ -119,7 +139,9 @@ export default function InventoryContainer({
                 onChange={(e) => setItemSelected(Number(e.target.value))}
               >
                 {inventory.map((item) => (
-                  <SelectItem key={`${item.id}`}>{item.name}</SelectItem>
+                  <SelectItem key={`${item.id}`}>
+                    {capitalizeWord(item.name)}
+                  </SelectItem>
                 ))}
               </Select>
 
@@ -138,7 +160,7 @@ export default function InventoryContainer({
               >
                 {charactersOfSession.map((character) => (
                   <SelectItem key={character.value}>
-                    {character.name}
+                    {capitalizeWord(character.name)}
                   </SelectItem>
                 ))}
               </Select>
@@ -184,16 +206,14 @@ function Item({
     onOpenChange: onEditModalOpenChange,
   } = useDisclosure();
 
-  function handleSend() {
+  function handleShowToAll() {
     //ToDO: Implementar Socket
 
     onImageModalOpen();
   }
 
-  function handleDelete() {
-    //ToDo: Implementar chamada a API
-
-    //api.delete(`/inventory/${item.id}`);
+  async function handleDelete() {
+    await api.delete(`/items/${item.id}`);
 
     setInventory((prev) => prev.filter((each) => each.id !== item.id));
 
@@ -222,7 +242,7 @@ function Item({
           variant='light'
           size='sm'
           isDisabled={disabled}
-          onPress={handleSend}
+          onPress={handleShowToAll}
         >
           <RiShareForwardLine size={21} />
         </Button>

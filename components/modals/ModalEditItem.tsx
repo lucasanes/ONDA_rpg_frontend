@@ -1,3 +1,4 @@
+import { api } from '@/providers/api';
 import { InventoryInterface } from '@/types/inventory';
 import { Button, Input } from '@nextui-org/react';
 import { Dispatch, FormEvent, SetStateAction, useState } from 'react';
@@ -23,13 +24,14 @@ export default function ModalEditItem({
   const [name, setName] = useState(item.name);
   const [image, setImage] = useState(item.image);
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     try {
-      //ToDo: Implementar chamada a API
-
-      //const response = await api.put('/inventory/${id}', {  });
+      await api.put(`/items/${item.id}`, {
+        name,
+        image,
+      });
 
       setInventory((prev) => {
         const index = prev.findIndex((each) => item.id === each.id);

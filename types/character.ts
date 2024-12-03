@@ -88,23 +88,6 @@ export interface SessionCharactersInterface {
   id: number;
   userId: number;
   isPublic: boolean;
-  name: string;
-  age: number;
-  portrait: string | null;
-  xp: number;
-  class: string;
-  race: string;
-  divinity: string;
-  origin: string;
-  currentHp: number;
-  currentMp: number;
-  currentMun: number;
-  hp: number;
-  mp: number;
-  mun: number;
-  ts: number;
-  tp: number;
-  to: number;
-  cd: number;
-  defense: number;
+  statusCharacter: StatusCharacterInterface;
+  mainCharacter: MainCharacterInterface;
 }

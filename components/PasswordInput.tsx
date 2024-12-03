@@ -4,6 +4,7 @@ import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import { MdOutlineLockOpen } from 'react-icons/md';
 
 interface PasswordInputProps {
+  isRequired?: boolean;
   label?: string;
   placeholder?: string;
   value: string;
@@ -11,6 +12,7 @@ interface PasswordInputProps {
 }
 
 export default function PasswordInput({
+  isRequired = true,
   label,
   placeholder,
   value,
@@ -24,10 +26,10 @@ export default function PasswordInput({
 
   return (
     <Input
-      isRequired
-      required
+      isRequired={isRequired}
+      required={isRequired}
       endContent={
-        <button className='w-5 h-5' onClick={handleShowPassword}>
+        <button type='button' className='w-5 h-5' onClick={handleShowPassword}>
           {showPassword ? (
             <AiOutlineEye size={18} />
           ) : (
