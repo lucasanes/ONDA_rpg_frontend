@@ -54,14 +54,20 @@ export default function InventoryContainer({
       //ToDo: Implementar chamada a API
 
       // if (characterSelected.value === 'Mestre') {
-      //   api.put(`/inventory/${itemSelected}`);
+      //   api.put(`/inventory/${itemSelected}/send`);
       // } else {
-      //   api.put(`/inventory/${itemSelected}`);
+      //   api.put(`/inventory/${itemSelected}/send/${characterSelected}`);
       // }
 
       setInventory((prev) => prev.filter((each) => each.id !== itemSelected));
 
-      toast.success('Item enviado com sucesso');
+      toast.success(
+        `Item enviado com sucesso para ${
+          charactersOfSession.find(
+            (character) => character.value === characterSelected
+          )?.name
+        }`
+      );
     } catch (error) {
       console.log(error);
       toast.error('Erro ao enviar item');

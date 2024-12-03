@@ -13,7 +13,6 @@ export default function ModalImage({
 }) {
   return (
     <Modal
-      placement='center'
       backdrop='blur'
       hideCloseButton
       isOpen={isOpen}
@@ -21,8 +20,8 @@ export default function ModalImage({
       size='full'
       onClick={onClose}
     >
-      <ModalContent className='bg-transparent flex items-center'>
-        <Image src={image} className='' />
+      <ModalContent className='bg-transparent flex justify-center items-center'>
+        <Image src={image} className='w-full h-full' />
       </ModalContent>
     </Modal>
   );

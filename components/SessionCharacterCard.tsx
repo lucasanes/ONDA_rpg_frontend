@@ -31,27 +31,31 @@ export function SessionCharacterCard({
   >;
 }) {
   const {
-    age,
-    cd,
-    class: characterClass,
-    origin,
-    defense,
-    divinity,
     id,
     isPublic,
-    mun,
-    currentMun,
-    name,
-    mp,
-    currentMp,
-    portrait,
-    hp,
-    currentHp,
-    race,
-    to,
-    tp,
-    ts,
-    xp,
+    mainCharacter: {
+      age,
+      class: characterClass,
+      origin,
+      divinity,
+      name,
+      race,
+      to,
+      tp,
+      ts,
+      xp,
+    },
+    statusCharacter: {
+      cd,
+      mun,
+      currentMun,
+      mp,
+      currentMp,
+      portrait,
+      hp,
+      currentHp,
+      defense,
+    },
   } = character;
 
   const router = useRouter();
@@ -104,7 +108,7 @@ export function SessionCharacterCard({
     <Card className='bg-transparent border-2 border-gray-300 rounded-sm'>
       <CardHeader className='justify-between items-center'>
         <div className='flex justify-center items-center gap-2'>
-          <h1 className='w-min sm:w-fit text-lg'>{name}</h1>
+          <h1 className='w-min sm:w-fit text-lg capitalize'>{name}</h1>
           <Button
             as={Link}
             href={`/character/${id}`}
@@ -237,15 +241,8 @@ export function SessionCharacterCard({
           />
 
           <div className='flex flex-wrap justify-center items-center col-span-full mt-3 px-3 gap-3'>
-            {defense && <Chip>{`Defesa (CA): ${defense}`}</Chip>}
-            {cd && <Chip>{`Classe de Dificuldade (CD): ${cd}`}</Chip>}
-
-            <div className='flex justify-center items-center gap-1'>
-              <img src='/coin.png' width={25} height={25} />
-              <span className={`text-xl mt-1 ${specialElite.className}`}>
-                {convertMoney(character)}
-              </span>
-            </div>
+            <Chip>{`Defesa (CA): ${defense}`}</Chip>
+            <Chip>{`Classe de Dificuldade (CD): ${cd}`}</Chip>
           </div>
         </CardBody>
       )}
@@ -308,18 +305,17 @@ export function SessionCharacterCard({
                 value={currentMp}
               />
 
-              {mun && (
-                <div className='flex items-center gap-3 ml-1'>
-                  <img src='/munition.png' width={10} height={10} />
-                  <span className={`text-md mt-1 ${specialElite.className}`}>
-                    {currentMun}/{mun}
-                  </span>
-                </div>
-              )}
+              <div className='flex items-center gap-3 ml-1'>
+                <img src='/munition.png' width={10} height={10} />
+                <span className={`text-md mt-1 ${specialElite.className}`}>
+                  {mun > 0 ? `${currentMun}/${mun}` : '0'}
+                </span>
+              </div>
+
               <div className='flex items-center gap-1'>
                 <img src='/coin.png' width={25} height={25} />
                 <span className={`text-md mt-1 ${specialElite.className}`}>
-                  {convertMoney(character)}
+                  {convertMoney(character.mainCharacter)}
                 </span>
               </div>
             </div>

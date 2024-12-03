@@ -97,7 +97,7 @@ export default function SignUp() {
         return;
       }
 
-      await api.post('/auth/change-password', { userId, password });
+      await api.put('/auth/change-password', { userId, password });
 
       toast.success('Senha alterada com sucesso');
 
