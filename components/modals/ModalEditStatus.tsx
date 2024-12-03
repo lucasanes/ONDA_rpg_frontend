@@ -1,5 +1,7 @@
+import { api } from '@/providers/api';
 import { StatusCharacterInterface } from '@/types/character';
 import { Button, Input } from '@nextui-org/react';
+import { useParams } from 'next/navigation';
 import { Dispatch, FormEvent, SetStateAction, useState } from 'react';
 import { toast } from 'react-toastify';
 import FileInput from '../FileInput';
@@ -22,20 +24,32 @@ export default function ModalEditStatus({
   const [defense, setDefense] = useState(statusCharacter.defense);
   const [cd, setCd] = useState(statusCharacter.cd);
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  const { id } = useParams();
+
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     try {
-      //ToDo: Implementar chamada a API
-
-      //const response = await api.put('/character/${id}/status', { portrait });
+      await api.put(`/characters/${id}/status`, {
+        portrait: portrait ? portrait : null,
+        defense,
+        cd,
+        hp: statusCharacter.hp,
+        currentHp: statusCharacter.currentHp,
+        mp: statusCharacter.mp,
+        currentMp: statusCharacter.currentMp,
+        mun: statusCharacter.mun,
+        currentMun: statusCharacter.currentMun,
+      });
 
       setStatusCharacter((prev) => ({
         ...prev,
-        portrait,
+        portrait: portrait ? portrait : null,
         defense,
         cd,
       }));
+
+      toast.success('Personagem editado com sucesso');
 
       onClose();
     } catch (error) {
@@ -75,8 +89,6 @@ export default function ModalEditStatus({
           />
 
           <FileInput
-            required
-            isRequired
             label={'Portrait'}
             placeholder='Selecione uma imagem'
             value={portrait}

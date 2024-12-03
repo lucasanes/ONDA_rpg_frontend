@@ -3,14 +3,12 @@ import { Button } from '@nextui-org/button';
 import { Input, Progress } from '@nextui-org/react';
 
 export default function StatusBar({
-  title,
   color,
   maxValue,
   currentValue,
   onCurrentValueUpdate,
   onMaxValueUpdate,
 }: {
-  title: string;
   color: string;
   maxValue: number;
   currentValue: number;

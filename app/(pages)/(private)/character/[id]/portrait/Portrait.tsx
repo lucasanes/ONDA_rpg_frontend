@@ -1,6 +1,5 @@
 'use client';
 
-import { useDisabled } from '@/app/context/DisabledContext';
 import { imFellEnglish, specialElite } from '@/config/fonts';
 import { CharacterPortraitInterface } from '@/types/character';
 import { IMAGE_SIZE } from '@/utils/image';
@@ -8,8 +7,6 @@ import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
 export default function Portrait() {
-  const { disabled, setDisabled } = useDisabled();
-
   const [loading, setLoading] = useState(true);
 
   const [character, setCharacter] = useState<CharacterPortraitInterface>(
@@ -24,17 +21,6 @@ export default function Portrait() {
       //ToDo: Implementar chamada a API
 
       //const response = await api.get(`/characters/${id}`);
-
-      // if (response.data.userId !== user.id) {
-      //   const sessionsOfUser = await api.get(`/sessions/user/${user.id}`);
-      //   if (!sessionOfUser.data.find((session) => session.id === response.data.sessionId)) {
-      //     if (!response.data.isPublic) {
-      //       setDisabled(true)
-      //       setLoading(false)
-      //       return
-      //     }
-      //   }
-      // }
 
       setCharacter({
         id: 1,
@@ -79,10 +65,7 @@ export default function Portrait() {
   }
 
   return (
-    !loading &&
-    (disabled ? (
-      <h1 className='my-auto mx-24 text-8xl text-red-700'>Portrait Privado</h1>
-    ) : (
+    !loading && (
       <>
         <div className='flex gap-10'>
           <button
@@ -170,7 +153,7 @@ export default function Portrait() {
           />
         </div>
       </>
-    ))
+    )
   );
 }
 
