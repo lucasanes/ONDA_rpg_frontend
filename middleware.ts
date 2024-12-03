@@ -1,15 +1,31 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+const regexPaths = {
+  public: [
+    /^\/signup$/,
+    /^\/$/,
+    /^\/forgot-password$/,
+    /^\/character\/[^/]+$/,
+    /^\/character\/[^/]+\/portrait$/,
+  ],
+  private: [
+    /^\/dashboard$/,
+    /^\/account$/,
+    /^\/character\/[^/]+$/,
+    /^\/session\/[^/]+$/,
+    /^\/character\/[^/]+\/portrait$/,
+  ],
+};
+
 export function middleware(req: NextRequest) {
   const token = req.cookies.get('token');
 
-  const paths = {
-    public: ['/signup', '/'],
-    private: ['/dashboard'],
-  };
-
-  const isPublicPath = paths.public.includes(req.nextUrl.pathname);
-  const isPrivatePath = paths.private.includes(req.nextUrl.pathname);
+  const isPublicPath = regexPaths.public.some((regex) =>
+    regex.test(req.nextUrl.pathname)
+  );
+  const isPrivatePath = regexPaths.private.some((regex) =>
+    regex.test(req.nextUrl.pathname)
+  );
 
   if (!token && !isPublicPath && isPrivatePath) {
     return NextResponse.redirect(new URL('/', req.url));
@@ -23,5 +39,5 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: '/((?!api|_next|favicon.ico|assets).*)',
+  matcher: ['/((?!api|static|.*\\..*|_next/static|_next/image|favicon.ico).*)'],
 };

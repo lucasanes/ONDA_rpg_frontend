@@ -75,6 +75,15 @@ export interface StatusCharacterInterface {
   hurted: boolean;
 }
 
+export interface StatusBarCharacterInterface {
+  hp: number;
+  currentHp: number;
+  mp: number;
+  currentMp: number;
+  mun: number;
+  currentMun: number;
+}
+
 export interface SessionCharactersInterface {
   id: number;
   userId: number;

@@ -1,5 +1,7 @@
+import { api } from '@/providers/api';
 import { MainCharacterInterface } from '@/types/character';
 import { Button, Input } from '@nextui-org/react';
+import { useParams } from 'next/navigation';
 import { Dispatch, FormEvent, SetStateAction, useState } from 'react';
 import { toast } from 'react-toastify';
 import ModalComponent from './Modal';
@@ -30,13 +32,24 @@ export default function ModalEditMain({
   const [tp, setTp] = useState(mainCharacter.tp);
   const [to, setTo] = useState(mainCharacter.to);
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  const { id } = useParams();
+
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     try {
-      //ToDo: Implementar chamada a API
-
-      //const response = await api.put('/character/${id}/main', { });
+      await api.put(`/characters/${id}/main`, {
+        name,
+        age,
+        xp,
+        class: mainCharacterClass,
+        origin,
+        race,
+        divinity,
+        ts,
+        tp,
+        to,
+      });
 
       setMainCharacter((prev) => ({
         ...prev,
@@ -51,6 +64,8 @@ export default function ModalEditMain({
         tp,
         to,
       }));
+
+      toast.success('Personagem editado com sucesso');
 
       onClose();
     } catch (error) {
