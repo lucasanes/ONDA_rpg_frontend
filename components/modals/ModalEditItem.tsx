@@ -43,10 +43,12 @@ export default function ModalEditItem({
         return [...prev];
       });
 
+      toast.success('Item editado com sucesso');
+
       onClose();
     } catch (error) {
       console.error(error);
-      toast.error('Erro ao editar personagem');
+      toast.error('Erro ao editar item');
     }
   }
 

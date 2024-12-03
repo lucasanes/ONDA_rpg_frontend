@@ -33,7 +33,9 @@ type SignUpType = {
 
 type AuthContextType = {
   user: UserType | null;
-  signIn: (userData: SignInType) => Promise<void>;
+  signIn: (userData: SignInType) => Promise<{
+    error: boolean;
+  }>;
   signUp: (userData: SignUpType) => Promise<void>;
   signOut: () => void;
 };
@@ -52,11 +54,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     if (token) {
       try {
-        const response = await api.get('/auth/me', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await api.get('/auth/me');
 
         setUser({
           id: response.data.id,
@@ -66,13 +64,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           updatedAt: response.data.updatedAt,
         });
       } catch (error) {
+        setUser(null);
         Cookies.remove('token');
         window.location.href = '/';
       }
     }
   }
 
-  async function signIn(userData: SignInType) {
+  async function signIn(userData: SignInType): Promise<{
+    error: boolean;
+  }> {
     try {
       const response = await api.post('/auth/sign-in', {
         email: userData.email,
@@ -91,9 +92,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         sameSite: 'strict',
         expires: userData.rememberMe ? 14 : undefined,
       });
+
+      return { error: false };
     } catch (error: any) {
       console.error(error);
-      toast.error('Email ou senha inválidos');
+      toast.error(error.response.data.message);
+
+      return { error: true };
     }
   }
 
