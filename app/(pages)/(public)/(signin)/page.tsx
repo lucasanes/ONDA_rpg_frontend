@@ -17,7 +17,6 @@ import { MdOutlineEmail } from 'react-icons/md';
 
 import { useAuth } from '@/app/context/AuthContext';
 import PasswordInput from '@/components/PasswordInput';
-import { toast } from 'react-toastify';
 
 export default function SignIn() {
   const [email, setEmail] = useState('');
@@ -30,14 +29,11 @@ export default function SignIn() {
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    try {
-      await signIn({ email, password, rememberMe });
+    const { error } = await signIn({ email, password, rememberMe });
 
-      router.push('/dashboard');
-    } catch (error) {
-      console.error(error);
-      toast.error('Erro ao fazer login');
-    }
+    if (error) return;
+
+    router.push('/dashboard');
   }
 
   return (

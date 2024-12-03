@@ -1,3 +1,5 @@
+import { useAuth } from '@/app/context/AuthContext';
+import { api } from '@/providers/api';
 import { CharactersInterface } from '@/types/character';
 import { Button, Input } from '@nextui-org/react';
 import { FormEvent, useState } from 'react';
@@ -27,57 +29,59 @@ export default function ModalAddCharacter({
   const [mp, setPm] = useState(0);
   const [portrait, setPortrait] = useState('');
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  const { user } = useAuth();
+
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     try {
-      //ToDo: Implementar chamada a API
-
-      //const response = await api.post('/characters', {
-      //  name,
-      //  xp,
-      //  age,
-      //  class: characterClass,
-      //  race,
-      //  origin,
-      //  divinity,
-      //  hp,
-      //  mp,
-      //  portrait,
-      //});
+      const response = await api.post('/characters', {
+        name,
+        xp,
+        age,
+        class: characterClass,
+        race,
+        origin,
+        divinity,
+        hp,
+        mp,
+        portrait,
+        userId: user?.id,
+      });
 
       setCharacters((characters) => [
         ...characters,
         {
-          id: Math.random(),
+          id: response.data.id,
           name,
           currentHp: hp,
           hp,
           isPublic: false,
-          userId: 1,
+          userId: response.data.userId,
           currentMp: mp,
           mp,
-          level: 1,
           mun: 0,
           currentMun: 0,
           to: 0,
           tp: 0,
           ts: 0,
-          xp: 0,
+          xp,
           portrait,
         },
       ]);
 
+      toast.success('Personagem criado com sucesso');
+
       onClose();
     } catch (error) {
       console.error(error);
-      toast.error('Erro ao adicionar personagem');
+      toast.error('Erro ao criar personagem');
     }
   }
 
   return (
     <ModalComponent
-      title='Adicionar Personagem'
+      title='Criar Personagem'
       isOpen={isOpen}
       onOpenChange={onOpenChange}
       handleSubmit={handleSubmit}
@@ -183,8 +187,6 @@ export default function ModalAddCharacter({
           />
 
           <FileInput
-            isRequired
-            required
             label='Portrait'
             placeholder='https://site.com/onda.png'
             value={portrait}

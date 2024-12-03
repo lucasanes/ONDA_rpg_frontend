@@ -1,3 +1,4 @@
+import { api } from '@/providers/api';
 import { SessionInterface } from '@/types/session';
 import { Button, Input, Textarea } from '@nextui-org/react';
 import { Dispatch, FormEvent, SetStateAction, useState } from 'react';
@@ -18,34 +19,34 @@ export default function ModalAddSession({
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     try {
-      //ToDo: Implementar chamada a API
-
-      //const response = await api.post('/sessions', { name, description });
+      const response = await api.post('/sessions', { name, description });
 
       setSessions((prevSessions) => [
         ...prevSessions,
         {
-          id: Math.random(),
+          id: response.data.id,
           name,
           description,
           players: [],
         },
       ]);
 
+      toast.success('Sessão criada com sucesso');
+
       onClose();
     } catch (error) {
       console.error(error);
-      toast.error('Erro ao adicionar sessão');
+      toast.error('Erro ao criar sessão');
     }
   }
 
   return (
     <ModalComponent
-      title='Adicionar Sessão'
+      title='Criar Sessão'
       isOpen={isOpen}
       onOpenChange={onOpenChange}
       handleSubmit={handleSubmit}

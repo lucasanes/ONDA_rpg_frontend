@@ -1,16 +1,19 @@
+import { api } from '@/providers/api';
 import { SessionInterface } from '@/types/session';
 import { Button, Input, Textarea } from '@nextui-org/react';
 import { Dispatch, FormEvent, SetStateAction, useState } from 'react';
 import { toast } from 'react-toastify';
 import ModalComponent from './Modal';
 
-export default function ModalAddSession({
+export default function ModalEditSession({
+  id,
   isOpen,
   onClose,
   onOpenChange,
   session,
   setSessions,
 }: {
+  id: number;
   isOpen: boolean;
   onClose: () => void;
   onOpenChange: () => void;
@@ -20,13 +23,11 @@ export default function ModalAddSession({
   const [name, setName] = useState(session.name);
   const [description, setDescription] = useState(session.description);
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     try {
-      //ToDo: Implementar chamada a API
-
-      //const response = await api.put('/sessions', { name, description });
+      await api.put(`/sessions/${id}`, { name, description });
 
       const updatedSession = {
         ...session,
@@ -40,10 +41,12 @@ export default function ModalAddSession({
         )
       );
 
+      toast.success('Sessão editada com sucesso');
+
       onClose();
     } catch (error) {
       console.error(error);
-      toast.error('Erro ao adicionar sessão');
+      toast.error('Erro ao editar sessão');
     }
   }
 

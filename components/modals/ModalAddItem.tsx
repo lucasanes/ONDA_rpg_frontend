@@ -54,6 +54,8 @@ export default function ModalAddItem({
         ]);
       }
 
+      toast.success('Item adicionado com sucesso');
+
       onClose();
     } catch (error) {
       console.error(error);

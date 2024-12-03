@@ -6,7 +6,9 @@ import ModalAddCharacter from '@/components/modals/ModalAddCharacter';
 import ModalAddSession from '@/components/modals/ModalAddSession';
 import ModalEditSession from '@/components/modals/ModalEditSession';
 import { specialElite } from '@/config/fonts';
+import { api } from '@/providers/api';
 import { CharactersInterface } from '@/types/character';
+import { InviteInterface } from '@/types/invite';
 import { SessionInterface } from '@/types/session';
 import { convertMoney } from '@/utils/convertMoney';
 import { xpToLevel, xpToNextLevel } from '@/utils/xp-level';
@@ -25,94 +27,35 @@ import {
   Spinner,
   useDisclosure,
 } from '@nextui-org/react';
+import Cookies from 'js-cookie';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { FormEvent, useEffect, useRef, useState } from 'react';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import { toast } from 'react-toastify';
 
 export default function Dashboard() {
-  const [invites, setInvites] = useState<SessionInterface[]>([]);
+  const [invites, setInvites] = useState<InviteInterface[]>([]);
   const [sessions, setSessions] = useState<SessionInterface[]>([]);
   const [characters, setCharacters] = useState<CharactersInterface[]>([]);
 
   const [loading, setLoading] = useState(true);
 
+  const token = Cookies.get('token');
+
   async function fetchData() {
     try {
-      //ToDo: Implementar chamada a API
-
-      //const sessionsResponse = await api.get('/sessions');
-
-      //const charactersResponse = await api.get('/characters');
-
-      //setSessions(sessionsResponse.data);
-
-      //setCharacters(charactersResponse.data);
-
-      setInvites([
-        {
-          id: 1,
-          name: 'Sessão 1',
-          description: 'Descrição da sessão 1',
-          players: ['Player 1'],
+      const response = await api.get('/dashboard', {
+        headers: {
+          authorization: `Bearer ${token}`,
         },
-      ]);
+      });
 
-      setSessions([
-        {
-          id: 1,
-          name: 'Sessão 1',
-          description: 'Descrição da sessão 1',
-          players: ['Player 1'],
-        },
-        {
-          id: 2,
-          name: 'Sessão 2',
-          description: 'Descrição da sessão 2',
-          players: ['Player 1', 'Player 2'],
-        },
-      ]);
+      setSessions(response.data.sessions);
 
-      setCharacters([
-        {
-          id: 1,
-          name: 'Personagem 1',
-          currentHp: 17,
-          hp: 20,
-          currentMp: 5,
-          mp: 10,
-          mun: 30,
-          currentMun: 30,
-          to: 1,
-          tp: 10,
-          ts: 100,
-          xp: 100,
-          isPublic: true,
-          sessionId: 1,
-          sessionName: 'ONDA',
-          userId: 1,
-          portrait:
-            'https://firebasestorage.googleapis.com/v0/b/registro-paranormal.appspot.com/o/site%2Flightz%2F4%2FNaksu.png?alt=media&token=59a4d04b-990a-4d49-81d0-eebd9cbd3201',
-        },
-        {
-          id: 2,
-          name: 'Personagem 2',
-          currentHp: 12,
-          hp: 20,
-          currentMp: 3,
-          mp: 10,
-          currentMun: 30,
-          to: 1,
-          mun: 30,
-          isPublic: false,
-          userId: 1,
-          tp: 10,
-          ts: 100,
-          xp: 10,
-          portrait: null,
-        },
-      ]);
+      setCharacters(response.data.characters);
+
+      setInvites(response.data.invites);
     } catch (error) {
       console.log(error);
       toast.error('Erro ao carregar dados');
@@ -122,8 +65,9 @@ export default function Dashboard() {
   }
 
   useEffect(() => {
+    if (!token) return;
     fetchData();
-  }, []);
+  }, [token]);
 
   return (
     <div className='w-full h-full flex flex-col items-center p-5 gap-5 overflow-y-auto'>
@@ -192,7 +136,7 @@ function AddSessionCard({
 
   return (
     <Card className='min-w-64 bg-transparent border-2 rounded border-gray-500 border-dotted'>
-      <CardHeader>
+      <CardHeader className='h-14'>
         <h1>Criar Sessão</h1>
       </CardHeader>
       <Divider className='border-1 !border-gray-500 border-dotted' />
@@ -224,7 +168,7 @@ function AddCharacterCard({
 
   return (
     <Card className='min-w-64 bg-transparent border-2 rounded border-gray-500 border-dotted'>
-      <CardHeader>
+      <CardHeader className='h-14'>
         <h1>Criar Ficha</h1>
       </CardHeader>
       <Divider className='border-1 !border-gray-500 border-dotted' />
@@ -256,11 +200,11 @@ function SessionCard({
 }) {
   const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
 
-  async function handleDelete() {
-    try {
-      //ToDo: Implementar chamada a API
+  async function handleDelete(e: FormEvent) {
+    e.preventDefault();
 
-      //await api.delete(`/sessions/${session.id}`);
+    try {
+      await api.delete(`/sessions/${session.id}`);
 
       toast.success('Sessão deletada com sucesso');
 
@@ -281,8 +225,9 @@ function SessionCard({
         onOpenChange={onOpenChange}
         setSessions={setSessions}
         session={session}
+        id={session.id}
       />
-      <CardHeader className='justify-between'>
+      <CardHeader className='h-14 justify-between'>
         <h1 className='capitalize'>{session.name}</h1>
 
         <div className='flex gap-3'>
@@ -293,7 +238,7 @@ function SessionCard({
       <Divider className='h-0.5 !bg-gray-500' />
       <CardBody>
         <p>Descrição: {session.description}</p>
-        <p>Jogadores: {session.players.join(', ')}</p>
+        <p className='capitalize'>Jogadores: {session.players.join(', ')}</p>
       </CardBody>
       <Divider className='h-0.5 !bg-gray-500' />
       <CardFooter>
@@ -321,9 +266,13 @@ function CharacterCard({
 
     if (!xpProgressRef) return;
 
+    const quantityXPOfCurrentLevel = xpToNextLevel(xpToLevel(currentXP));
     const quantityXPToNextLevel = xpToNextLevel(xpToLevel(currentXP) + 1);
 
-    const percentage = (currentXP / quantityXPToNextLevel) * 100;
+    const percentage =
+      ((currentXP - quantityXPOfCurrentLevel) /
+        (quantityXPToNextLevel - quantityXPOfCurrentLevel)) *
+      100;
 
     const degree = (percentage / 100) * 360; // Converte para graus
     xpProgressRef.style.background = `conic-gradient(#43ff5c 0deg ${degree}deg, white ${degree}deg 360deg)`;
@@ -333,11 +282,11 @@ function CharacterCard({
     updateXP(character.xp);
   }, []);
 
-  async function handleDelete() {
-    try {
-      //ToDo: Implementar chamada a API
+  async function handleDelete(e: FormEvent) {
+    e.preventDefault();
 
-      //await api.delete(`/characters/${character.id}`);
+    try {
+      await api.delete(`/characters/${character.id}`);
 
       toast.success('Personagem deletado com sucesso');
 
@@ -352,11 +301,9 @@ function CharacterCard({
 
   async function handleChangeVisibility() {
     try {
-      //ToDo: Implementar chamada a API
-
-      //await api.put(`/characters/${character.id}`, {
-      //  isPublic: !character.isPublic,
-      //});
+      await api.put(`/characters/${character.id}`, {
+        isPublic: !character.isPublic,
+      });
 
       setCharacters((characters) =>
         characters.map((char) =>
@@ -373,7 +320,7 @@ function CharacterCard({
 
   return (
     <Card className='min-w-64 bg-transparent border-2 rounded border-gray-500 '>
-      <CardHeader className='justify-between'>
+      <CardHeader className='h-14 justify-between'>
         <h1 className='capitalize'>
           {character.name}
           {character.sessionId && ` - ${character.sessionName}`}
@@ -454,7 +401,7 @@ function CharacterCard({
               value={character.currentMp}
             />
 
-            {character.mun && (
+            {character.mun > 0 && (
               <div className='flex items-center gap-3 ml-1'>
                 <img src='/munition.png' width={10} height={10} />
                 <span className={`text-md mt-1 ${specialElite.className}`}>
@@ -486,17 +433,17 @@ function Invite({
   setInvites,
   characters,
 }: {
-  invite: SessionInterface;
-  setInvites: React.Dispatch<React.SetStateAction<SessionInterface[]>>;
+  invite: InviteInterface;
+  setInvites: React.Dispatch<React.SetStateAction<InviteInterface[]>>;
   characters: CharactersInterface[];
 }) {
   const [characterId, setCharacterId] = useState<number | null>(null);
 
-  async function handleDelete() {
-    try {
-      //ToDo: Implementar chamada a API
+  async function handleDelete(e: FormEvent) {
+    e.preventDefault();
 
-      //await api.delete(`/invites/${session.id}`);
+    try {
+      await api.delete(`/invites/${invite.id}`);
 
       toast.success('Convite deletado com sucesso');
 
@@ -514,11 +461,9 @@ function Invite({
         return;
       }
 
-      //ToDo: Implementar chamada a API
-
-      //await api.put(`/characters/${characterId}`, {
-      //  sessionId: invite.id,
-      //});
+      await api.put(`/invites/${invite.id}`, {
+        characterId,
+      });
 
       toast.success('Personagem adicionado com sucesso');
 
@@ -531,8 +476,8 @@ function Invite({
 
   return (
     <Card className='min-w-64 bg-transparent border-2 rounded border-gray-500 '>
-      <CardHeader className='justify-between'>
-        <h1 className='capitalize'>Convite - {invite.name}</h1>
+      <CardHeader className='h-14 justify-between'>
+        <h1 className='capitalize'>Convite - {invite.session.name}</h1>
 
         <DeleteButton onPress={handleDelete}>
           <span className='text-danger'>Recusar</span>
@@ -540,8 +485,11 @@ function Invite({
       </CardHeader>
       <Divider className='h-0.5 !bg-gray-500' />
       <CardBody>
-        <p>Descrição: {invite.description}</p>
-        <p>Jogadores: {invite.players.join(', ')}</p>
+        <p>Descrição: {invite.session.description}</p>
+        <p className='capitalize'>
+          Jogadores:{' '}
+          {invite.session.players.length && invite.session.players.join(', ')}
+        </p>
       </CardBody>
       <Divider className='h-0.5 !bg-gray-500' />
       <CardFooter className='flex justify-center items-baseline gap-3'>

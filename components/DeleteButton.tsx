@@ -9,6 +9,7 @@ import {
   ModalHeader,
   useDisclosure,
 } from '@nextui-org/react';
+import { FormEvent } from 'react';
 import { BiTrash } from 'react-icons/bi';
 
 export default function DeleteButton({
@@ -16,7 +17,7 @@ export default function DeleteButton({
   size = 18,
   children,
 }: {
-  onPress: () => void;
+  onPress: (e: FormEvent) => void;
   size?: number;
   children?: React.ReactNode;
 }) {

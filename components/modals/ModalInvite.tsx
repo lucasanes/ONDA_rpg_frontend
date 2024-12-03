@@ -1,4 +1,7 @@
+import { useAuth } from '@/app/context/AuthContext';
+import { api } from '@/providers/api';
 import { Button, Input } from '@nextui-org/react';
+import { useParams } from 'next/navigation';
 import { FormEvent, useState } from 'react';
 import { toast } from 'react-toastify';
 import ModalComponent from './Modal';
@@ -14,22 +17,31 @@ export default function ModalInvite({
 }) {
   const [email, setEmail] = useState('');
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  const { id } = useParams();
+
+  const { user } = useAuth();
+
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     try {
+      if (email === user?.email) {
+        toast.error('Você não pode convidar a si mesmo');
+        return;
+      }
+
       //Todo: Implementar Socket
 
       //socket.emit('invite', {  });
 
-      //ToDo: Implementar chamada a API
+      await api.post('/invites', { email, sessionId: Number(id) });
 
-      //const response = await api.post('/invite', {  });
+      toast.success('Convite enviado com sucesso');
 
       onClose();
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      toast.error('Erro ao enviar convite');
+      toast.error(error.response.data.message);
     }
   }
 
