@@ -34,6 +34,17 @@ export default function SignUp() {
     event.preventDefault();
 
     try {
+      if (
+        username.length < 3 ||
+        username.length > 24 ||
+        username.includes(' ')
+      ) {
+        toast.error(
+          'O nome de usuário deve ter no mínimo 3 caracteres, no máximo 24 caracteres, e não pode conter espaços'
+        );
+        return;
+      }
+
       if (password !== confirmPassword) {
         toast.error('As senhas não coincidem');
         return;
