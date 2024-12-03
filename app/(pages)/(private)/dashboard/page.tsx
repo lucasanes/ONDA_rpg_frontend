@@ -65,9 +65,10 @@ export default function Dashboard() {
   }
 
   useEffect(() => {
-    if (!token) return;
     fetchData();
-  }, [token]);
+
+    //ToDo: Implementar Socket do Convite
+  }, []);
 
   return (
     <div className='w-full h-full flex flex-col items-center p-5 gap-5 overflow-y-auto'>

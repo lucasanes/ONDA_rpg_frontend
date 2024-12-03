@@ -1,7 +1,7 @@
 'use client';
 
 import { useDisabled } from '@/app/context/DisabledContext';
-import InventoryContainer from '@/components/InventarioContainer';
+import InventoryContainer from '@/components/InventoryContainer';
 import { MainContainer } from '@/components/MainContainer';
 import { StatusContainer } from '@/components/StatusContainer';
 import { api } from '@/providers/api';
@@ -65,7 +65,7 @@ export default function Character() {
 
       setCharactersOfSession([
         {
-          value: 'Mestre',
+          value: `sessionId:${character.sessionId}`,
           name: 'Mestre',
         },
         ...charactersOfSession.sort((a: Select, b: Select) =>
@@ -102,8 +102,22 @@ export default function Character() {
     }
   }
 
+  async function updateInventory() {
+    try {
+      const response = await api.get(`/items/character/${id}`);
+
+      setInventory(response.data);
+    } catch (error: any) {
+      console.log(error);
+      toast.error(error.response.data.message);
+    }
+  }
+
   useEffect(() => {
     fetchData();
+
+    //ToDo: Implementar Socket para atualizar o inventario em tempo real
+    // updateInventory();
   }, []);
 
   return loading ? (

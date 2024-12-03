@@ -1,7 +1,7 @@
 'use client';
 
 import AddButton from '@/components/AddButton';
-import InventoryContainer from '@/components/InventarioContainer';
+import InventoryContainer from '@/components/InventoryContainer';
 import ModalInvite from '@/components/modals/ModalInvite';
 import { SessionCharacterCard } from '@/components/SessionCharacterCard';
 import { api } from '@/providers/api';
@@ -39,8 +39,22 @@ export default function Session() {
     }
   }
 
+  async function updateInventory() {
+    try {
+      const response = await api.get(`/items/character/${id}`);
+
+      setInventory(response.data);
+    } catch (error: any) {
+      console.log(error);
+      toast.error(error.response.data.message);
+    }
+  }
+
   useEffect(() => {
     fetchData();
+
+    //ToDo: Implementar Socket para atualizar o inventario em tempo real
+    // updateInventory();
   }, []);
 
   return loading ? (
