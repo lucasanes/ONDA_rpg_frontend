@@ -1,6 +1,6 @@
 import { api } from '@/providers/api';
 import { InventoryInterface } from '@/types/inventory';
-import { Button, Input } from '@nextui-org/react';
+import { Button, Input, Spinner } from '@nextui-org/react';
 import { Dispatch, FormEvent, SetStateAction, useState } from 'react';
 import { toast } from 'react-toastify';
 import FileInput from '../FileInput';
@@ -24,10 +24,16 @@ export default function ModalEditItem({
   const [name, setName] = useState(item.name);
   const [image, setImage] = useState(item.image);
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     try {
+      if (isSubmitting) return;
+
+      setIsSubmitting(true);
+
       await api.put(`/items/${item.id}`, {
         name,
         image,
@@ -51,6 +57,8 @@ export default function ModalEditItem({
     } catch (error) {
       console.error(error);
       toast.error('Erro ao editar item');
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
@@ -88,8 +96,8 @@ export default function ModalEditItem({
           <Button onPress={onClose} variant='flat' color='danger'>
             Cancelar
           </Button>
-          <Button type='submit' color='primary'>
-            Salvar
+          <Button isDisabled={isSubmitting} type='submit' color='primary'>
+            {isSubmitting ? <Spinner size='sm' color='current' /> : 'Salvar'}
           </Button>
         </>
       }

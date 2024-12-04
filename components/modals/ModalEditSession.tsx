@@ -1,6 +1,6 @@
 import { api } from '@/providers/api';
 import { SessionInterface } from '@/types/session';
-import { Button, Input, Textarea } from '@nextui-org/react';
+import { Button, Input, Spinner, Textarea } from '@nextui-org/react';
 import { Dispatch, FormEvent, SetStateAction, useState } from 'react';
 import { toast } from 'react-toastify';
 import ModalComponent from './Modal';
@@ -23,10 +23,16 @@ export default function ModalEditSession({
   const [name, setName] = useState(session.name);
   const [description, setDescription] = useState(session.description);
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     try {
+      if (isSubmitting) return;
+
+      setIsSubmitting(true);
+
       await api.put(`/sessions/${id}`, { name, description });
 
       const updatedSession = {
@@ -47,6 +53,8 @@ export default function ModalEditSession({
     } catch (error) {
       console.error(error);
       toast.error('Erro ao editar sessão');
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
@@ -86,8 +94,8 @@ export default function ModalEditSession({
           <Button onPress={onClose} variant='flat' color='danger'>
             Cancelar
           </Button>
-          <Button type='submit' color='primary'>
-            Salvar
+          <Button isDisabled={isSubmitting} type='submit' color='primary'>
+            {isSubmitting ? <Spinner size='sm' color='current' /> : 'Salvar'}
           </Button>
         </>
       }

@@ -54,7 +54,7 @@ export default function Dashboard() {
   return (
     <div className='w-full h-full flex flex-col items-center p-5 gap-5 overflow-y-auto'>
       {loading ? (
-        <Spinner size='lg' className='mt-6' />
+        <Spinner size='lg' color='current' className='mt-6' />
       ) : (
         <>
           <Container title='Sessões'>

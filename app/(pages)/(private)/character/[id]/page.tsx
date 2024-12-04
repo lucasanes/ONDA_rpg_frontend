@@ -122,7 +122,7 @@ export default function Character() {
   }, []);
 
   return loading ? (
-    <Spinner size='lg' className='mt-6' />
+    <Spinner size='lg' color='current' className='mt-6' />
   ) : (
     <>
       <div className='flex flex-col p-4 gap-4 overflow-y-auto overflow-x-hidden'>

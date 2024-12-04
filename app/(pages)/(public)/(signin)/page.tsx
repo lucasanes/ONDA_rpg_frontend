@@ -10,6 +10,7 @@ import {
   Divider,
   Input,
   Link,
+  Spinner,
 } from '@nextui-org/react';
 import { useRouter } from 'next/navigation';
 import { FormEvent, useState } from 'react';
@@ -23,17 +24,25 @@ export default function SignIn() {
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(true);
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const router = useRouter();
   const { signIn } = useAuth();
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    const { error } = await signIn({ email, password, rememberMe });
+    try {
+      setIsSubmitting(true);
 
-    if (error) return;
+      const { error } = await signIn({ email, password, rememberMe });
 
-    router.push('/dashboard');
+      if (error) return;
+
+      router.push('/dashboard');
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -75,8 +84,13 @@ export default function SignIn() {
           </CardBody>
           <Divider />
           <CardFooter className='flex gap-3'>
-            <Button color='primary' type='submit' variant='solid'>
-              Entrar
+            <Button
+              isDisabled={isSubmitting}
+              color='primary'
+              type='submit'
+              variant='solid'
+            >
+              {isSubmitting ? <Spinner size='sm' color='current' /> : 'Entrar'}
             </Button>
             <Button as={Link} color='secondary' href='/signup' type='button'>
               Criar uma conta?

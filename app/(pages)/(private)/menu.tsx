@@ -62,7 +62,7 @@ export default function Menu() {
                 {user ? (
                   <p className='capitalize'>{user.username}</p>
                 ) : (
-                  <Spinner size='sm' />
+                  <Spinner size='sm' color='current' />
                 )}
               </Button>
             </DropdownTrigger>

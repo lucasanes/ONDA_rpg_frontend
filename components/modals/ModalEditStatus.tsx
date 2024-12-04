@@ -1,6 +1,6 @@
 import { api } from '@/providers/api';
 import { StatusCharacterInterface } from '@/types/character';
-import { Button, Input } from '@nextui-org/react';
+import { Button, Input, Spinner } from '@nextui-org/react';
 import { useParams } from 'next/navigation';
 import { Dispatch, FormEvent, SetStateAction, useState } from 'react';
 import { toast } from 'react-toastify';
@@ -24,12 +24,18 @@ export default function ModalEditStatus({
   const [defense, setDefense] = useState(statusCharacter.defense);
   const [cd, setCd] = useState(statusCharacter.cd);
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const { id } = useParams();
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     try {
+      if (isSubmitting) return;
+
+      setIsSubmitting(true);
+
       await api.put(`/characters/${id}/status`, {
         portrait: portrait ? portrait : null,
         defense,
@@ -55,6 +61,8 @@ export default function ModalEditStatus({
     } catch (error) {
       console.error(error);
       toast.error('Erro ao editar personagem');
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
@@ -101,8 +109,8 @@ export default function ModalEditStatus({
           <Button onPress={onClose} variant='flat' color='danger'>
             Cancelar
           </Button>
-          <Button type='submit' color='primary'>
-            Salvar
+          <Button isDisabled={isSubmitting} type='submit' color='primary'>
+            {isSubmitting ? <Spinner size='sm' color='current' /> : 'Salvar'}
           </Button>
         </>
       }
