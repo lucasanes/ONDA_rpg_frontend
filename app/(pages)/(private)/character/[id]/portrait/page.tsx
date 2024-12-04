@@ -1,5 +1,6 @@
 'use client';
 
+import { useSocket } from '@/app/context/SocketContext';
 import { imFellEnglish, specialElite } from '@/config/fonts';
 import { api } from '@/providers/api';
 import { CharacterPortraitInterface } from '@/types/character';
@@ -20,6 +21,8 @@ export default function Portrait() {
   const [showMun, setShowMun] = useState(false);
 
   const { id } = useParams();
+
+  const { onStatusCharacter } = useSocket();
 
   async function fetchData() {
     try {
@@ -46,107 +49,59 @@ export default function Portrait() {
 
   useEffect(() => {
     fetchData();
-  }, []);
 
-  function updateCharacterField<T extends keyof CharacterPortraitInterface>(
-    field: T,
-    value: CharacterPortraitInterface[T]
-  ) {
-    setCharacter((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
-  }
+    onStatusCharacter(Number(id), (data) => {
+      setCharacter((prev) => ({
+        ...prev,
+        [data.key]: data.value,
+      }));
+
+      if (data.key === 'currentMun') {
+        setShowMun(true);
+        setTimeout(() => setShowMun(false), 5000);
+      }
+
+      if (data.key === 'money') {
+        setShowMoney(true);
+        setTimeout(() => setShowMoney(false), 5000);
+      }
+    });
+  }, []);
 
   return (
     !loading && (
-      <>
-        <div className='flex gap-10'>
-          <button
-            onClick={() =>
-              updateCharacterField('fighting', !character.fighting)
-            }
-          >
-            combate
-          </button>
-          <button
-            onClick={() => updateCharacterField('tired', !character.tired)}
-          >
-            cansado
-          </button>
-          <button
-            onClick={() => updateCharacterField('hurted', !character.hurted)}
-          >
-            machucado
-          </button>
-          <button
-            onClick={() =>
-              updateCharacterField('unconscious', !character.unconscious)
-            }
-          >
-            inconsciente
-          </button>
-          <button
-            onClick={() => updateCharacterField('dying', !character.dying)}
-          >
-            morrendo
-          </button>
-          <button
-            onClick={() => {
-              updateCharacterField('currentMun', character.currentMun - 1);
-              setShowMun(true);
-              setTimeout(() => setShowMun(false), 5000);
+      <div className='w-full h-full flex justify-start items-center p-20'>
+        <div className='relative'>
+          <Hurted
+            hurted={character.hurted}
+            unconscious={character.unconscious}
+          />
+          <Dying dying={character.dying} unconscious={character.unconscious} />
+          <div
+            style={{
+              top: `${IMAGE_SIZE - 125}px`,
+              left: `${IMAGE_SIZE - 50}px`,
             }}
+            className='absolute z-40 flex flex-col gap-2 justify-center items-start'
           >
-            - mun
-          </button>
-          <button
-            onClick={() => {
-              updateCharacterField('money', character.money - 10);
-              setShowMoney(true);
-              setTimeout(() => setShowMoney(false), 5000);
-            }}
-          >
-            - money
-          </button>
-        </div>
-
-        <div className='w-full h-full flex justify-start items-center p-20'>
-          <div className='relative'>
-            <Hurted
-              hurted={character.hurted}
-              unconscious={character.unconscious}
-            />
-            <Dying
-              dying={character.dying}
-              unconscious={character.unconscious}
-            />
-            <div
-              style={{
-                top: `${IMAGE_SIZE + 30}px`,
-                left: `${IMAGE_SIZE}px`,
-              }}
-              className='fixed z-40 flex flex-col gap-2 justify-center items-start'
-            >
-              <Money money={character.money} showMoney={showMoney} />
-              <Munition munition={character.currentMun} showMun={showMun} />
-            </div>
-            <PortraitImage
-              portrait={character.portrait}
-              unconscious={character.unconscious}
-              tired={character.tired}
-            />
+            <Money money={character.money} showMoney={showMoney} />
+            <Munition munition={character.currentMun} showMun={showMun} />
           </div>
-          <NameOrStatus
-            name={character.name}
-            fighting={character.fighting}
-            mp={character.mp}
-            currentMp={character.currentMp}
-            hp={character.hp}
-            currentHp={character.currentHp}
+          <PortraitImage
+            portrait={character.portrait}
+            unconscious={character.unconscious}
+            tired={character.tired}
           />
         </div>
-      </>
+        <NameOrStatus
+          name={character.name}
+          fighting={character.fighting}
+          mp={character.mp}
+          currentMp={character.currentMp}
+          hp={character.hp}
+          currentHp={character.currentHp}
+        />
+      </div>
     )
   );
 }
@@ -160,7 +115,7 @@ function Munition({
 }) {
   return (
     <div
-      className={`ml-3 z-40 flex items-center justify-center transition duration-1000 ease-in-out ${
+      className={`ml z-40 flex items-center justify-center transition duration-1000 ease-in-out ${
         showMun ? 'opacity-100' : 'opacity-0'
       }`}
     >
@@ -295,7 +250,7 @@ function NameOrStatus({
   return (
     <>
       <div
-        className={`flex flex-col ml-12 mt-6 mb-6 ${!fighting ? 'opacity-100' : 'opacity-0'} transition ${!fighting ? 'duration-1000' : 'duration-500'} ease-in-out`}
+        className={`flex flex-col ml-16 mt-6 mb-6 ${!fighting ? 'opacity-100' : 'opacity-0'} transition ${!fighting ? 'duration-1000' : 'duration-500'} ease-in-out`}
       >
         <p
           style={{
@@ -316,7 +271,7 @@ function NameOrStatus({
       </div>
 
       <div
-        className={`relative -left-96 flex flex-col ml-12 mt-8 ${fighting ? 'opacity-100' : 'opacity-0'} transition ${fighting ? 'duration-1000' : 'duration-500'} ease-in-out`}
+        className={`relative -left-96 flex flex-col ml-28 mt-8 ${fighting ? 'opacity-100' : 'opacity-0'} transition ${fighting ? 'duration-1000' : 'duration-500'} ease-in-out`}
       >
         <span
           style={{

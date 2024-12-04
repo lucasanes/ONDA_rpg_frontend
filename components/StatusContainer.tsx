@@ -1,11 +1,13 @@
 import { useDisabled } from '@/app/context/DisabledContext';
+import { useSocket } from '@/app/context/SocketContext';
 import { api } from '@/providers/api';
 import {
   StatusBarCharacterInterface,
   StatusCharacterInterface,
 } from '@/types/character';
+import { xpToLevel, xpToNextLevel } from '@/utils/xp-level';
 import { Button, Chip, Divider, useDisclosure } from '@nextui-org/react';
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import EditButton from './EditButton';
 import ModalEditStatus from './modals/ModalEditStatus';
@@ -23,11 +25,14 @@ export function StatusContainer({
 
   const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
 
+  const xpRef = useRef<HTMLDivElement>(null);
+
   const {
     hp,
     currentHp,
     mp,
     currentMp,
+    xp,
     mun,
     currentMun,
     portrait,
@@ -40,10 +45,32 @@ export function StatusContainer({
     defense,
   } = statusCharacter;
 
-  const router = useRouter();
   const { disabled } = useDisabled();
 
   const { onOpen, isOpen, onClose, onOpenChange } = useDisclosure();
+
+  const { updateStatusCharacter } = useSocket();
+
+  function updateXP(currentXP: number) {
+    const xpProgressRef = xpRef.current;
+
+    if (!xpProgressRef) return;
+
+    const quantityXPOfCurrentLevel = xpToNextLevel(xpToLevel(currentXP));
+    const quantityXPToNextLevel = xpToNextLevel(xpToLevel(currentXP) + 1);
+
+    const percentage =
+      ((currentXP - quantityXPOfCurrentLevel) /
+        (quantityXPToNextLevel - quantityXPOfCurrentLevel)) *
+      100;
+
+    const degree = (percentage / 100) * 360; // Converte para graus
+    xpProgressRef.style.background = `conic-gradient(#43ff5c 0deg ${degree}deg, white ${degree}deg 360deg)`;
+  }
+
+  useEffect(() => {
+    updateXP(xp);
+  }, []);
 
   useEffect(() => {
     if (currentHp < hp / 2 && currentHp >= hp / 4 && currentHp > 0 && !hurted) {
@@ -76,55 +103,72 @@ export function StatusContainer({
   }, [currentHp, hp, currentMp, mp]);
 
   function handleFighting(boolean: boolean) {
-    //ToDo: Implementar chamada Socket
-
-    setStatusCharacter((prev) => ({
-      ...prev,
-      fighting: boolean,
-    }));
+    updateStatusCharacter(
+      { value: boolean, key: 'fighting', characterId: id },
+      () => {
+        setStatusCharacter((prev) => ({
+          ...prev,
+          fighting: boolean,
+        }));
+      }
+    );
   }
 
   function handleTired(boolean: boolean) {
-    //ToDo: Implementar chamada Socket
-
-    setStatusCharacter((prev) => ({
-      ...prev,
-      tired: boolean,
-    }));
+    updateStatusCharacter(
+      { value: boolean, key: 'tired', characterId: id },
+      () => {
+        setStatusCharacter((prev) => ({
+          ...prev,
+          tired: boolean,
+        }));
+      }
+    );
   }
 
   function handleHurted(boolean: boolean) {
-    //ToDo: Implementar chamada Socket
-
-    setStatusCharacter((prev) => ({
-      ...prev,
-      hurted: boolean,
-    }));
+    updateStatusCharacter(
+      { value: boolean, key: 'hurted', characterId: id },
+      () => {
+        setStatusCharacter((prev) => ({
+          ...prev,
+          hurted: boolean,
+        }));
+      }
+    );
   }
 
   function handleDying(boolean: boolean) {
-    //ToDo: Implementar chamada Socket
-
-    setStatusCharacter((prev) => ({
-      ...prev,
-      dying: boolean,
-    }));
+    updateStatusCharacter(
+      { value: boolean, key: 'dying', characterId: id },
+      () => {
+        setStatusCharacter((prev) => ({
+          ...prev,
+          dying: boolean,
+        }));
+      }
+    );
   }
 
   function handleUnconscious(boolean: boolean) {
-    //ToDo: Implementar chamada Socket
-
-    setStatusCharacter((prev) => ({
-      ...prev,
-      unconscious: boolean,
-    }));
+    updateStatusCharacter(
+      { value: boolean, key: 'unconscious', characterId: id },
+      () => {
+        setStatusCharacter((prev) => ({
+          ...prev,
+          unconscious: boolean,
+        }));
+      }
+    );
   }
 
   function onUpdate(key: keyof StatusBarCharacterInterface, value: number) {
-    setStatusCharacter((prev) => ({
-      ...prev,
-      [key]: value,
-    }));
+    updateStatusCharacter({ value, key, characterId: id }, () => {
+      setStatusCharacter((prev) => ({
+        ...prev,
+        [key]: value,
+      }));
+    });
 
     if (debounceTimeout.current) {
       clearTimeout(debounceTimeout.current);
@@ -209,11 +253,11 @@ export function StatusContainer({
             </Button>
           </div>
         </div>
-        <div
-          onClick={() => router.push(`/character/${id}/portrait`)}
+        <Link
+          href={`/character/${id}/portrait`}
           className='relative min-w-64 min-h-64 max-w-64 max-h-64 rounded-full cursor-pointer'
         >
-          <div className='z-10 absolute min-w-64 min-h-64 max-w-64 max-h-64 rounded-full aspect-square object-cover border-2'></div>
+          {/* <div className='z-10 absolute min-w-64 min-h-64 max-w-64 max-h-64 rounded-full aspect-square object-cover border-2'></div> */}
           <img
             style={{
               width: 350,
@@ -231,10 +275,25 @@ export function StatusContainer({
             className={`absolute z-20 left-2 bottom-3 rounded-full rotate-90 transition duration-700 ease-in-out ${hurted ? 'opacity-80' : `opacity-0`} ${unconscious ? 'blur-sm' : ''}`}
           />
           <img
-            className={`z-0 min-w-64 min-h-64 max-w-64 max-h-64 rounded-full aspect-square object-cover transition duration-700 ease-in-out ${unconscious ? 'brightness-0 blur-sm' : 'brightness-100 blur-0'} ${tired ? 'grayscale' : ''}`}
+            className={`z-0 w-64 h-64 rounded-full aspect-square object-cover transition duration-700 ease-in-out ${unconscious ? 'brightness-0 blur-sm' : 'brightness-100 blur-0'} ${tired ? 'grayscale' : ''}`}
             src={portrait || '/noportrait.png'}
           />
-        </div>
+          <div
+            ref={xpRef}
+            className='absolute w-64 h-64 z-30 inset-0 rounded-full'
+            style={{
+              background: 'conic-gradient(#43ff5c 0deg, white 0deg 360deg)',
+              maskImage:
+                'radial-gradient(closest-side, transparent 97%, black 0%)',
+              WebkitMaskImage:
+                'radial-gradient(closest-side, transparent 97%, black 0%)',
+            }}
+          ></div>
+          {/* <img
+            className={`z-0 min-w-64 min-h-64 max-w-64 max-h-64 rounded-full aspect-square object-cover transition duration-700 ease-in-out ${unconscious ? 'brightness-0 blur-sm' : 'brightness-100 blur-0'} ${tired ? 'grayscale' : ''}`}
+            src={portrait || '/noportrait.png'}
+          /> */}
+        </Link>
       </div>
 
       <span className='mt-3 text-center'>Vida</span>

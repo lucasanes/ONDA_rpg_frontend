@@ -1,5 +1,7 @@
+import { useSocket } from '@/app/context/SocketContext';
 import { api } from '@/providers/api';
 import { MainCharacterInterface } from '@/types/character';
+import { convertMoney } from '@/utils/convertMoney';
 import { Button, Input } from '@nextui-org/react';
 import { useParams } from 'next/navigation';
 import { Dispatch, FormEvent, SetStateAction, useState } from 'react';
@@ -34,6 +36,8 @@ export default function ModalEditMain({
 
   const { id } = useParams();
 
+  const { updateStatusCharacter } = useSocket();
+
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
@@ -64,6 +68,21 @@ export default function ModalEditMain({
         tp,
         to,
       }));
+
+      if (
+        ts != mainCharacter.ts ||
+        tp != mainCharacter.tp ||
+        to != mainCharacter.to
+      ) {
+        updateStatusCharacter(
+          {
+            characterId: Number(id),
+            key: 'money',
+            value: convertMoney({ ts, tp, to }),
+          },
+          () => {}
+        );
+      }
 
       toast.success('Personagem editado com sucesso');
 

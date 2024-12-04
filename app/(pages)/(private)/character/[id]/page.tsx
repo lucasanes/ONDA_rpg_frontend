@@ -86,6 +86,7 @@ export default function Character() {
 
       setInitialStatusCharacter({
         ...character.statusCharacter,
+        xp: character.mainCharacter.xp,
         dying: false,
         fighting: false,
         hurted: false,

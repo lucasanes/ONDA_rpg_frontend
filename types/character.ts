@@ -71,6 +71,7 @@ export interface StatusCharacterInterface {
   tired: boolean;
   dying: boolean;
   fighting: boolean;
+  xp: number;
   currentMun: number;
   hurted: boolean;
 }
