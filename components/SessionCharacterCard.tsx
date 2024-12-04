@@ -1,3 +1,4 @@
+import { useSocket } from '@/app/context/SocketContext';
 import { specialElite } from '@/config/fonts';
 import { api } from '@/providers/api';
 import { SessionCharactersInterface } from '@/types/character';
@@ -16,7 +17,7 @@ import {
   Progress,
 } from '@nextui-org/react';
 import { useRouter } from 'next/navigation';
-import { FormEvent, useRef, useState } from 'react';
+import { FormEvent, useEffect, useRef, useState } from 'react';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import { BiCoin, BiLinkExternal, BiUnlink, BiUserCircle } from 'react-icons/bi';
 import { toast } from 'react-toastify';
@@ -24,9 +25,11 @@ import DeleteButton from './DeleteButton';
 
 export function SessionCharacterCard({
   character,
+  characters,
   setCharacters,
 }: {
   character: SessionCharactersInterface;
+  characters: SessionCharactersInterface[];
   setCharacters: React.Dispatch<
     React.SetStateAction<SessionCharactersInterface[]>
   >;
@@ -52,6 +55,7 @@ export function SessionCharacterCard({
       currentMun,
       mp,
       currentMp,
+      money,
       portrait,
       hp,
       currentHp,
@@ -63,6 +67,28 @@ export function SessionCharacterCard({
 
   const [section, setSection] = useState<'main' | 'status'>('main');
   const xpRef = useRef<HTMLDivElement>(null);
+
+  const { onStatusCharacter } = useSocket();
+
+  useEffect(() => {
+    onStatusCharacter(Number(id), (data) => {
+      const characterIndex = characters.findIndex((char) => char.id === id);
+
+      if (characterIndex === -1) return;
+
+      const newCharacters = [...characters];
+
+      newCharacters[characterIndex] = {
+        ...newCharacters[characterIndex],
+        statusCharacter: {
+          ...newCharacters[characterIndex].statusCharacter,
+          [data.key]: data.value,
+        },
+      };
+
+      setCharacters(newCharacters);
+    });
+  }, []);
 
   async function handleChangeVisibility() {
     try {
@@ -314,7 +340,7 @@ export function SessionCharacterCard({
               <div className='flex items-center gap-1'>
                 <img src='/coin.png' width={25} height={25} />
                 <span className={`text-md mt-1 ${specialElite.className}`}>
-                  {convertMoney(character.mainCharacter)}
+                  {money ? money : convertMoney(character.mainCharacter)}
                 </span>
               </div>
             </div>

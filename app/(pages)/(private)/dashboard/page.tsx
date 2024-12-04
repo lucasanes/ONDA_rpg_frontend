@@ -48,7 +48,7 @@ export default function Dashboard() {
   useEffect(() => {
     fetchData();
 
-    //ToDo: Implementar Socket do Convite
+    //ToDo: Implementar Socket para receber convites
   }, []);
 
   return (

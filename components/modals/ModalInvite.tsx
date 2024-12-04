@@ -30,7 +30,7 @@ export default function ModalInvite({
         return;
       }
 
-      //Todo: Implementar Socket
+      //Todo: Implementar Socket para enviar convite
 
       //socket.emit('invite', {  });
 

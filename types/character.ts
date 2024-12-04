@@ -67,6 +67,7 @@ export interface StatusCharacterInterface {
   portrait: string | null;
   cd: number;
   defense: number;
+  money?: number;
   unconscious: boolean;
   tired: boolean;
   dying: boolean;

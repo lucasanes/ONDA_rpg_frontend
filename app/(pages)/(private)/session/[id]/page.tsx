@@ -107,6 +107,7 @@ function CharacterContainer({
           <SessionCharacterCard
             key={character.id}
             character={character}
+            characters={characters}
             setCharacters={setCharacters}
           />
         ))}
