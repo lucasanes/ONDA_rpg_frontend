@@ -49,7 +49,7 @@ export function StatusContainer({
 
   const { onOpen, isOpen, onClose, onOpenChange } = useDisclosure();
 
-  const { updateStatusCharacter } = useSocket();
+  const { emitStatusCharacter } = useSocket();
 
   function updateXP(currentXP: number) {
     const xpProgressRef = xpRef.current;
@@ -103,7 +103,7 @@ export function StatusContainer({
   }, [currentHp, hp, currentMp, mp]);
 
   function handleFighting(boolean: boolean) {
-    updateStatusCharacter(
+    emitStatusCharacter(
       { value: boolean, key: 'fighting', characterId: id },
       () => {
         setStatusCharacter((prev) => ({
@@ -115,7 +115,7 @@ export function StatusContainer({
   }
 
   function handleTired(boolean: boolean) {
-    updateStatusCharacter(
+    emitStatusCharacter(
       { value: boolean, key: 'tired', characterId: id },
       () => {
         setStatusCharacter((prev) => ({
@@ -127,7 +127,7 @@ export function StatusContainer({
   }
 
   function handleHurted(boolean: boolean) {
-    updateStatusCharacter(
+    emitStatusCharacter(
       { value: boolean, key: 'hurted', characterId: id },
       () => {
         setStatusCharacter((prev) => ({
@@ -139,7 +139,7 @@ export function StatusContainer({
   }
 
   function handleDying(boolean: boolean) {
-    updateStatusCharacter(
+    emitStatusCharacter(
       { value: boolean, key: 'dying', characterId: id },
       () => {
         setStatusCharacter((prev) => ({
@@ -151,7 +151,7 @@ export function StatusContainer({
   }
 
   function handleUnconscious(boolean: boolean) {
-    updateStatusCharacter(
+    emitStatusCharacter(
       { value: boolean, key: 'unconscious', characterId: id },
       () => {
         setStatusCharacter((prev) => ({
@@ -163,7 +163,7 @@ export function StatusContainer({
   }
 
   function onUpdate(key: keyof StatusBarCharacterInterface, value: number) {
-    updateStatusCharacter({ value, key, characterId: id }, () => {
+    emitStatusCharacter({ value, key, characterId: id }, () => {
       setStatusCharacter((prev) => ({
         ...prev,
         [key]: value,

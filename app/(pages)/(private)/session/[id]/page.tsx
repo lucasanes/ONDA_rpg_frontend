@@ -1,5 +1,6 @@
 'use client';
 
+import { useSocket } from '@/app/context/SocketContext';
 import AddButton from '@/components/AddButton';
 import InventoryContainer from '@/components/InventoryContainer';
 import ModalInvite from '@/components/modals/ModalInvite';
@@ -8,7 +9,7 @@ import { api } from '@/providers/api';
 import { SessionCharactersInterface } from '@/types/character';
 import { InventoryInterface } from '@/types/inventory';
 import { Divider, Spinner, useDisclosure } from '@nextui-org/react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
@@ -22,6 +23,10 @@ export default function Session() {
 
   const { id } = useParams();
 
+  const router = useRouter();
+
+  const { onItem } = useSocket();
+
   async function fetchData() {
     try {
       const { data } = await api.get(`/sessions/${id}`);
@@ -34,16 +39,21 @@ export default function Session() {
     } catch (error: any) {
       console.log(error);
       toast.error(error.response.data.message);
+      if (error.response.data.message.includes('permissão')) {
+        router.push('/dashboard');
+      }
     } finally {
       setLoading(false);
     }
   }
 
-  async function updateInventory() {
+  async function updateInventory(senderName: string) {
     try {
       const response = await api.get(`/items/character/${id}`);
 
       setInventory(response.data);
+
+      toast.success(`Você recebeu um item de ${senderName}`);
     } catch (error: any) {
       console.log(error);
       toast.error(error.response.data.message);
@@ -53,8 +63,9 @@ export default function Session() {
   useEffect(() => {
     fetchData();
 
-    //ToDo: Implementar Socket para atualizar o inventario em tempo real
-    // updateInventory();
+    onItem(true, Number(id), (data) => {
+      updateInventory(data.senderName);
+    });
   }, []);
 
   return loading ? (
@@ -67,6 +78,8 @@ export default function Session() {
           setCharacters={setCharacters}
         />
         <InventoryContainer
+          senderName='Mestre'
+          sessionId={Number(id)}
           charactersOfSession={characters.map((each) => ({
             value: each.id,
             name: each.mainCharacter.name,

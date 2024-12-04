@@ -1,5 +1,7 @@
 'use client';
 
+import { useAuth } from '@/app/context/AuthContext';
+import { useSocket } from '@/app/context/SocketContext';
 import { AddCharacterCard } from '@/components/AddCharacterCard';
 import { AddSessionCard } from '@/components/AddSessionCard';
 import { CharacterCard } from '@/components/CharacterCard';
@@ -23,6 +25,9 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
 
   const token = Cookies.get('token');
+  const { user } = useAuth();
+
+  const { onInvite } = useSocket();
 
   async function fetchData() {
     try {
@@ -48,8 +53,12 @@ export default function Dashboard() {
   useEffect(() => {
     fetchData();
 
-    //ToDo: Implementar Socket para receber convites
-  }, []);
+    if (user?.id) {
+      onInvite(user.id, (data) => {
+        setInvites((prev) => [...prev, data]);
+      });
+    }
+  }, [user?.id]);
 
   return (
     <div className='w-full h-full flex flex-col items-center p-5 gap-5 overflow-y-auto'>

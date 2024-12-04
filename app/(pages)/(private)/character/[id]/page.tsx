@@ -1,6 +1,7 @@
 'use client';
 
 import { useDisabled } from '@/app/context/DisabledContext';
+import { useSocket } from '@/app/context/SocketContext';
 import InventoryContainer from '@/components/InventoryContainer';
 import { MainContainer } from '@/components/MainContainer';
 import { StatusContainer } from '@/components/StatusContainer';
@@ -12,7 +13,7 @@ import {
 } from '@/types/character';
 import { InventoryInterface } from '@/types/inventory';
 import { Spinner } from '@nextui-org/react';
-import { redirect, useParams } from 'next/navigation';
+import { redirect, useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
@@ -39,6 +40,9 @@ export default function Character() {
 
   const { id } = useParams();
   const { setDisabled } = useDisabled();
+  const { onItem } = useSocket();
+
+  const router = useRouter();
 
   async function fetchData() {
     try {
@@ -98,16 +102,22 @@ export default function Character() {
     } catch (error: any) {
       console.log(error);
       toast.error(error.response.data.message);
+
+      if (error.response.data.message.includes('permissão')) {
+        router.push('/dashboard');
+      }
     } finally {
       setLoading(false);
     }
   }
 
-  async function updateInventory() {
+  async function updateInventory(senderName: string) {
     try {
       const response = await api.get(`/items/character/${id}`);
 
       setInventory(response.data);
+
+      toast.success(`Você recebeu um item de ${senderName}`);
     } catch (error: any) {
       console.log(error);
       toast.error(error.response.data.message);
@@ -117,8 +127,9 @@ export default function Character() {
   useEffect(() => {
     fetchData();
 
-    //ToDo: Implementar Socket para atualizar o inventario em tempo real
-    // updateInventory();
+    onItem(false, Number(id), (data) => {
+      updateInventory(data.senderName);
+    });
   }, []);
 
   return loading ? (
@@ -135,6 +146,8 @@ export default function Character() {
         </div>
         <div>
           <InventoryContainer
+            senderName={initialMainCharacter.name}
+            sessionId={character.sessionId ? character.sessionId : null}
             charactersOfSession={charactersOfSession}
             inventory={inventory}
             setInventory={setInventory}
