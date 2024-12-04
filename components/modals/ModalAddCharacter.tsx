@@ -1,7 +1,7 @@
 import { useAuth } from '@/app/context/AuthContext';
 import { api } from '@/providers/api';
 import { CharactersInterface } from '@/types/character';
-import { Button, Input } from '@nextui-org/react';
+import { Button, Input, Spinner } from '@nextui-org/react';
 import { FormEvent, useState } from 'react';
 import { toast } from 'react-toastify';
 import FileInput from '../FileInput';
@@ -29,12 +29,18 @@ export default function ModalAddCharacter({
   const [mp, setPm] = useState(0);
   const [portrait, setPortrait] = useState('');
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const { user } = useAuth();
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     try {
+      if (isSubmitting) return;
+
+      setIsSubmitting(true);
+
       const response = await api.post('/characters', {
         name,
         xp,
@@ -76,6 +82,8 @@ export default function ModalAddCharacter({
     } catch (error) {
       console.error(error);
       toast.error('Erro ao criar personagem');
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
@@ -199,8 +207,8 @@ export default function ModalAddCharacter({
           <Button onPress={onClose} variant='flat' color='danger'>
             Cancelar
           </Button>
-          <Button type='submit' color='primary'>
-            Adicionar
+          <Button isDisabled={isSubmitting} type='submit' color='primary'>
+            {isSubmitting ? <Spinner size='sm' color='current' /> : 'Adicionar'}
           </Button>
         </>
       }

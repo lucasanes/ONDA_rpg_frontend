@@ -32,12 +32,12 @@ export function InviteCard({
     try {
       await api.delete(`/invites/${invite.id}`);
 
-      toast.success('Convite deletado com sucesso');
+      toast.success('Convite recusado com sucesso');
 
       setInvites((invites) => invites.filter((each) => each.id !== invite.id));
     } catch (error) {
       console.log(error);
-      toast.error('Erro ao deletar convite');
+      toast.error('Erro ao recusar convite');
     }
   }
 

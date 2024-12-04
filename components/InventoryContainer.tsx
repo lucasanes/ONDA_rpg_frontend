@@ -1,4 +1,5 @@
 import { useDisabled } from '@/app/context/DisabledContext';
+import { useSocket } from '@/app/context/SocketContext';
 import { api } from '@/providers/api';
 import { InventoryInterface } from '@/types/inventory';
 import { capitalizeWord } from '@/utils/capitalizeWord';
@@ -10,7 +11,7 @@ import {
   SelectItem,
   useDisclosure,
 } from '@nextui-org/react';
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { AiOutlineClear, AiOutlineSend } from 'react-icons/ai';
 import { RiShareForwardLine } from 'react-icons/ri';
 import { toast } from 'react-toastify';
@@ -21,10 +22,14 @@ import ModalEditItem from './modals/ModalEditItem';
 import ModalImage from './modals/ModalImage';
 
 export default function InventoryContainer({
+  sessionId,
+  senderName,
   charactersOfSession,
   inventory,
   setInventory,
 }: {
+  sessionId: number | null;
+  senderName: string;
   charactersOfSession: { value: string | number; name: string }[];
   inventory: InventoryInterface[];
   setInventory: Dispatch<SetStateAction<InventoryInterface[]>>;
@@ -32,16 +37,40 @@ export default function InventoryContainer({
   const { disabled } = useDisabled();
 
   const { onOpen, isOpen, onClose, onOpenChange } = useDisclosure();
+  const {
+    onOpen: onImageModalOpen,
+    isOpen: isImageModalOpen,
+    onClose: onImageModalClose,
+    onOpenChange: onImageModalOpenChange,
+  } = useDisclosure();
 
   const [characterSelected, setCharacterSelected] = useState<string | number>(
     ''
   );
   const [itemSelected, setItemSelected] = useState<number>(0);
 
+  const [image, setImage] = useState<string>('');
+
   const showSender = inventory.length > 0 && charactersOfSession.length > 0;
 
+  const { emitItem, onImage, emitCleanImage, onCleanImage } = useSocket();
+
+  useEffect(() => {
+    onImage(sessionId, (data) => {
+      setImage(data.image);
+      onImageModalOpen();
+    });
+
+    onCleanImage(sessionId, () => {
+      setImage('');
+      onImageModalClose();
+    });
+  }, []);
+
   function handleHideForAll() {
-    //ToDO: Implementar Socket para esconder para todos
+    if (!sessionId) return;
+
+    emitCleanImage({ sessionId });
   }
 
   async function handleSend() {
@@ -51,13 +80,13 @@ export default function InventoryContainer({
         return;
       }
 
-      //ToDO: Implementar Socket para enviar item
-
       const isToSession = characterSelected.toString().startsWith('sessionId:');
 
-      if (isToSession) {
-        const sessionId = characterSelected.toString().split(':')[1];
+      const sessionId = isToSession
+        ? characterSelected.toString().split(':')[1]
+        : null;
 
+      if (isToSession) {
         await api.put(`/items/${itemSelected}`, {
           sessionId: Number(sessionId),
           characterId: null,
@@ -73,14 +102,25 @@ export default function InventoryContainer({
         });
       }
 
-      setInventory((prev) => prev.filter((each) => each.id !== itemSelected));
+      emitItem(
+        {
+          characterId: !isToSession ? Number(characterSelected) : null,
+          sessionId: isToSession ? Number(sessionId) : null,
+          senderName,
+        },
+        () => {
+          setInventory((prev) =>
+            prev.filter((each) => each.id !== itemSelected)
+          );
 
-      toast.success(
-        `Item enviado com sucesso para ${
-          charactersOfSession.find(
-            (character) => character.value === characterSelected
-          )?.name
-        }`
+          toast.success(
+            `Item enviado com sucesso para ${
+              charactersOfSession.find(
+                (character) => character.value === characterSelected
+              )?.name
+            }`
+          );
+        }
       );
     } catch (error) {
       console.log(error);
@@ -90,6 +130,12 @@ export default function InventoryContainer({
 
   return (
     <div className='border-2 rounded-md border-gray-300 flex flex-col p-4 gap-2'>
+      <ModalImage
+        isOpen={isImageModalOpen}
+        onClose={onImageModalClose}
+        onOpenChange={onImageModalOpenChange}
+        image={image}
+      />
       <ModalAddItem
         isOpen={isOpen}
         onClose={onClose}
@@ -117,6 +163,7 @@ export default function InventoryContainer({
             {inventory.map((item) => (
               <Item
                 key={item.id}
+                sessionId={sessionId}
                 item={item}
                 setInventory={setInventory}
                 disabled={disabled}
@@ -184,10 +231,12 @@ export default function InventoryContainer({
 }
 
 function Item({
+  sessionId,
   item,
   setInventory,
   disabled,
 }: {
+  sessionId: number | null;
   item: InventoryInterface;
   setInventory: Dispatch<SetStateAction<InventoryInterface[]>>;
   disabled: boolean;
@@ -206,10 +255,15 @@ function Item({
     onOpenChange: onEditModalOpenChange,
   } = useDisclosure();
 
-  function handleShowToAll() {
-    //ToDO: Implementar Socket para mostrar para todos
+  const { emitImage } = useSocket();
 
-    onImageModalOpen();
+  function handleShowToAll() {
+    if (!sessionId) return;
+
+    emitImage({
+      image: item.image,
+      sessionId,
+    });
   }
 
   async function handleDelete() {

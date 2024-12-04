@@ -1,4 +1,5 @@
 import { useAuth } from '@/app/context/AuthContext';
+import { useSocket } from '@/app/context/SocketContext';
 import { api } from '@/providers/api';
 import { Button, Input } from '@nextui-org/react';
 import { useParams } from 'next/navigation';
@@ -20,6 +21,7 @@ export default function ModalInvite({
   const { id } = useParams();
 
   const { user } = useAuth();
+  const { emitInvite } = useSocket();
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -30,13 +32,15 @@ export default function ModalInvite({
         return;
       }
 
-      //Todo: Implementar Socket para enviar convite
+      const { data } = await api.post('/invites', {
+        email,
+        sessionId: Number(id),
+      });
 
-      //socket.emit('invite', {  });
-
-      await api.post('/invites', { email, sessionId: Number(id) });
-
-      toast.success('Convite enviado com sucesso');
+      emitInvite(data, () => {
+        console.log('sent');
+        toast.success('Convite enviado com sucesso');
+      });
 
       onClose();
     } catch (error: any) {

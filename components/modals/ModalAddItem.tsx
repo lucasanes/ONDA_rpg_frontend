@@ -1,6 +1,6 @@
 import { api } from '@/providers/api';
 import { InventoryInterface } from '@/types/inventory';
-import { Button, Input } from '@nextui-org/react';
+import { Button, Input, Spinner } from '@nextui-org/react';
 import { useParams, usePathname } from 'next/navigation';
 import { Dispatch, FormEvent, SetStateAction, useState } from 'react';
 import { toast } from 'react-toastify';
@@ -24,10 +24,16 @@ export default function ModalAddItem({
   const [name, setName] = useState('');
   const [image, setImage] = useState('');
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     try {
+      if (isSubmitting) return;
+
+      setIsSubmitting(true);
+
       if (pathname.includes('character')) {
         const response = await api.post('/items', {
           name,
@@ -69,6 +75,8 @@ export default function ModalAddItem({
     } catch (error) {
       console.error(error);
       toast.error('Erro ao editar personagem');
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
@@ -105,8 +113,8 @@ export default function ModalAddItem({
           <Button onPress={onClose} variant='flat' color='danger'>
             Cancelar
           </Button>
-          <Button type='submit' color='primary'>
-            Salvar
+          <Button isDisabled={isSubmitting} type='submit' color='primary'>
+            {isSubmitting ? <Spinner size='sm' color='current' /> : 'Salvar'}
           </Button>
         </>
       }

@@ -2,7 +2,7 @@ import { useSocket } from '@/app/context/SocketContext';
 import { api } from '@/providers/api';
 import { MainCharacterInterface } from '@/types/character';
 import { convertMoney } from '@/utils/convertMoney';
-import { Button, Input } from '@nextui-org/react';
+import { Button, Input, Spinner } from '@nextui-org/react';
 import { useParams } from 'next/navigation';
 import { Dispatch, FormEvent, SetStateAction, useState } from 'react';
 import { toast } from 'react-toastify';
@@ -34,14 +34,20 @@ export default function ModalEditMain({
   const [tp, setTp] = useState(mainCharacter.tp);
   const [to, setTo] = useState(mainCharacter.to);
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const { id } = useParams();
 
-  const { updateStatusCharacter } = useSocket();
+  const { emitStatusCharacter } = useSocket();
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     try {
+      if (isSubmitting) return;
+
+      setIsSubmitting(true);
+
       await api.put(`/characters/${id}/main`, {
         name,
         age,
@@ -74,7 +80,7 @@ export default function ModalEditMain({
         tp != mainCharacter.tp ||
         to != mainCharacter.to
       ) {
-        updateStatusCharacter(
+        emitStatusCharacter(
           {
             characterId: Number(id),
             key: 'money',
@@ -90,6 +96,8 @@ export default function ModalEditMain({
     } catch (error) {
       console.error(error);
       toast.error('Erro ao editar personagem');
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
@@ -217,8 +225,8 @@ export default function ModalEditMain({
           <Button onPress={onClose} variant='flat' color='danger'>
             Cancelar
           </Button>
-          <Button type='submit' color='primary'>
-            Salvar
+          <Button isDisabled={isSubmitting} type='submit' color='primary'>
+            {isSubmitting ? <Spinner size='sm' color='current' /> : 'Salvar'}
           </Button>
         </>
       }

@@ -27,8 +27,10 @@ export default function Menu() {
     router.push('/');
   }
 
+  const show = !pathname.includes('portrait') && !pathname.includes('images');
+
   return (
-    !pathname.includes('portrait') && (
+    show && (
       <div className='fixedw-full h-14 bg-menu flex justify-between items-center px-4 sm:px-16'>
         <div className='md:w-1/3 hidden md:flex flex-none gap-2 justify-start items-center'>
           <img className='size-12' src='/favicon.webp' />
@@ -62,7 +64,7 @@ export default function Menu() {
                 {user ? (
                   <p className='capitalize'>{user.username}</p>
                 ) : (
-                  <Spinner size='sm' />
+                  <Spinner size='sm' color='current' />
                 )}
               </Button>
             </DropdownTrigger>

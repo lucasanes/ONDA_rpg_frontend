@@ -1,6 +1,6 @@
 import { api } from '@/providers/api';
 import { SessionInterface } from '@/types/session';
-import { Button, Input, Textarea } from '@nextui-org/react';
+import { Button, Input, Spinner, Textarea } from '@nextui-org/react';
 import { Dispatch, FormEvent, SetStateAction, useState } from 'react';
 import { toast } from 'react-toastify';
 import ModalComponent from './Modal';
@@ -19,10 +19,16 @@ export default function ModalAddSession({
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     try {
+      if (isSubmitting) return;
+
+      setIsSubmitting(true);
+
       const response = await api.post('/sessions', { name, description });
 
       setSessions((prevSessions) => [
@@ -41,6 +47,8 @@ export default function ModalAddSession({
     } catch (error) {
       console.error(error);
       toast.error('Erro ao criar sessão');
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
@@ -80,8 +88,8 @@ export default function ModalAddSession({
           <Button onPress={onClose} variant='flat' color='danger'>
             Cancelar
           </Button>
-          <Button type='submit' color='primary'>
-            Adicionar
+          <Button isDisabled={isSubmitting} type='submit' color='primary'>
+            {isSubmitting ? <Spinner size='sm' color='current' /> : 'Adicionar'}
           </Button>
         </>
       }
