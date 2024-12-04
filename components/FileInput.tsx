@@ -23,13 +23,15 @@ export default function FileInput({
 
   const { id } = params;
 
+  const prod = process.env.NODE_ENV === 'production';
+
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
 
     const storageRef = ref(
       storage,
-      `novosite/${user?.username || 'unknow'}/${id || 'unknow'}/${file.name}`
+      `novosite/${prod ? 'prod' : 'dev'}/${user?.username || 'unknow'}/${id || 'unknow'}/${file.name}`
     );
     const uploadTask = uploadBytesResumable(storageRef, file);
 
