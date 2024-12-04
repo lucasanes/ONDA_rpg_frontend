@@ -1,4 +1,5 @@
 import { specialElite } from '@/config/fonts';
+import { api } from '@/providers/api';
 import { SessionCharactersInterface } from '@/types/character';
 import { convertMoney } from '@/utils/convertMoney';
 import { xpToLevel } from '@/utils/xp-level';
@@ -15,7 +16,7 @@ import {
   Progress,
 } from '@nextui-org/react';
 import { useRouter } from 'next/navigation';
-import { useRef, useState } from 'react';
+import { FormEvent, useRef, useState } from 'react';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import { BiCoin, BiLinkExternal, BiUnlink, BiUserCircle } from 'react-icons/bi';
 import { toast } from 'react-toastify';
@@ -65,11 +66,9 @@ export function SessionCharacterCard({
 
   async function handleChangeVisibility() {
     try {
-      //ToDo: Implementar chamada a API
-
-      //await api.put(`/characters/${character.id}`, {
-      //  isPublic: !character.isPublic,
-      //});
+      await api.put(`/characters/${character.id}`, {
+        isPublic: !character.isPublic,
+      });
 
       setCharacters((characters) =>
         characters.map((char) =>
@@ -84,13 +83,13 @@ export function SessionCharacterCard({
     }
   }
 
-  async function handleUnlink() {
-    try {
-      //ToDo: Implementar chamada a API
+  async function handleUnlink(e: FormEvent) {
+    e.preventDefault();
 
-      // await api.put(`/characters/${id}`, {
-      //   sessionId: null,
-      // });
+    try {
+      await api.put(`/characters/${id}`, {
+        sessionId: null,
+      });
 
       toast.success('Personagem desvinculado com sucesso');
 
@@ -259,7 +258,7 @@ export function SessionCharacterCard({
               >
                 <Image
                   radius='full'
-                  className='w-full h-full z-20 rounded-full object-cover'
+                  className='w-full h-full z-20 aspect-square rounded-full object-cover'
                   src={portrait || '/noportrait.png'}
                 />
                 <div
