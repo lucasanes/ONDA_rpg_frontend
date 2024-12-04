@@ -1,5 +1,5 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { io, Socket } from 'socket.io-client';
+import React, { createContext, useContext } from 'react';
+import { io } from 'socket.io-client';
 
 type Status =
   | 'fighting'
@@ -40,21 +40,13 @@ const SocketContext = createContext<SocketContextValue | undefined>(undefined);
 export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [socket, setSocket] = useState<Socket | null>(null);
-
-  useEffect(() => {
-    const socket = io(process.env.NEXT_PUBLIC_API_URL);
-    setSocket(socket);
-    return () => {
-      socket.disconnect();
-    };
-  }, []);
+  const socket = io(process.env.NEXT_PUBLIC_API_URL);
 
   function onStatusCharacter(
     id: number,
     callback: (data: OnPortraitCharacter) => void
   ) {
-    socket?.on(`status-character?${id}`, (data: OnPortraitCharacter) => {
+    socket.on(`status-character?${id}`, (data: OnPortraitCharacter) => {
       callback(data);
     });
   }
@@ -64,7 +56,7 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({
     callback: (data: EmitPortraitCharacter) => void
   ) {
     callback(statusCharacter);
-    socket?.emit('status-character', statusCharacter);
+    socket.emit('status-character', statusCharacter);
   }
 
   return (
