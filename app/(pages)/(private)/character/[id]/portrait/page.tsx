@@ -70,37 +70,42 @@ export default function Portrait() {
 
   return (
     !loading && (
-      <div className='w-full h-full flex justify-start items-center p-20'>
-        <div className='relative'>
-          <Hurted
-            hurted={character.hurted}
-            unconscious={character.unconscious}
-          />
-          <Dying dying={character.dying} unconscious={character.unconscious} />
-          <div
-            style={{
-              top: `${IMAGE_SIZE - 125}px`,
-              left: `${IMAGE_SIZE - 50}px`,
-            }}
-            className='absolute z-40 flex flex-col gap-2 justify-center items-start'
-          >
-            <Money money={character.money} showMoney={showMoney} />
-            <Munition munition={character.currentMun} showMun={showMun} />
+      <div className='w-full h-full overflow-auto p-10'>
+        <div className='relative flex justify-start items-center'>
+          <div className='relative'>
+            <Hurted
+              hurted={character.hurted}
+              unconscious={character.unconscious}
+            />
+            <Dying
+              dying={character.dying}
+              unconscious={character.unconscious}
+            />
+            <div
+              style={{
+                top: `${IMAGE_SIZE - 125}px`,
+                left: `${IMAGE_SIZE - 50}px`,
+              }}
+              className='absolute z-40 flex flex-col gap-2 justify-center items-start'
+            >
+              <Money money={character.money} showMoney={showMoney} />
+              <Munition munition={character.currentMun} showMun={showMun} />
+            </div>
+            <PortraitImage
+              portrait={character.portrait}
+              unconscious={character.unconscious}
+              tired={character.tired}
+            />
           </div>
-          <PortraitImage
-            portrait={character.portrait}
-            unconscious={character.unconscious}
-            tired={character.tired}
+          <NameOrStatus
+            name={character.name}
+            fighting={character.fighting}
+            mp={character.mp}
+            currentMp={character.currentMp}
+            hp={character.hp}
+            currentHp={character.currentHp}
           />
         </div>
-        <NameOrStatus
-          name={character.name}
-          fighting={character.fighting}
-          mp={character.mp}
-          currentMp={character.currentMp}
-          hp={character.hp}
-          currentHp={character.currentHp}
-        />
       </div>
     )
   );
@@ -248,15 +253,15 @@ function NameOrStatus({
   const lastName = splitedName[1];
 
   return (
-    <>
+    <div className='w-96 h-96 absolute left-96 ml-72 flex justify-start items-center'>
       <div
-        className={`flex flex-col ml-16 mt-6 mb-6 ${!fighting ? 'opacity-100' : 'opacity-0'} transition ${!fighting ? 'duration-1000' : 'duration-500'} ease-in-out`}
+        className={`absolute flex flex-col ml-16 mt-6 mb-6 ${!fighting ? 'opacity-100' : 'opacity-0'} transition ${!fighting ? 'duration-1000' : 'duration-500'} ease-in-out`}
       >
         <p
           style={{
             textShadow: '0 0 1rem #7be4ef, 0 0 1rem #7be4ef',
           }}
-          className={`text-9xl italic rotate-3 ${imFellEnglish.className}`}
+          className={`text-9xl italic rotate-3 mb-2 capitalize ${imFellEnglish.className}`}
         >
           {firstName}
         </p>
@@ -264,14 +269,14 @@ function NameOrStatus({
           style={{
             textShadow: '0 0 1rem #7be4ef, 0 0 1rem #7be4ef',
           }}
-          className={`text-9xl italic rotate-3 ${imFellEnglish.className}`}
+          className={`text-9xl italic rotate-3 mt-2 capitalize ${imFellEnglish.className}`}
         >
           {lastName}
         </p>
       </div>
 
       <div
-        className={`relative -left-96 flex flex-col ml-28 mt-8 ${fighting ? 'opacity-100' : 'opacity-0'} transition ${fighting ? 'duration-1000' : 'duration-500'} ease-in-out`}
+        className={`absolute ml-16 mt-10 flex flex-col ${fighting ? 'opacity-100' : 'opacity-0'} transition ${fighting ? 'duration-1000' : 'duration-500'} ease-in-out`}
       >
         <span
           style={{
@@ -290,6 +295,6 @@ function NameOrStatus({
           {currentMp}/{mp}
         </span>
       </div>
-    </>
+    </div>
   );
 }
