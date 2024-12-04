@@ -40,8 +40,8 @@ export default function InventoryContainer({
 
   const showSender = inventory.length > 0 && charactersOfSession.length > 0;
 
-  function handleClean() {
-    //ToDO: Implementar Socket
+  function handleHideForAll() {
+    //ToDO: Implementar Socket para esconder para todos
   }
 
   async function handleSend() {
@@ -51,7 +51,7 @@ export default function InventoryContainer({
         return;
       }
 
-      //ToDO: Implementar Socket
+      //ToDO: Implementar Socket para enviar item
 
       const isToSession = characterSelected.toString().startsWith('sessionId:');
 
@@ -102,7 +102,7 @@ export default function InventoryContainer({
           variant='light'
           size='sm'
           isDisabled={disabled}
-          onPress={handleClean}
+          onPress={handleHideForAll}
         >
           <AiOutlineClear size={21} />
         </Button>
@@ -207,7 +207,7 @@ function Item({
   } = useDisclosure();
 
   function handleShowToAll() {
-    //ToDO: Implementar Socket
+    //ToDO: Implementar Socket para mostrar para todos
 
     onImageModalOpen();
   }
