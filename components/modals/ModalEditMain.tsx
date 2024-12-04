@@ -38,7 +38,7 @@ export default function ModalEditMain({
 
   const { id } = useParams();
 
-  const { updateStatusCharacter } = useSocket();
+  const { emitStatusCharacter } = useSocket();
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -80,7 +80,7 @@ export default function ModalEditMain({
         tp != mainCharacter.tp ||
         to != mainCharacter.to
       ) {
-        updateStatusCharacter(
+        emitStatusCharacter(
           {
             characterId: Number(id),
             key: 'money',
