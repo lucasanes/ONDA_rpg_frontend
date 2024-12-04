@@ -73,6 +73,7 @@ export default function Portrait() {
       <div className='w-full h-full overflow-auto p-10'>
         <div className='relative flex justify-start items-center'>
           <div className='relative'>
+            <Dice />
             <Hurted
               hurted={character.hurted}
               unconscious={character.unconscious}
@@ -107,6 +108,42 @@ export default function Portrait() {
           />
         </div>
       </div>
+    )
+  );
+}
+
+function Dice() {
+  const [key, setKey] = useState(0);
+  const [dice, setDice] = useState<'normal' | 'disaster' | 'critic'>('normal');
+  const [value, setValue] = useState(0);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setKey((prev) => prev + 1);
+      const random = Math.floor(Math.random() * 20 + 1);
+      if (random == 1) {
+        setDice('disaster');
+      } else if (random == 20) {
+        setDice('critic');
+      } else {
+        setDice('normal');
+      }
+    }, 1000);
+  }, []);
+
+  return (
+    key > 0 && (
+      <video
+        key={key}
+        style={{
+          width: IMAGE_SIZE + 50,
+          height: IMAGE_SIZE + 50,
+        }}
+        src={`/video/${dice}-dice.webm`}
+        autoPlay
+        muted
+        className='ml-2 absolute z-40'
+      />
     )
   );
 }
