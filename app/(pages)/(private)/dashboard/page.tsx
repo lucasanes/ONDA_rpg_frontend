@@ -349,18 +349,18 @@ function CharacterCard({
           <div
             className={`flex flex-row sm:flex-col items-center gap-4 ${specialElite.className}`}
           >
-            <div
-              onClick={() => router.push(`/character/${character.id}/portrait`)}
+            <Link
+              href={`/character/${character.id}/portrait`}
               className='relative w-32 h-32 rounded-full cursor-pointer overflow-hidden'
             >
               <Image
                 radius='full'
-                className='w-full h-full z-20 rounded-full object-cover'
+                className='w-32 h-32 z-20 rounded-full object-cover'
                 src={character.portrait || '/noportrait.png'}
               />
               <div
                 ref={xpRef}
-                className='absolute z-30 inset-0 rounded-full'
+                className='absolute w-full h-full z-30 inset-0 rounded-full'
                 style={{
                   background: 'conic-gradient(#43ff5c 0deg, white 0deg 360deg)',
                   maskImage:
@@ -369,9 +369,7 @@ function CharacterCard({
                     'radial-gradient(closest-side, transparent 95%, black 0%)',
                 }}
               ></div>
-
-              {/* <div className='absolute z-20 inset-0 rounded-full border-2 border-white'></div> */}
-            </div>
+            </Link>
             <div className='flex flex-col gap-2'>
               <Chip className='text-center min-w-full pt-1'>
                 Nível {xpToLevel(character.xp)}

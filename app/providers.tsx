@@ -9,6 +9,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import { AuthProvider } from './context/AuthContext';
 import { DisabledProvider } from './context/DisabledContext';
+import { SocketProvider } from './context/SocketContext';
 
 export interface ProvidersProps {
   children: React.ReactNode;
@@ -19,14 +20,16 @@ export function Providers({ children }: ProvidersProps) {
 
   return (
     <AuthProvider>
-      <DisabledProvider>
-        <NextUIProvider navigate={router.push}>
-          <NextThemesProvider>
-            <ToastContainer closeOnClick newestOnTop theme='dark' />
-            {children}
-          </NextThemesProvider>
-        </NextUIProvider>
-      </DisabledProvider>
+      <SocketProvider>
+        <DisabledProvider>
+          <NextUIProvider navigate={router.push}>
+            <NextThemesProvider>
+              <ToastContainer closeOnClick newestOnTop theme='dark' />
+              {children}
+            </NextThemesProvider>
+          </NextUIProvider>
+        </DisabledProvider>
+      </SocketProvider>
     </AuthProvider>
   );
 }
