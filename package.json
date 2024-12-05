@@ -11,7 +11,6 @@
   "engines": {
     "node": "22.x"
   },
-  "type": "module",
   "dependencies": {
     "@fontsource/im-fell-english": "^5.1.0",
     "@fontsource/protest-revolution": "^5.1.0",
