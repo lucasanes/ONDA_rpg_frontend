@@ -14,7 +14,7 @@ import {
 } from '@/types/character';
 import { InventoryInterface } from '@/types/inventory';
 import { Spinner } from '@nextui-org/react';
-import { redirect, useParams, useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
@@ -53,31 +53,33 @@ export default function Character() {
 
       if (!response.data.hasPermission) {
         if (character.isPublic) {
-          setDisabled(false);
+          setDisabled(true);
         } else {
-          redirect('/dashboard');
+          router.push('/dashboard');
+          return;
         }
       }
 
       window.document.title = `${character.mainCharacter.name} - ONDA RPG`;
 
-      const charactersOfSession: Select[] = character.session.characters
-        .filter((char: { id: number }) => char.id !== character.id)
-        .map((char: { id: number; mainCharacter: { name: string } }) => ({
-          value: char.id,
-          name: char.mainCharacter.name,
-        }));
+      if (character.sessionId) {
+        const charactersOfSession: Select[] = character.session.characters
+          .filter((char: { id: number }) => char.id !== character.id)
+          .map((char: { id: number; mainCharacter: { name: string } }) => ({
+            value: char.id,
+            name: char.mainCharacter.name,
+          }));
 
-      setCharactersOfSession([
-        {
-          value: `sessionId:${character.sessionId}`,
-          name: 'Mestre',
-        },
-        ...charactersOfSession.sort((a: Select, b: Select) =>
-          a.name.localeCompare(b.name)
-        ),
-      ]);
-
+        setCharactersOfSession([
+          {
+            value: `sessionId:${character.sessionId}`,
+            name: 'Mestre',
+          },
+          ...charactersOfSession.sort((a: Select, b: Select) =>
+            a.name.localeCompare(b.name)
+          ),
+        ]);
+      }
       setCharacter({
         id: character.id,
         isPublic: character.isPublic,
@@ -100,6 +102,7 @@ export default function Character() {
       });
 
       setInventory(character.items);
+      setLoading(false);
     } catch (error: any) {
       console.log(error);
       toast.error(error.response.data.message);
@@ -107,8 +110,6 @@ export default function Character() {
       if (error.response.data.message.includes('permissão')) {
         router.push('/dashboard');
       }
-    } finally {
-      setLoading(false);
     }
   }
 
