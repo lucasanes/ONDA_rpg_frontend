@@ -49,7 +49,7 @@ export function StatusContainer({
 
   const { onOpen, isOpen, onClose, onOpenChange } = useDisclosure();
 
-  const { emitStatusCharacter } = useSocket();
+  const { emitStatusCharacter, onStatusCharacter } = useSocket();
 
   function updateXP(currentXP: number) {
     const xpProgressRef = xpRef.current;
@@ -70,6 +70,10 @@ export function StatusContainer({
 
   useEffect(() => {
     updateXP(xp);
+
+    onStatusCharacter(Number(id), (status) => {
+      setStatusCharacter((prev) => ({ ...prev, [status.key]: status.value }));
+    });
   }, []);
 
   useEffect(() => {
