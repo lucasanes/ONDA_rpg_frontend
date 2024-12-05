@@ -22,7 +22,7 @@ export default function Portrait() {
 
   const { id } = useParams();
 
-  const { onStatusCharacter } = useSocket();
+  const { onStatusCharacter, statusCharacterOff } = useSocket();
 
   async function fetchData() {
     try {
@@ -66,6 +66,10 @@ export default function Portrait() {
         setTimeout(() => setShowMoney(false), 5000);
       }
     });
+
+    return () => {
+      statusCharacterOff(Number(id));
+    };
   }, []);
 
   return (
@@ -118,7 +122,7 @@ function Dice({ characterId }: { characterId: number | null }) {
   const [value, setValue] = useState(0);
   const [isD20, setIsD20] = useState(false);
 
-  const { onRollDice } = useSocket();
+  const { onRollDice, rollDiceOff } = useSocket();
 
   useEffect(() => {
     onRollDice(null, characterId, (data) => {
@@ -136,6 +140,10 @@ function Dice({ characterId }: { characterId: number | null }) {
 
       setKey((prev) => prev + 1);
     });
+
+    return () => {
+      rollDiceOff(null, characterId);
+    };
   }, []);
 
   return (

@@ -41,7 +41,7 @@ export default function Character() {
 
   const { id } = useParams();
   const { setDisabled } = useDisabled();
-  const { onItem } = useSocket();
+  const { onItem, itemOff } = useSocket();
 
   const router = useRouter();
 
@@ -131,6 +131,10 @@ export default function Character() {
     onItem(false, Number(id), (data) => {
       updateInventory(data.senderName);
     });
+
+    return () => {
+      itemOff(false, Number(id));
+    };
   }, []);
 
   return loading ? (

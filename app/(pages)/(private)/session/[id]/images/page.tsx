@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
 
 export default function Images() {
   const { id } = useParams();
-  const { onImage, onCleanImage } = useSocket();
+  const { onImage, onCleanImage, cleanImageOff } = useSocket();
 
   const [image, setImage] = useState<string>('');
 
@@ -21,6 +21,10 @@ export default function Images() {
     onCleanImage(Number(id), () => {
       setImage('');
     });
+
+    return () => {
+      cleanImageOff(Number(id));
+    };
   }, []);
 
   return (

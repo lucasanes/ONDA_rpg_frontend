@@ -2,8 +2,10 @@
 
 import { useSocket } from '@/app/context/SocketContext';
 import AddButton from '@/components/AddButton';
+import DiceContainer from '@/components/DiceContainer';
 import InventoryContainer from '@/components/InventoryContainer';
 import ModalInvite from '@/components/modals/ModalInvite';
+import RollsContainer from '@/components/RollsContainer';
 import { SessionCharacterCard } from '@/components/SessionCharacterCard';
 import { api } from '@/providers/api';
 import { SessionCharactersInterface } from '@/types/character';
@@ -25,7 +27,7 @@ export default function Session() {
 
   const router = useRouter();
 
-  const { onItem } = useSocket();
+  const { onItem, onRollDice, itemOff, rollDiceOff } = useSocket();
 
   async function fetchData() {
     try {
@@ -66,6 +68,15 @@ export default function Session() {
     onItem(true, Number(id), (data) => {
       updateInventory(data.senderName);
     });
+
+    onRollDice(Number(id), null, (data) => {
+      toast.info(`rolou um dado e obteve ${data.value}`);
+    });
+
+    return () => {
+      itemOff(true, Number(id));
+      rollDiceOff(Number(id), null);
+    };
   }, []);
 
   return loading ? (
@@ -77,6 +88,10 @@ export default function Session() {
           characters={characters}
           setCharacters={setCharacters}
         />
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+          <DiceContainer sessionId={Number(id)} characterId={null} />
+          <RollsContainer sessionId={Number(id)} />
+        </div>
         <InventoryContainer
           senderName='Mestre'
           sessionId={Number(id)}

@@ -68,7 +68,7 @@ export function SessionCharacterCard({
   const [section, setSection] = useState<'main' | 'status'>('main');
   const xpRef = useRef<HTMLDivElement>(null);
 
-  const { onStatusCharacter } = useSocket();
+  const { onStatusCharacter, statusCharacterOff } = useSocket();
 
   useEffect(() => {
     onStatusCharacter(Number(id), (data) => {
@@ -88,6 +88,10 @@ export function SessionCharacterCard({
 
       setCharacters(newCharacters);
     });
+
+    return () => {
+      statusCharacterOff(Number(id));
+    };
   }, []);
 
   async function handleChangeVisibility() {

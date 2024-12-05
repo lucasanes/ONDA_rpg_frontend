@@ -77,30 +77,36 @@ interface SocketContextValue {
     statusCharacter: EmitPortraitCharacter,
     callback: (data: EmitPortraitCharacter) => void
   ) => void;
+  statusCharacterOff: (id: number) => void;
   onInvite: (userId: number, callback: (data: OnInvite) => void) => void;
   emitInvite: (
     invite: EmitInvite,
     callback: (data: EmitInvite) => void
   ) => void;
+  inviteOff: (userId: number) => void;
   onItem: (
     isSession: boolean,
     id: number,
     callback: (data: OnItem) => void
   ) => void;
   emitItem: (item: EmitItem, callback: () => void) => void;
+  itemOff: (isSession: boolean, id: number) => void;
   onImage: (
     sessionId: number | null,
     callback: (data: OnImage) => void
   ) => void;
   emitImage: (image: EmitImage) => void;
+  imageOff: (sessionId: number | null) => void;
   onCleanImage: (sessionId: number | null, callback: () => void) => void;
   emitCleanImage: (image: EmitCleanImage) => void;
+  cleanImageOff: (sessionId: number | null) => void;
   onRollDice: (
     sessionId: number | null,
     characterId: number | null,
     callback: (data: OnRollDice) => void
   ) => void;
   emitRollDice: (rollDice: EmitRollDice) => void;
+  rollDiceOff: (sessionId: number | null, characterId: number | null) => void;
 }
 
 const SocketContext = createContext<SocketContextValue | undefined>(undefined);
@@ -127,6 +133,10 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({
     callback(statusCharacter);
   }
 
+  function statusCharacterOff(id: number) {
+    socket.off(`status-character?${id}`);
+  }
+
   function onInvite(userId: number, callback: (data: OnInvite) => void) {
     socket.on(`invite?${userId}`, (data: OnInvite) => {
       callback(data);
@@ -139,6 +149,10 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({
   ) {
     socket.emit('invite', invite);
     callback(invite);
+  }
+
+  function inviteOff(userId: number) {
+    socket.off(`invite?${userId}`);
   }
 
   function onItem(
@@ -156,6 +170,10 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({
     callback();
   }
 
+  function itemOff(isSession: boolean, id: number) {
+    socket.off(`item?isSession=${isSession}?${id}`);
+  }
+
   function onImage(
     sessionId: number | null,
     callback: (data: OnImage) => void
@@ -171,6 +189,12 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({
     socket.emit('image', image);
   }
 
+  function imageOff(sessionId: number | null) {
+    if (!sessionId) return;
+
+    socket.off(`image?${sessionId}`);
+  }
+
   function onCleanImage(sessionId: number | null, callback: () => void) {
     if (!sessionId) return;
 
@@ -181,6 +205,12 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({
 
   function emitCleanImage(image: EmitCleanImage) {
     socket.emit('clean-image', image);
+  }
+
+  function cleanImageOff(sessionId: number | null) {
+    if (!sessionId) return;
+
+    socket.off(`clean-image?${sessionId}`);
   }
 
   function onRollDice(
@@ -207,21 +237,39 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({
     socket.emit('roll-dice', rollDice);
   }
 
+  function rollDiceOff(sessionId: number | null, characterId: number | null) {
+    if (!sessionId && !characterId) return;
+
+    if (!sessionId) {
+      socket.off(`roll-dice?${characterId}`);
+    }
+
+    if (!characterId) {
+      socket.off(`roll-dice?${sessionId}`);
+    }
+  }
+
   return (
     <SocketContext.Provider
       value={{
         onStatusCharacter,
         emitStatusCharacter,
+        statusCharacterOff,
         onInvite,
         emitInvite,
+        inviteOff,
         onItem,
         emitItem,
+        itemOff,
         onImage,
         emitImage,
+        imageOff,
         onCleanImage,
         emitCleanImage,
+        cleanImageOff,
         onRollDice,
         emitRollDice,
+        rollDiceOff,
       }}
     >
       {children}

@@ -53,7 +53,14 @@ export default function InventoryContainer({
 
   const showSender = inventory.length > 0 && charactersOfSession.length > 0;
 
-  const { emitItem, onImage, emitCleanImage, onCleanImage } = useSocket();
+  const {
+    emitItem,
+    onImage,
+    emitCleanImage,
+    onCleanImage,
+    imageOff,
+    cleanImageOff,
+  } = useSocket();
 
   useEffect(() => {
     onImage(sessionId, (data) => {
@@ -65,6 +72,11 @@ export default function InventoryContainer({
       setImage('');
       onImageModalClose();
     });
+
+    return () => {
+      imageOff(sessionId);
+      cleanImageOff(sessionId);
+    };
   }, []);
 
   function handleHideForAll() {
