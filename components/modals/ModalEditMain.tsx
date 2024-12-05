@@ -24,6 +24,7 @@ export default function ModalEditMain({
   const [name, setName] = useState(mainCharacter.name);
   const [age, setAge] = useState(mainCharacter.age);
   const [xp, setXp] = useState(mainCharacter.xp);
+  const [weightLimit, setWeightLimit] = useState(mainCharacter.weightLimit);
   const [mainCharacterClass, setMainCharacterClass] = useState(
     mainCharacter.class
   );
@@ -56,6 +57,7 @@ export default function ModalEditMain({
         origin,
         race,
         divinity,
+        weightLimit,
         ts,
         tp,
         to,
@@ -70,6 +72,7 @@ export default function ModalEditMain({
         origin,
         race,
         divinity,
+        weightLimit,
         ts,
         tp,
         to,
@@ -140,6 +143,17 @@ export default function ModalEditMain({
             type='number'
             value={xp.toString()}
             onChange={(e) => setXp(Number(e.target.value))}
+          />
+
+          <Input
+            isRequired
+            required
+            label='Limite de Peso'
+            labelPlacement='outside'
+            placeholder='10'
+            type='number'
+            value={weightLimit.toString()}
+            onChange={(e) => setWeightLimit(Number(e.target.value))}
           />
 
           <Input

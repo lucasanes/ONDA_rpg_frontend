@@ -1,6 +1,6 @@
 import { api } from '@/providers/api';
 import { InventoryInterface } from '@/types/inventory';
-import { Button, Input, Spinner } from '@nextui-org/react';
+import { Button, Input, Spinner, Textarea } from '@nextui-org/react';
 import { Dispatch, FormEvent, SetStateAction, useState } from 'react';
 import { toast } from 'react-toastify';
 import FileInput from '../FileInput';
@@ -22,6 +22,8 @@ export default function ModalEditItem({
   handleDelete: () => void;
 }) {
   const [name, setName] = useState(item.name);
+  const [description, setDescription] = useState(item.description);
+  const [weight, setWeight] = useState(item.weight);
   const [image, setImage] = useState(item.image);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -37,6 +39,8 @@ export default function ModalEditItem({
       await api.put(`/items/${item.id}`, {
         name,
         image,
+        description,
+        weight,
       });
 
       setInventory((prev) => {
@@ -45,6 +49,8 @@ export default function ModalEditItem({
         prev[index] = {
           ...prev[index],
           name,
+          description,
+          weight,
           image,
         };
 
@@ -79,6 +85,25 @@ export default function ModalEditItem({
             placeholder='Espada'
             value={name}
             onChange={(e) => setName(e.target.value)}
+          />
+
+          <Input
+            required
+            isRequired
+            type='number'
+            label={'Peso'}
+            labelPlacement='outside'
+            placeholder='1kg'
+            value={weight.toString()}
+            onChange={(e) => setWeight(Number(e.target.value))}
+          />
+
+          <Textarea
+            label={'Descrição'}
+            labelPlacement='outside'
+            placeholder='Uma espada afiada'
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
           />
 
           <FileInput

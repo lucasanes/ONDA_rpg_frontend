@@ -1,6 +1,6 @@
 import { api } from '@/providers/api';
 import { InventoryInterface } from '@/types/inventory';
-import { Button, Input, Spinner } from '@nextui-org/react';
+import { Button, Input, Spinner, Textarea } from '@nextui-org/react';
 import { useParams, usePathname } from 'next/navigation';
 import { Dispatch, FormEvent, SetStateAction, useState } from 'react';
 import { toast } from 'react-toastify';
@@ -22,6 +22,8 @@ export default function ModalAddItem({
   const pathname = usePathname();
 
   const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
+  const [weight, setWeight] = useState(0);
   const [image, setImage] = useState('');
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -38,6 +40,8 @@ export default function ModalAddItem({
         const response = await api.post('/items', {
           name,
           image,
+          description,
+          weight,
           characterId: Number(id),
         });
 
@@ -46,6 +50,8 @@ export default function ModalAddItem({
           {
             id: response.data.id,
             name,
+            description,
+            weight,
             characterId: Number(id),
             image,
           },
@@ -54,6 +60,8 @@ export default function ModalAddItem({
         const response = await api.post('/items', {
           name,
           image,
+          description,
+          weight,
           sessionId: Number(id),
         });
 
@@ -63,6 +71,8 @@ export default function ModalAddItem({
             ...prev,
             id: response.data.id,
             name,
+            description,
+            weight,
             sessionId: Number(id),
             image,
           },
@@ -96,6 +106,25 @@ export default function ModalAddItem({
             placeholder='Espada'
             value={name}
             onChange={(e) => setName(e.target.value)}
+          />
+
+          <Input
+            required
+            isRequired
+            type='number'
+            label={'Peso'}
+            labelPlacement='outside'
+            placeholder='2'
+            value={weight.toString()}
+            onChange={(e) => setWeight(Number(e.target.value))}
+          />
+
+          <Textarea
+            label={'Descrição'}
+            labelPlacement='outside'
+            placeholder='Uma espada afiada'
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
           />
 
           <FileInput

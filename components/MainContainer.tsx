@@ -16,7 +16,8 @@ export function MainContainer({
   const [mainCharacter, setMainCharacter] =
     useState<MainCharacterInterface>(initialMainCharacter);
 
-  const { name, xp, divinity, origin, race, ts, to, tp, age } = mainCharacter;
+  const { name, xp, divinity, origin, race, weightLimit, ts, to, tp, age } =
+    mainCharacter;
 
   const { onOpen, isOpen, onClose, onOpenChange } = useDisclosure();
 
@@ -48,6 +49,13 @@ export function MainContainer({
         disabled
         label='XP'
         value={xp.toString()}
+      />
+      <Input
+        variant='bordered'
+        size='md'
+        disabled
+        label='Limite de Peso'
+        value={weightLimit.toString()}
       />
       <Input
         variant='bordered'
