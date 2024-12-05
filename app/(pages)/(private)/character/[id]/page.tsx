@@ -2,6 +2,7 @@
 
 import { useDisabled } from '@/app/context/DisabledContext';
 import { useSocket } from '@/app/context/SocketContext';
+import DiceContainer from '@/components/DiceContainer';
 import InventoryContainer from '@/components/InventoryContainer';
 import { MainContainer } from '@/components/MainContainer';
 import { StatusContainer } from '@/components/StatusContainer';
@@ -142,6 +143,12 @@ export default function Character() {
           <StatusContainer
             id={character.id}
             initialStatusCharacter={initialStatusCharacter}
+          />
+        </div>
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+          <DiceContainer
+            characterId={character.id}
+            sessionId={character.sessionId ? character.sessionId : null}
           />
         </div>
         <div>
