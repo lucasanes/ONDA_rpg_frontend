@@ -126,7 +126,7 @@ function Dice({ characterId }: { characterId: number | null }) {
 
   useEffect(() => {
     onRollDice(null, characterId, (data) => {
-      setValue(data.value);
+      setValue(data.dice.total);
 
       if (data.isCritical) {
         setDice('critic');

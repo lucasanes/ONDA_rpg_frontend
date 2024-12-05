@@ -38,6 +38,9 @@ export default function RollsContainer({
   const { onRollDice } = useSocket();
 
   useEffect(() => {
+    setRolls([]);
+    setReverse(true);
+
     const rollsStorage = localStorage.getItem('@ONDA:rolls');
 
     const rolls = rollsStorage ? JSON.parse(rollsStorage) : [];
@@ -111,7 +114,7 @@ export default function RollsContainer({
             className='flex flex-col gap-2 border-2 border-gray-300 rounded-md p-4'
           >
             <div className='flex justify-between items-center gap-2'>
-              <div className='flex items-center gap-2'>
+              <div className='flex items-center gap-2 mb-1'>
                 <img
                   src={roll.portrait || '/noportrait.png'}
                   alt='person'
