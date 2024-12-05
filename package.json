@@ -9,7 +9,7 @@
     "lint": "eslint . --ext .ts,.tsx -c .eslintrc.json --fix"
   },
   "engines": {
-    "node": "16.x"
+    "node": "22.x"
   },
   "dependencies": {
     "@fontsource/im-fell-english": "^5.1.0",
