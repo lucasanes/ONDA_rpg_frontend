@@ -22,9 +22,107 @@ module.exports = {
             transform: 'scale(1.05) rotate(-2.5deg) translateY(-5px)',
           },
         },
+        textDice: {
+          '30%': {
+            opacity: 0,
+          },
+          '33%': {
+            opacity: 1,
+          },
+          '78%': {
+            opacity: 1,
+          },
+          '81%': {
+            opacity: 0,
+          },
+          '100%': {
+            opacity: 0,
+          },
+        },
+        criticalTextDice: {
+          '45%': {
+            opacity: 0,
+          },
+          '48%': {
+            opacity: 1,
+          },
+          '78%': {
+            opacity: 1,
+          },
+          '81%': {
+            opacity: 0,
+          },
+          '100%': {
+            opacity: 0,
+          },
+        },
+        criticalTextDice2: {
+          '0%': {
+            transform: 'translate(2px, 2px) rotate(0deg)',
+          },
+          '10%': {
+            transform: 'translate(-2px, -2px) rotate(-01deg)',
+          },
+          '20%': {
+            transform: 'translate(-2px, 2px) rotate(1deg)',
+          },
+          '30%': {
+            transform: 'translate(2px, 2px) rotate(0deg)',
+          },
+          '40%': {
+            transform: 'translate(-2px, -2px) rotate(1deg)',
+          },
+          '50%': {
+            transform: 'translate(2px, -2px) rotate(-1deg)',
+          },
+          '60%': {
+            transform: 'translate(2px, 2px) rotate(0deg)',
+          },
+          '70%': {
+            transform: 'translate(-2px, -2px) rotate(-01deg)',
+          },
+          '80%': {
+            transform: 'translate(-2px, -2px) rotate(1deg)',
+          },
+          '90%': {
+            transform: 'translate(2px, 2px) rotate(0deg)',
+          },
+          '100%': {
+            transform: 'translate(2px, 2px) rotate(1deg)',
+          },
+        },
+        disasterTextDice: {
+          '30%': {
+            opacity: 0,
+          },
+          '33%': {
+            opacity: 1,
+          },
+          '43%': {
+            transform: 'rotate(0deg)',
+          },
+          '48%': {
+            transform: 'translate(5px, 50px) rotate(35deg)',
+          },
+          '75%': {
+            transform: 'translate(5px, 50px) rotate(35deg)',
+            opacity: 1,
+          },
+          '87%': {
+            transform: 'translate(200px, 600px) rotate(300deg)',
+            opacity: 0,
+          },
+          '100%': {
+            opacity: 0,
+          },
+        },
       },
       animation: {
         breathing: 'breathing 5s ease-in-out infinite',
+        criticalTextDice:
+          'criticalTextDice ease-in-out 10s, criticalTextDice2 .5s linear infinite',
+        disasterTextDice: 'disasterTextDice ease-in-out 10s',
+        textDice: 'textDice ease-in-out 10s',
       },
       colors: {
         background: {

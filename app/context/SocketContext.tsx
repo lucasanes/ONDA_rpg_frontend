@@ -56,6 +56,18 @@ type EmitCleanImage = {
   sessionId: number;
 };
 
+type OnRollDice = {
+  value: number;
+  isD20: boolean;
+  isCritical: boolean;
+  isDisaster: boolean;
+};
+
+type EmitRollDice = OnRollDice & {
+  sessionId: number | null;
+  characterId: number | null;
+};
+
 interface SocketContextValue {
   onStatusCharacter: (
     id: number,
@@ -83,6 +95,12 @@ interface SocketContextValue {
   emitImage: (image: EmitImage) => void;
   onCleanImage: (sessionId: number | null, callback: () => void) => void;
   emitCleanImage: (image: EmitCleanImage) => void;
+  onRollDice: (
+    sessionId: number | null,
+    characterId: number | null,
+    callback: (data: OnRollDice) => void
+  ) => void;
+  emitRollDice: (rollDice: EmitRollDice) => void;
 }
 
 const SocketContext = createContext<SocketContextValue | undefined>(undefined);
@@ -165,6 +183,30 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({
     socket.emit('clean-image', image);
   }
 
+  function onRollDice(
+    sessionId: number | null,
+    characterId: number | null,
+    callback: (data: OnRollDice) => void
+  ) {
+    if (!sessionId && !characterId) return;
+
+    if (!sessionId) {
+      socket.on(`roll-dice?${characterId}`, (data: OnRollDice) => {
+        callback(data);
+      });
+    }
+
+    if (!characterId) {
+      socket.on(`roll-dice?${sessionId}`, (data: OnRollDice) => {
+        callback(data);
+      });
+    }
+  }
+
+  function emitRollDice(rollDice: EmitRollDice) {
+    socket.emit('roll-dice', rollDice);
+  }
+
   return (
     <SocketContext.Provider
       value={{
@@ -178,6 +220,8 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({
         emitImage,
         onCleanImage,
         emitCleanImage,
+        onRollDice,
+        emitRollDice,
       }}
     >
       {children}

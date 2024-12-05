@@ -73,7 +73,7 @@ export default function Portrait() {
       <div className='w-full h-full overflow-auto p-10'>
         <div className='relative flex justify-start items-center'>
           <div className='relative'>
-            <Dice />
+            <Dice characterId={Number(id)} />
             <Hurted
               hurted={character.hurted}
               unconscious={character.unconscious}
@@ -112,38 +112,70 @@ export default function Portrait() {
   );
 }
 
-function Dice() {
+function Dice({ characterId }: { characterId: number | null }) {
   const [key, setKey] = useState(0);
   const [dice, setDice] = useState<'normal' | 'disaster' | 'critic'>('normal');
   const [value, setValue] = useState(0);
+  const [isD20, setIsD20] = useState(false);
+
+  const { onRollDice } = useSocket();
 
   useEffect(() => {
-    setTimeout(() => {
-      setKey((prev) => prev + 1);
-      const random = Math.floor(Math.random() * 20 + 1);
-      if (random == 1) {
-        setDice('disaster');
-      } else if (random == 20) {
+    onRollDice(null, characterId, (data) => {
+      setValue(data.value);
+
+      if (data.isCritical) {
         setDice('critic');
+      } else if (data.isDisaster) {
+        setDice('disaster');
       } else {
         setDice('normal');
       }
-    }, 1000);
+
+      setIsD20(data.isD20);
+
+      setKey((prev) => prev + 1);
+    });
   }, []);
 
   return (
     key > 0 && (
-      <video
-        key={key}
-        style={{
-          width: IMAGE_SIZE + 50,
-          height: IMAGE_SIZE + 50,
-        }}
-        src={`/video/${dice}-dice.webm`}
-        autoPlay
-        muted
-        className='ml-2 absolute z-40'
-      />
+      <div key={key} className='relative'>
+        <span
+          style={{
+            top: `${IMAGE_SIZE - 320}px`,
+            left: `${IMAGE_SIZE - 370}px`,
+            WebkitTextStroke: `2px ${isD20 ? '#00b4dc' : '#ff6200'}`,
+            textShadow: `
+            ${isD20 ? '#00b4dc' : '#ff6200'} 0 0 30px, 
+            #000000 5px 5px 5px,
+            #000000 5px 5px 10px,
+            #000000 5px 5px 15px,
+            #000000 5px 5px 20px
+          `,
+          }}
+          className={`z-50 absolute text-9xl w-52 text-center opacity-0 ${specialElite.className} 
+            ${
+              dice == 'critic'
+                ? 'animate-criticalTextDice'
+                : dice == 'disaster'
+                  ? 'animate-disasterTextDice'
+                  : 'animate-textDice'
+            }`}
+        >
+          {value}
+        </span>
+        <video
+          style={{
+            width: IMAGE_SIZE + 50,
+            height: IMAGE_SIZE + 50,
+          }}
+          src={`/video/${dice}-dice.webm`}
+          autoPlay
+          muted
+          className='ml-2 absolute z-40'
+        />
+      </div>
     )
   );
 }
