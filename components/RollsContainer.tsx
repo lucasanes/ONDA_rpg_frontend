@@ -89,8 +89,8 @@ export default function RollsContainer({
 
   return (
     <div className='border-2 rounded-md border-gray-300 flex flex-col gap-2'>
-      <div className='flex justify-between px-4 pt-4'>
-        <h1 className='text-xl pt-2'>Rolagens</h1>
+      <div className='flex justify-between items-center px-4 pt-4'>
+        <h1 className='text-xl'>Rolagens</h1>
         <div className='flex gap-2'>
           <IconButton onPress={handleClear}>
             <AiOutlineClear size={20} />

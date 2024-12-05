@@ -101,7 +101,7 @@ export default function DiceContainer({
           onOpenChange={onOpenChange}
         />
       )}
-      <div className='h-10 flex justify-start'>
+      <div className='h-10 flex justify-start items-center'>
         <h1 className='text-xl pt-1'>Dado</h1>
       </div>
       <Divider className='bg-gray-300 -ml-4 mt-2 mb-2 h-0.5 w-[calc(100%+2rem)]' />

@@ -10,7 +10,7 @@ import { SessionCharacterCard } from '@/components/SessionCharacterCard';
 import { api } from '@/providers/api';
 import { SessionCharactersInterface } from '@/types/character';
 import { InventoryInterface } from '@/types/inventory';
-import { Divider, Spinner, useDisclosure } from '@nextui-org/react';
+import { Button, Divider, Spinner, useDisclosure } from '@nextui-org/react';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
@@ -118,6 +118,25 @@ function CharacterContainer({
 }) {
   const { onOpen, isOpen, onClose, onOpenChange } = useDisclosure();
 
+  const { emitStatusCharacter } = useSocket();
+
+  const [fighting, setFighting] = useState(false);
+
+  function handleFighting(value: boolean) {
+    characters.forEach((character) => {
+      emitStatusCharacter(
+        {
+          characterId: character.id,
+          key: 'fighting',
+          value,
+        },
+        () => {
+          setFighting(value);
+        }
+      );
+    });
+  }
+
   return (
     <div className='border-2 rounded-md border-gray-300 flex flex-col p-4 gap-2'>
       <ModalInvite
@@ -125,7 +144,13 @@ function CharacterContainer({
         onClose={onClose}
         onOpenChange={onOpenChange}
       />
-      <div className='flex justify-between'>
+      <div className='flex justify-between items-center'>
+        <Button
+          className={`border-2 border-green-400 text-gray-200 ${fighting ? 'bg-green-300 bg-opacity-30' : 'bg-transparent'}`}
+          onPress={() => handleFighting(!fighting)}
+        >
+          Combate
+        </Button>
         <h1 className='text-xl'>Personagens</h1>
         <AddButton onPress={onOpen} />
       </div>
