@@ -52,7 +52,6 @@ export default function ModalAddCharacter({
         hp,
         mp,
         portrait,
-        userId: user?.id,
       });
 
       setCharacters((characters) => [
