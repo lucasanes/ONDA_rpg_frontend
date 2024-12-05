@@ -26,6 +26,8 @@ type Dice = {
 };
 
 export default function ModalDice({
+  name,
+  portrait,
   dice,
   isD20,
   criticalMargin,
@@ -34,6 +36,8 @@ export default function ModalDice({
   isOpen,
   onOpenChange,
 }: {
+  name: string;
+  portrait: string | null;
   dice: string;
   isD20: boolean;
   criticalMargin: string;
@@ -68,7 +72,7 @@ export default function ModalDice({
       const isCritical = roll >= Number(criticalMargin);
       const isDisaster = roll === 1;
 
-      setDiceValue({
+      const diceValue = {
         total: roll + bonusValue,
         dice,
         isCritical,
@@ -82,15 +86,19 @@ export default function ModalDice({
             rolls: [roll],
           },
         ],
-      });
+      };
+
+      setDiceValue(diceValue);
 
       emitRollDice({
         characterId,
-        isDisaster,
-        isCritical,
         isD20,
         sessionId,
-        value: roll + bonusValue,
+        isCritical,
+        isDisaster,
+        dice: diceValue,
+        name,
+        portrait,
       });
     } else {
       const parts = totalDice.split('+');
@@ -140,22 +148,26 @@ export default function ModalDice({
 
       const isDisaster = totalDices === disasterValue;
 
-      setDiceValue({
-        isCritical,
-        isDisaster,
+      const diceValue = {
         total: totalDices + bonusValue,
         dice: dices.join('+'),
         bonus: `(${bonuses.join('+') || 0})`,
+        isCritical,
+        isDisaster,
         rollDices,
-      });
+      };
+
+      setDiceValue(diceValue);
 
       emitRollDice({
+        name,
+        portrait,
         characterId,
         sessionId,
-        isDisaster,
         isD20,
         isCritical,
-        value: totalDices + bonusValue,
+        isDisaster,
+        dice: diceValue,
       });
     }
   }

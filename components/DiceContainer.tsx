@@ -1,6 +1,5 @@
 import { useDisabled } from '@/app/context/DisabledContext';
 import {
-  Button,
   Checkbox,
   Divider,
   Input,
@@ -10,12 +9,17 @@ import {
 } from '@nextui-org/react';
 import { FormEvent, useState } from 'react';
 import { RiShareForwardLine } from 'react-icons/ri';
+import IconButton from './IconButton';
 import ModalDice from './modals/ModalDice';
 
 export default function DiceContainer({
+  name,
+  portrait,
   characterId,
   sessionId,
 }: {
+  name: string;
+  portrait: string | null;
   characterId: number | null;
   sessionId: number | null;
 }) {
@@ -84,23 +88,25 @@ export default function DiceContainer({
 
   return (
     <div className='border-2 rounded-md border-gray-300 flex flex-col p-4 gap-2'>
-      <form onSubmit={handleRollDice}>
-        {isOpen && (
-          <ModalDice
-            characterId={characterId}
-            dice={dice}
-            isD20={isD20}
-            criticalMargin={criticalMargin}
-            sessionId={sessionId}
-            isOpen={isOpen}
-            onOpenChange={onOpenChange}
-          />
-        )}
-        <div className='flex justify-start'>
-          <h1 className='text-xl mb-4'>Dado</h1>
-        </div>
-        <Divider className='bg-gray-300 -ml-4 mt-2 mb-2 h-0.5 w-[calc(100%+2rem)]' />
+      {isOpen && (
+        <ModalDice
+          name={name}
+          portrait={portrait}
+          characterId={characterId}
+          dice={dice}
+          isD20={isD20}
+          criticalMargin={criticalMargin}
+          sessionId={sessionId}
+          isOpen={isOpen}
+          onOpenChange={onOpenChange}
+        />
+      )}
+      <div className='h-10 flex justify-start items-center'>
+        <h1 className='text-xl pt-1'>Dado</h1>
+      </div>
+      <Divider className='bg-gray-300 -ml-4 mt-2 mb-2 h-0.5 w-[calc(100%+2rem)]' />
 
+      <form onSubmit={handleRollDice}>
         <div className='flex gap-4 justify-between items-baseline mt-4 mb-2'>
           <Input
             isInvalid={isInvalid}
@@ -114,14 +120,9 @@ export default function DiceContainer({
             value={diceMask(dice)}
             onChange={(e) => updateDice(e.target.value)}
           />
-          <Button
-            className='min-w-1 text-cyan-400 relative top-1'
-            variant='light'
-            isDisabled={disabled}
-            type='submit'
-          >
+          <IconButton className='relative top-1' type='submit'>
             <RiShareForwardLine size={21} />
-          </Button>
+          </IconButton>
         </div>
         <div className='flex gap-4 justify-between items-center'>
           <Checkbox

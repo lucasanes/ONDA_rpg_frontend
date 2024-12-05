@@ -41,7 +41,7 @@ export default function Character() {
 
   const { id } = useParams();
   const { setDisabled } = useDisabled();
-  const { onItem } = useSocket();
+  const { onItem, itemOff } = useSocket();
 
   const router = useRouter();
 
@@ -131,6 +131,10 @@ export default function Character() {
     onItem(false, Number(id), (data) => {
       updateInventory(data.senderName);
     });
+
+    return () => {
+      itemOff(false, Number(id));
+    };
   }, []);
 
   return loading ? (
@@ -147,6 +151,8 @@ export default function Character() {
         </div>
         <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
           <DiceContainer
+            name={initialMainCharacter.name}
+            portrait={initialStatusCharacter.portrait}
             characterId={character.id}
             sessionId={character.sessionId ? character.sessionId : null}
           />

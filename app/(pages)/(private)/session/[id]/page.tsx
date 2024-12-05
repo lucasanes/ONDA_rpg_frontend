@@ -2,13 +2,15 @@
 
 import { useSocket } from '@/app/context/SocketContext';
 import AddButton from '@/components/AddButton';
+import DiceContainer from '@/components/DiceContainer';
 import InventoryContainer from '@/components/InventoryContainer';
 import ModalInvite from '@/components/modals/ModalInvite';
+import RollsContainer from '@/components/RollsContainer';
 import { SessionCharacterCard } from '@/components/SessionCharacterCard';
 import { api } from '@/providers/api';
 import { SessionCharactersInterface } from '@/types/character';
 import { InventoryInterface } from '@/types/inventory';
-import { Divider, Spinner, useDisclosure } from '@nextui-org/react';
+import { Button, Divider, Spinner, useDisclosure } from '@nextui-org/react';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
@@ -25,7 +27,7 @@ export default function Session() {
 
   const router = useRouter();
 
-  const { onItem } = useSocket();
+  const { onItem, itemOff } = useSocket();
 
   async function fetchData() {
     try {
@@ -66,6 +68,10 @@ export default function Session() {
     onItem(true, Number(id), (data) => {
       updateInventory(data.senderName);
     });
+
+    return () => {
+      itemOff(true, Number(id));
+    };
   }, []);
 
   return loading ? (
@@ -77,6 +83,15 @@ export default function Session() {
           characters={characters}
           setCharacters={setCharacters}
         />
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+          <DiceContainer
+            name='Mestre'
+            portrait={null}
+            sessionId={Number(id)}
+            characterId={null}
+          />
+          <RollsContainer sessionId={Number(id)} />
+        </div>
         <InventoryContainer
           senderName='Mestre'
           sessionId={Number(id)}
@@ -103,6 +118,25 @@ function CharacterContainer({
 }) {
   const { onOpen, isOpen, onClose, onOpenChange } = useDisclosure();
 
+  const { emitStatusCharacter } = useSocket();
+
+  const [fighting, setFighting] = useState(false);
+
+  function handleFighting(value: boolean) {
+    characters.forEach((character) => {
+      emitStatusCharacter(
+        {
+          characterId: character.id,
+          key: 'fighting',
+          value,
+        },
+        () => {
+          setFighting(value);
+        }
+      );
+    });
+  }
+
   return (
     <div className='border-2 rounded-md border-gray-300 flex flex-col p-4 gap-2'>
       <ModalInvite
@@ -110,7 +144,13 @@ function CharacterContainer({
         onClose={onClose}
         onOpenChange={onOpenChange}
       />
-      <div className='flex justify-between'>
+      <div className='flex justify-between items-center'>
+        <Button
+          className={`border-2 border-green-400 text-gray-200 ${fighting ? 'bg-green-300 bg-opacity-30' : 'bg-transparent'}`}
+          onPress={() => handleFighting(!fighting)}
+        >
+          Combate
+        </Button>
         <h1 className='text-xl'>Personagens</h1>
         <AddButton onPress={onOpen} />
       </div>

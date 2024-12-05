@@ -27,7 +27,7 @@ export default function Dashboard() {
   const token = Cookies.get('token');
   const { user } = useAuth();
 
-  const { onInvite } = useSocket();
+  const { onInvite, inviteOff } = useSocket();
 
   async function fetchData() {
     try {
@@ -58,6 +58,10 @@ export default function Dashboard() {
         setInvites((prev) => [...prev, data]);
       });
     }
+
+    return () => {
+      inviteOff(user?.id!);
+    };
   }, [user?.id]);
 
   return (
