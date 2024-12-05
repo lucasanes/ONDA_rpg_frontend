@@ -6,8 +6,10 @@ import { capitalizeWord } from '@/utils/capitalizeWord';
 import {
   Divider,
   Image,
+  Input,
   Select,
   SelectItem,
+  Textarea,
   useDisclosure,
 } from '@nextui-org/react';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
@@ -25,12 +27,14 @@ export default function InventoryContainer({
   sessionId,
   senderName,
   charactersOfSession,
+  weightLimit,
   inventory,
   setInventory,
 }: {
   sessionId: number | null;
   senderName: string;
   charactersOfSession: { value: string | number; name: string }[];
+  weightLimit?: number;
   inventory: InventoryInterface[];
   setInventory: Dispatch<SetStateAction<InventoryInterface[]>>;
 }) {
@@ -104,6 +108,9 @@ export default function InventoryContainer({
           characterId: null,
           name: inventory.find((item) => item.id === itemSelected)?.name,
           image: inventory.find((item) => item.id === itemSelected)?.image,
+          description: inventory.find((item) => item.id === itemSelected)
+            ?.description,
+          weight: inventory.find((item) => item.id === itemSelected)?.weight,
         });
       } else {
         await api.put(`/items/${itemSelected}`, {
@@ -111,6 +118,9 @@ export default function InventoryContainer({
           characterId: Number(characterSelected),
           name: inventory.find((item) => item.id === itemSelected)?.name,
           image: inventory.find((item) => item.id === itemSelected)?.image,
+          description: inventory.find((item) => item.id === itemSelected)
+            ?.description,
+          weight: inventory.find((item) => item.id === itemSelected)?.weight,
         });
       }
 
@@ -140,6 +150,8 @@ export default function InventoryContainer({
     }
   }
 
+  const totalWeight = inventory.reduce((acc, item) => acc + item.weight, 0);
+
   return (
     <div className='border-2 rounded-md border-gray-300 flex flex-col p-4 gap-2'>
       <ModalImage
@@ -158,7 +170,10 @@ export default function InventoryContainer({
         <IconButton size='sm' onPress={handleHideForAll}>
           <AiOutlineClear size={21} />
         </IconButton>
-        <h1 className='text-xl'>Inventário</h1>
+        <h1 className='text-xl'>
+          Inventário{' '}
+          {weightLimit != undefined && `${totalWeight}/${weightLimit}`}
+        </h1>
         <AddButton onPress={onOpen} />
       </div>
       {inventory.length > 0 && (
@@ -172,7 +187,6 @@ export default function InventoryContainer({
                 sessionId={sessionId}
                 item={item}
                 setInventory={setInventory}
-                disabled={disabled}
               />
             ))}
           </div>
@@ -233,12 +247,10 @@ function Item({
   sessionId,
   item,
   setInventory,
-  disabled,
 }: {
   sessionId: number | null;
   item: InventoryInterface;
   setInventory: Dispatch<SetStateAction<InventoryInterface[]>>;
-  disabled: boolean;
 }) {
   const {
     onOpen: onImageModalOpen,
@@ -274,7 +286,7 @@ function Item({
   }
 
   return (
-    <div className='min-w-64 flex flex-col justify-center items-center border-2 border-gray-300 rounded-sm'>
+    <div className='min-w-64 flex flex-col justify-start items-center border-2 border-gray-300 rounded-sm'>
       <ModalImage
         isOpen={isImageModalOpen}
         onClose={onImageModalClose}
@@ -297,6 +309,23 @@ function Item({
           {item.name}
         </span>
         <EditButton onPress={onEditModalOpen} size={16} />
+      </div>
+      <Divider className='h-0.5 bg-gray-300' />
+      <div className='w-full flex flex-col justify-center items-center p-3 gap-2'>
+        <Input
+          label='Peso'
+          variant='bordered'
+          size='sm'
+          value={item.weight.toString()}
+          disabled
+        />
+        <Textarea
+          label='Descrição'
+          variant='bordered'
+          size='sm'
+          value={item.description}
+          disabled
+        />
       </div>
       <Divider className='h-0.5 bg-gray-300' />
       <div className='m-5 rounded-sm'>

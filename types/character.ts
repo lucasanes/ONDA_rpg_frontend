@@ -52,6 +52,7 @@ export interface MainCharacterInterface {
   age: number;
   origin: string;
   divinity: string;
+  weightLimit: number;
   xp: number;
   to: number;
   ts: number;

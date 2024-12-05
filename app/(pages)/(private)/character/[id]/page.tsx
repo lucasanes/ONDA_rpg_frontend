@@ -163,6 +163,7 @@ export default function Character() {
             senderName={initialMainCharacter.name}
             sessionId={character.sessionId ? character.sessionId : null}
             charactersOfSession={charactersOfSession}
+            weightLimit={initialMainCharacter.weightLimit}
             inventory={inventory}
             setInventory={setInventory}
           />
