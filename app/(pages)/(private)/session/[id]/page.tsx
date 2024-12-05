@@ -27,7 +27,7 @@ export default function Session() {
 
   const router = useRouter();
 
-  const { onItem, onRollDice, itemOff, rollDiceOff } = useSocket();
+  const { onItem, itemOff } = useSocket();
 
   async function fetchData() {
     try {
@@ -69,13 +69,8 @@ export default function Session() {
       updateInventory(data.senderName);
     });
 
-    onRollDice(Number(id), null, (data) => {
-      toast.info(`rolou um dado e obteve ${data.value}`);
-    });
-
     return () => {
       itemOff(true, Number(id));
-      rollDiceOff(Number(id), null);
     };
   }, []);
 
@@ -89,7 +84,12 @@ export default function Session() {
           setCharacters={setCharacters}
         />
         <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-          <DiceContainer sessionId={Number(id)} characterId={null} />
+          <DiceContainer
+            name='Mestre'
+            portrait={null}
+            sessionId={Number(id)}
+            characterId={null}
+          />
           <RollsContainer sessionId={Number(id)} />
         </div>
         <InventoryContainer

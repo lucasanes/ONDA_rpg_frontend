@@ -57,7 +57,19 @@ type EmitCleanImage = {
 };
 
 type OnRollDice = {
-  value: number;
+  name: string;
+  portrait: string | null;
+  dice: {
+    total: number;
+    dice: string;
+    bonus: string;
+    rollDices: {
+      total: number;
+      quantity: number;
+      faces: number;
+      rolls: number[];
+    }[];
+  };
   isD20: boolean;
   isCritical: boolean;
   isDisaster: boolean;

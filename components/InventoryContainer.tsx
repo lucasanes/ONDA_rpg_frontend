@@ -4,7 +4,6 @@ import { api } from '@/providers/api';
 import { InventoryInterface } from '@/types/inventory';
 import { capitalizeWord } from '@/utils/capitalizeWord';
 import {
-  Button,
   Divider,
   Image,
   Select,
@@ -17,6 +16,7 @@ import { RiShareForwardLine } from 'react-icons/ri';
 import { toast } from 'react-toastify';
 import AddButton from './AddButton';
 import EditButton from './EditButton';
+import IconButton from './IconButton';
 import ModalAddItem from './modals/ModalAddItem';
 import ModalEditItem from './modals/ModalEditItem';
 import ModalImage from './modals/ModalImage';
@@ -155,15 +155,9 @@ export default function InventoryContainer({
         setInventory={setInventory}
       />
       <div className='flex justify-between'>
-        <Button
-          className='min-w-1 text-cyan-400'
-          variant='light'
-          size='sm'
-          isDisabled={disabled}
-          onPress={handleHideForAll}
-        >
+        <IconButton size='sm' onPress={handleHideForAll}>
           <AiOutlineClear size={21} />
-        </Button>
+        </IconButton>
         <h1 className='text-xl'>Inventário</h1>
         <AddButton onPress={onOpen} />
       </div>
@@ -225,16 +219,9 @@ export default function InventoryContainer({
               </Select>
             </div>
 
-            <Button
-              variant='light'
-              color='secondary'
-              size='md'
-              className='min-w-8 text-cyan-400'
-              isDisabled={disabled}
-              onPress={handleSend}
-            >
+            <IconButton onPress={handleSend}>
               <AiOutlineSend size={20} />
-            </Button>
+            </IconButton>
           </div>
         </>
       )}
@@ -303,15 +290,9 @@ function Item({
         handleDelete={handleDelete}
       />
       <div className='w-full flex px-2 justify-between items-center'>
-        <Button
-          className='min-w-1 text-cyan-400'
-          variant='light'
-          size='sm'
-          isDisabled={disabled}
-          onPress={handleShowToAll}
-        >
+        <IconButton size='sm' onPress={handleShowToAll}>
           <RiShareForwardLine size={21} />
-        </Button>
+        </IconButton>
         <span className='m-2 text-center break-words whitespace-break-spaces capitalize'>
           {item.name}
         </span>

@@ -1,12 +1,26 @@
-import { useDisabled } from '@/app/context/DisabledContext';
 import { useSocket } from '@/app/context/SocketContext';
-import { Divider } from '@nextui-org/react';
+import { Card, CardBody, CardFooter, Divider } from '@nextui-org/react';
 import { useEffect, useState } from 'react';
+import { AiOutlineClear } from 'react-icons/ai';
+import { BsArrowRepeat } from 'react-icons/bs';
+import IconButton from './IconButton';
+
+type Dice = {
+  total: number;
+  dice: string;
+  bonus: string;
+  rollDices: {
+    total: number;
+    quantity: number;
+    faces: number;
+    rolls: number[];
+  }[];
+};
 
 type Roll = {
   name: string;
-  image: string;
-  value: number;
+  portrait: string | null;
+  dice: Dice;
   isD20: boolean;
   isCritical: boolean;
   isDisaster: boolean;
@@ -19,67 +33,116 @@ export default function RollsContainer({
   sessionId: number | null;
 }) {
   const [rolls, setRolls] = useState<Roll[]>([]);
-
-  const { disabled } = useDisabled();
+  const [reverse, setReverse] = useState<boolean>(true);
 
   const { onRollDice } = useSocket();
 
   useEffect(() => {
+    const rollsStorage = localStorage.getItem('@ONDA:rolls');
+
+    const rolls = rollsStorage ? JSON.parse(rollsStorage) : [];
+
+    setRolls(rolls);
+
     onRollDice(sessionId, null, (data) => {
-      setRolls((prev) => [
-        ...prev,
+      const createdAt = new Date().toLocaleTimeString('pt-BR', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+      });
+
+      const rollsStorage = localStorage.getItem('@ONDA:rolls');
+
+      const rolls = rollsStorage ? JSON.parse(rollsStorage) : [];
+
+      setRolls([
+        ...rolls,
         {
-          createdAt: new Date().toISOString(),
-          name: 'Mestre',
-          image:
-            'https://m.media-amazon.com/images/S/pv-target-images/6e7c612490e10fc180d1ad5bacd2a3a39030c99cdd7dc0e49144425a6f8823fc._SX1080_FMjpg_.jpg',
+          createdAt,
           ...data,
         },
       ]);
+
+      localStorage.setItem(
+        '@ONDA:rolls',
+        JSON.stringify([
+          ...rolls,
+          {
+            createdAt,
+            ...data,
+          },
+        ])
+      );
     });
   }, []);
 
+  function handleClear() {
+    setRolls([]);
+    localStorage.setItem('@ONDA:rolls', JSON.stringify([]));
+  }
+
+  function handleReverse() {
+    setReverse((prev) => !prev);
+  }
+
+  const viewRolls = reverse ? rolls.reverse() : rolls;
+
   return (
     <div className='border-2 rounded-md border-gray-300 flex flex-col gap-2'>
-      <div className='flex justify-start px-4 pt-4'>
-        <h1 className='text-xl mb-2'>Rolagens</h1>
+      <div className='flex justify-between px-4 pt-4'>
+        <h1 className='text-xl pt-2'>Rolagens</h1>
+        <div className='flex gap-2'>
+          <IconButton onPress={handleClear}>
+            <AiOutlineClear size={20} />
+          </IconButton>
+          <IconButton onPress={handleReverse}>
+            <BsArrowRepeat size={20} />
+          </IconButton>
+        </div>
       </div>
       <Divider className='bg-gray-300 mt-2 h-0.5' />
-      <div className='max-h-96 flex flex-col gap-4 p-4 overflow-y-auto'>
-        {rolls
-          .map((roll, index) => (
-            <div
-              key={index}
-              className='flex flex-col gap-2 border-2 border-gray-300 rounded-md p-4'
-            >
+      <div
+        style={{ maxHeight: 500 }}
+        className='flex flex-col gap-4 p-4 overflow-y-auto'
+      >
+        {viewRolls.map((roll, index) => (
+          <div
+            key={index}
+            className='flex flex-col gap-2 border-2 border-gray-300 rounded-md p-4'
+          >
+            <div className='flex justify-between items-center gap-2'>
               <div className='flex items-center gap-2'>
                 <img
-                  src={roll.image}
+                  src={roll.portrait || '/noportrait.png'}
                   alt='person'
-                  className='w-8 h-8 rounded-full'
+                  className='w-12 h-12 rounded-full aspect-square object-cover border-1 border-gray-300'
                 />
-                <span>{roll.name}</span>
+                <span className='text-xl'>{roll.name}</span>
               </div>
-              <Divider />
-              <div className='flex items-center gap-2'>
-                <span>{roll.value}</span>
-                {roll.isD20 && (
-                  <span className='text-sm font-bold text-gray-400'>D20</span>
-                )}
-                {roll.isCritical && (
-                  <span className='text-sm font-bold text-red-500'>
-                    Crítico
-                  </span>
-                )}
-                {roll.isDisaster && (
-                  <span className='text-sm font-bold text-red-500'>
-                    Desastre
-                  </span>
-                )}
-              </div>
+              <span>{roll.createdAt}</span>
             </div>
-          ))
-          .reverse()}
+            <Divider />
+            <Card className='w-full bg-transparent mt-2'>
+              <CardBody className='flex justify-start py-5'>
+                <h2
+                  className={`text-lg ${roll.isCritical && 'text-green-400'} ${roll.isDisaster && 'text-red-500'}`}
+                >
+                  {roll.dice.rollDices.map((roll) => roll.total).join('+')}
+                  {`+${roll.dice.bonus}`} = {roll.dice.total}
+                </h2>
+              </CardBody>
+              <Divider />
+              <CardFooter className='flex flex-col justify-center items-start'>
+                {roll.dice.rollDices.map((roll, i) => (
+                  <span key={i} className='text-md'>
+                    {roll.quantity}d{roll.faces}:{' '}
+                    {roll.rolls.map((r) => r).join(', ')}
+                  </span>
+                ))}
+              </CardFooter>
+            </Card>
+          </div>
+        ))}
       </div>
     </div>
   );

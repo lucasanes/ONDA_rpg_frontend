@@ -151,6 +151,8 @@ export default function Character() {
         </div>
         <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
           <DiceContainer
+            name={initialMainCharacter.name}
+            portrait={initialStatusCharacter.portrait}
             characterId={character.id}
             sessionId={character.sessionId ? character.sessionId : null}
           />
