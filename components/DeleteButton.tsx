@@ -61,7 +61,7 @@ export default function DeleteButton({
         size='sm'
         isDisabled={disabled}
       >
-        {children ? children : <BiTrash className='text-danger' size={size} />}
+        {children ? children : <BiTrash className='text-red-500' size={size} />}
       </Button>
     </>
   );

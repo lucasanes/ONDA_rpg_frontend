@@ -15,22 +15,24 @@ import {
   Link,
   Progress,
 } from '@nextui-org/react';
-import { useRouter } from 'next/navigation';
 import { FormEvent, useEffect, useRef, useState } from 'react';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import { BiCoin, BiLinkExternal, BiUnlink, BiUserCircle } from 'react-icons/bi';
+import { GiShardSword } from 'react-icons/gi';
 import { toast } from 'react-toastify';
 import DeleteButton from './DeleteButton';
 
 export function SessionCharacterCard({
-  character,
+  initialCharacter,
   setCharacters,
 }: {
-  character: SessionCharactersInterface;
+  initialCharacter: SessionCharactersInterface;
   setCharacters: React.Dispatch<
     React.SetStateAction<SessionCharactersInterface[]>
   >;
 }) {
+  const [character, setCharacter] = useState(initialCharacter);
+
   const {
     id,
     isPublic,
@@ -66,19 +68,29 @@ export function SessionCharacterCard({
     },
   } = character;
 
-  const router = useRouter();
-
   const [section, setSection] = useState<'main' | 'status'>('main');
+  const [teste, setTeste] = useState({} as SessionCharactersInterface);
   const xpRef = useRef<HTMLDivElement>(null);
 
   const {
     onStatusCharacter,
+    emitStatusCharacter,
     statusCharacterOff,
     onXPCharacter,
     xpCharacterOff,
   } = useSocket();
 
   function updateXP(currentXP: number) {
+    setCharacter((prev) => {
+      return {
+        ...prev,
+        mainCharacter: {
+          ...prev.mainCharacter,
+          xp: currentXP,
+        },
+      };
+    });
+
     const xpProgressRef = xpRef.current;
 
     if (!xpProgressRef) return;
@@ -99,18 +111,14 @@ export function SessionCharacterCard({
     updateXP(xp);
 
     onStatusCharacter(Number(id), (data) => {
-      let newCharacter = character;
-
-      newCharacter = {
-        ...newCharacter,
-        statusCharacter: {
-          ...newCharacter.statusCharacter,
-          [data.key]: data.value,
-        },
-      };
-
-      setCharacters((prev) => {
-        return prev.map((each) => (each.id === id ? newCharacter : each));
+      setCharacter((prev) => {
+        return {
+          ...prev,
+          statusCharacter: {
+            ...prev.statusCharacter,
+            [data.key]: data.value,
+          },
+        };
       });
     });
 
@@ -124,19 +132,39 @@ export function SessionCharacterCard({
     };
   }, []);
 
+  function handleChangeFighting() {
+    emitStatusCharacter(
+      {
+        characterId: id,
+        key: 'fighting',
+        value: !fighting,
+      },
+      () => {
+        setCharacter((prev) => {
+          return {
+            ...prev,
+            statusCharacter: {
+              ...prev.statusCharacter,
+              fighting: !prev.statusCharacter.fighting,
+            },
+          };
+        });
+      }
+    );
+  }
+
   async function handleChangeVisibility() {
     try {
       await api.put(`/characters/${character.id}`, {
         isPublic: !character.isPublic,
       });
 
-      setCharacters((characters) =>
-        characters.map((char) =>
-          char.id === character.id
-            ? { ...char, isPublic: !char.isPublic }
-            : char
-        )
-      );
+      setCharacter((prev) => {
+        return {
+          ...prev,
+          isPublic: !prev.isPublic,
+        };
+      });
     } catch (error) {
       console.log(error);
       toast.error('Erro ao alterar visibilidade');
@@ -188,6 +216,14 @@ export function SessionCharacterCard({
             className='text-cyan-500 min-w-1'
           >
             <BiUserCircle size={20} />
+          </Button>
+          <Button
+            size='sm'
+            variant='light'
+            className={`${fighting ? 'text-green-500' : 'text-danger'} min-w-1`}
+            onPress={handleChangeFighting}
+          >
+            <GiShardSword size={20} />
           </Button>
           <Button
             size='sm'

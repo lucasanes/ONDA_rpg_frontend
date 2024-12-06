@@ -159,7 +159,7 @@ function CharacterContainer({
         {characters.map((character) => (
           <SessionCharacterCard
             key={character.id}
-            character={character}
+            initialCharacter={character}
             setCharacters={setCharacters}
           />
         ))}
