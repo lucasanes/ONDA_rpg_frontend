@@ -25,6 +25,14 @@ type EmitPortraitCharacter = OnPortraitCharacter & {
   characterId: number;
 };
 
+type OnXPCharacter = {
+  xp: number;
+};
+
+type EmitXPCharacter = OnXPCharacter & {
+  characterId: number;
+};
+
 type OnInvite = {
   sessionId: number;
   id: number;
@@ -90,6 +98,12 @@ interface SocketContextValue {
     callback: (data: EmitPortraitCharacter) => void
   ) => void;
   statusCharacterOff: (id: number) => void;
+  onXPCharacter: (id: number, callback: (data: OnXPCharacter) => void) => void;
+  emitXPCharacter: (
+    xpCharacter: EmitXPCharacter,
+    callback: (data: EmitXPCharacter) => void
+  ) => void;
+  xpCharacterOff: (id: number) => void;
   onInvite: (userId: number, callback: (data: OnInvite) => void) => void;
   emitInvite: (
     invite: EmitInvite,
@@ -147,6 +161,24 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({
 
   function statusCharacterOff(id: number) {
     socket.off(`status-character?${id}`);
+  }
+
+  function onXPCharacter(id: number, callback: (data: OnXPCharacter) => void) {
+    socket.on(`xp?${id}`, (data: OnXPCharacter) => {
+      callback(data);
+    });
+  }
+
+  function emitXPCharacter(
+    xpCharacter: EmitXPCharacter,
+    callback: (data: EmitXPCharacter) => void
+  ) {
+    socket.emit('xp', xpCharacter);
+    callback(xpCharacter);
+  }
+
+  function xpCharacterOff(id: number) {
+    socket.off(`xp?${id}`);
   }
 
   function onInvite(userId: number, callback: (data: OnInvite) => void) {
@@ -267,6 +299,9 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({
         onStatusCharacter,
         emitStatusCharacter,
         statusCharacterOff,
+        onXPCharacter,
+        emitXPCharacter,
+        xpCharacterOff,
         onInvite,
         emitInvite,
         inviteOff,

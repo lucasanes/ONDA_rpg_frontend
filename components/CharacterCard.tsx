@@ -1,3 +1,4 @@
+import { useSocket } from '@/app/context/SocketContext';
 import { specialElite } from '@/config/fonts';
 import { api } from '@/providers/api';
 import { CharactersInterface } from '@/types/character';
@@ -27,6 +28,8 @@ export function CharacterCard({
   character: CharactersInterface;
   setCharacters: React.Dispatch<React.SetStateAction<CharactersInterface[]>>;
 }) {
+  const { onXPCharacter } = useSocket();
+
   const xpRef = useRef<HTMLDivElement>(null);
 
   function updateXP(currentXP: number) {
@@ -48,6 +51,16 @@ export function CharacterCard({
 
   useEffect(() => {
     updateXP(character.xp);
+
+    onXPCharacter(Number(character.id), (data) => {
+      updateXP(data.xp);
+
+      setCharacters((characters) =>
+        characters.map((char) =>
+          char.id === character.id ? { ...char, xp: data.xp } : char
+        )
+      );
+    });
   }, []);
 
   async function handleDelete(e: FormEvent) {
