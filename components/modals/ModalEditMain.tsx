@@ -39,7 +39,7 @@ export default function ModalEditMain({
 
   const { id } = useParams();
 
-  const { emitStatusCharacter } = useSocket();
+  const { emitStatusCharacter, emitXPCharacter } = useSocket();
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -88,6 +88,16 @@ export default function ModalEditMain({
             characterId: Number(id),
             key: 'money',
             value: convertMoney({ ts, tp, to }),
+          },
+          () => {}
+        );
+      }
+
+      if (xp != mainCharacter.xp) {
+        emitXPCharacter(
+          {
+            characterId: Number(id),
+            xp,
           },
           () => {}
         );
