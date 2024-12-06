@@ -44,6 +44,7 @@ export function SessionCharacterCard({
       divinity,
       name,
       race,
+      weightLimit,
       to,
       tp,
       ts,
@@ -243,6 +244,13 @@ export function SessionCharacterCard({
             disabled
             label='Divindade'
             value={divinity}
+          />
+          <Input
+            variant='bordered'
+            size='md'
+            disabled
+            label='Limite de Peso'
+            value={weightLimit.toString()}
           />
           <Input
             startContent={<BiCoin className='mb-0.5' />}
