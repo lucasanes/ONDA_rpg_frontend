@@ -195,19 +195,26 @@ export function StatusContainer({
     }
 
     debounceTimeout.current = setTimeout(() => {
-      updateApi();
-    }, 3000);
-  }
-
-  async function updateApi() {
-    try {
-      await api.put(`/characters/${id}/status`, {
+      updateApi(key, value, {
         hp,
         currentHp,
         mp,
         currentMp,
         mun,
         currentMun,
+      });
+    }, 3000);
+  }
+
+  async function updateApi(
+    key: keyof StatusBarCharacterInterface,
+    value: number,
+    statusCharacter: Partial<StatusBarCharacterInterface>
+  ) {
+    try {
+      await api.put(`/characters/${id}/status`, {
+        ...statusCharacter,
+        [key]: value,
         cd,
         defense,
         portrait,
