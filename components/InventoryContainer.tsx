@@ -324,6 +324,9 @@ function Item({
           variant='bordered'
           size='sm'
           value={item.description}
+          rows={6}
+          disableAutosize
+          disableAnimation
           disabled
         />
       </div>

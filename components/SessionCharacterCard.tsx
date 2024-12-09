@@ -193,7 +193,7 @@ export function SessionCharacterCard({
 
   return (
     <Card className='bg-transparent border-2 border-gray-300 rounded-sm'>
-      <CardHeader className='justify-between items-center'>
+      <CardHeader className='justify-between items-center gap-4'>
         <div className='flex justify-center items-center gap-2'>
           <h1 className='w-min sm:w-fit text-lg capitalize'>{name}</h1>
           <Button
@@ -207,7 +207,7 @@ export function SessionCharacterCard({
           </Button>
         </div>
 
-        <div className='flex gap-2'>
+        <div className='flex flex-wrap justify-center gap-2'>
           <Button
             as={Link}
             href={`/character/${id}/portrait`}

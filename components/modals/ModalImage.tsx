@@ -20,8 +20,13 @@ export default function ModalImage({
       size='full'
       onClick={onClose}
     >
-      <ModalContent className='bg-transparent flex justify-center items-center'>
-        <Image src={image} className='w-full h-full' />
+      <ModalContent className='bg-transparent flex w-full h-full justify-center items-center'>
+        <div className='flex w-full h-full justify-center'>
+          <Image
+            src={image}
+            className='max-w-full max-h-full w-full h-full object-contain'
+          />
+        </div>
       </ModalContent>
     </Modal>
   );
