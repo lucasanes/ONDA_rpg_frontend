@@ -120,6 +120,8 @@ export default function ModalAddItem({
           />
 
           <Textarea
+            required
+            isRequired
             label={'Descrição'}
             labelPlacement='outside'
             placeholder='Uma espada afiada'
@@ -128,8 +130,6 @@ export default function ModalAddItem({
           />
 
           <FileInput
-            required
-            isRequired
             label={'Imagem'}
             placeholder='Selecione uma imagem'
             value={image}
