@@ -81,6 +81,11 @@ export default function ModalAddItem({
 
       toast.success('Item adicionado com sucesso');
 
+      setName('');
+      setDescription('');
+      setWeight(0);
+      setImage('');
+
       onClose();
     } catch (error) {
       console.error(error);

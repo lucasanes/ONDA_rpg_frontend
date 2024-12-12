@@ -77,6 +77,17 @@ export default function ModalAddCharacter({
 
       toast.success('Personagem criado com sucesso');
 
+      setName('');
+      setXp(0);
+      setAge(0);
+      setCharacterClass('');
+      setRace('');
+      setOrigin('');
+      setDivinity('');
+      setPv(0);
+      setPm(0);
+      setPortrait('');
+
       onClose();
     } catch (error) {
       console.error(error);
