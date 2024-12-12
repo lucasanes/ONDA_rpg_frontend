@@ -49,6 +49,9 @@ export default function ModalEditSession({
 
       toast.success('Sessão editada com sucesso');
 
+      setName('');
+      setDescription('');
+
       onClose();
     } catch (error) {
       console.error(error);

@@ -38,9 +38,10 @@ export default function ModalInvite({
       });
 
       emitInvite(data, () => {
-        console.log('sent');
         toast.success('Convite enviado com sucesso');
       });
+
+      setEmail('');
 
       onClose();
     } catch (error: any) {

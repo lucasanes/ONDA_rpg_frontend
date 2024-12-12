@@ -43,6 +43,9 @@ export default function ModalAddSession({
 
       toast.success('Sessão criada com sucesso');
 
+      setName('');
+      setDescription('');
+
       onClose();
     } catch (error) {
       console.error(error);
