@@ -26,12 +26,10 @@ export function SoundPlayer({ userId }: SoundPlayerProps) {
     audioVolumeOff,
   } = useSocket();
 
-  const musicPercentageLocalStorage = localStorage.getItem(
-    '@ONDA:musicPercentage'
-  );
+  const musicPercentageLocalStorage = localStorage.getItem('@ONDA:volume');
 
   const musicPercentage = musicPercentageLocalStorage
-    ? parseFloat(musicPercentageLocalStorage)
+    ? 11 - Number(musicPercentageLocalStorage)
     : 1;
 
   useEffect(() => {
