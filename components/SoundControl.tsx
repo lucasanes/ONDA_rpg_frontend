@@ -63,9 +63,11 @@ export function SoundControl({
       audioRef.current.currentTime = value;
       setCurrentTime(value);
 
-      userIds.forEach((id) => {
-        emitAudioPlay({ userId: Number(id), audioUrl, currentTime: value });
-      });
+      if (!paused) {
+        userIds.forEach((id) => {
+          emitAudioPlay({ userId: Number(id), audioUrl, currentTime: value });
+        });
+      }
     }
   };
 
@@ -73,7 +75,7 @@ export function SoundControl({
     setPaused(false);
 
     userIds.forEach((id) => {
-      if (audioRef.current) {
+      if (audioRef.current && paused) {
         emitAudioPlay({
           userId: Number(id),
           audioUrl,
