@@ -7,10 +7,13 @@ import { useState } from 'react';
 import { BiCoin } from 'react-icons/bi';
 import EditButton from './EditButton';
 import ModalEditMain from './modals/ModalEditMain';
+import { SoundPlayer } from './SoundPlayer';
 
 export function MainContainer({
+  userId,
   initialMainCharacter,
 }: {
+  userId: number;
   initialMainCharacter: MainCharacterInterface;
 }) {
   const [mainCharacter, setMainCharacter] =
@@ -35,7 +38,18 @@ export function MainContainer({
         <EditButton onPress={onOpen} />
       </div>
       <Divider className='bg-gray-300 -ml-4 mt-2 mb-2 h-0.5 w-[calc(100%+2rem)]' />
-      <Input variant='bordered' size='md' disabled label='Nome' value={name} />
+
+      <span>Clique aqui para (des)ativar os sons</span>
+      <SoundPlayer userId={userId} />
+
+      <Input
+        variant='bordered'
+        size='md'
+        disabled
+        label='Nome'
+        value={name}
+        className='mt-6'
+      />
       <Input
         variant='bordered'
         size='md'

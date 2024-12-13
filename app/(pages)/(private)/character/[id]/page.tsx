@@ -144,7 +144,10 @@ export default function Character() {
     <>
       <div className='flex flex-col p-4 gap-4 overflow-y-auto overflow-x-hidden'>
         <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-          <MainContainer initialMainCharacter={initialMainCharacter} />
+          <MainContainer
+            userId={character.userId}
+            initialMainCharacter={initialMainCharacter}
+          />
           <StatusContainer
             id={character.id}
             initialStatusCharacter={initialStatusCharacter}

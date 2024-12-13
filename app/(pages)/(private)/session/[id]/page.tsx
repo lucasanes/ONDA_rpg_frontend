@@ -7,6 +7,7 @@ import InventoryContainer from '@/components/InventoryContainer';
 import ModalInvite from '@/components/modals/ModalInvite';
 import RollsContainer from '@/components/RollsContainer';
 import { SessionCharacterCard } from '@/components/SessionCharacterCard';
+import { SoundContainer } from '@/components/SoundContainer';
 import { api } from '@/providers/api';
 import { SessionCharactersInterface } from '@/types/character';
 import { InventoryInterface } from '@/types/inventory';
@@ -79,6 +80,9 @@ export default function Session() {
   ) : (
     <>
       <div className='flex flex-col p-4 gap-4 overflow-y-auto overflow-x-hidden'>
+        <SoundContainer
+          userIds={characters.map((character) => character.userId)}
+        />
         <CharacterContainer
           characters={characters}
           setCharacters={setCharacters}
