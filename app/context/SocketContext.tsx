@@ -88,6 +88,24 @@ type EmitRollDice = OnRollDice & {
   characterId: number | null;
 };
 
+type OnAudioPlayAndPause = {
+  audioUrl: string;
+  currentTime: number;
+};
+
+type EmitAudioPlayAndPause = OnAudioPlayAndPause & {
+  userId: number;
+};
+
+type OnAudioVolume = {
+  volume: number;
+  audioUrl: string;
+};
+
+type EmitAudioVolume = OnAudioVolume & {
+  userId: number;
+};
+
 interface SocketContextValue {
   onStatusCharacter: (
     id: number,
@@ -133,6 +151,24 @@ interface SocketContextValue {
   ) => void;
   emitRollDice: (rollDice: EmitRollDice) => void;
   rollDiceOff: (sessionId: number | null, characterId: number | null) => void;
+  onAudioPlay: (
+    sessionId: number,
+    callback: (data: OnAudioPlayAndPause) => void
+  ) => void;
+  emitAudioPlay: (audioPlay: EmitAudioPlayAndPause) => void;
+  audioPlayOff: (sessionId: number) => void;
+  onAudioPause: (
+    sessionId: number,
+    callback: (data: OnAudioPlayAndPause) => void
+  ) => void;
+  emitAudioPause: (audioPause: EmitAudioPlayAndPause) => void;
+  audioPauseOff: (sessionId: number) => void;
+  onAudioVolume: (
+    sessionId: number,
+    callback: (data: OnAudioVolume) => void
+  ) => void;
+  emitAudioVolume: (audioVolume: EmitAudioVolume) => void;
+  audioVolumeOff: (sessionId: number) => void;
 }
 
 const SocketContext = createContext<SocketContextValue | undefined>(undefined);
@@ -293,6 +329,57 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   }
 
+  function onAudioPlay(
+    userId: number,
+    callback: (data: OnAudioPlayAndPause) => void
+  ) {
+    socket.on(`audio-play?${userId}`, (data: OnAudioPlayAndPause) => {
+      callback(data);
+    });
+  }
+
+  function emitAudioPlay(audioPlay: EmitAudioPlayAndPause) {
+    socket.emit('audio-play', audioPlay);
+  }
+
+  function audioPlayOff(userId: number) {
+    socket.off(`audio-play?${userId}`);
+  }
+
+  function onAudioPause(
+    userId: number,
+    callback: (data: OnAudioPlayAndPause) => void
+  ) {
+    socket.on(`audio-pause?${userId}`, (data: OnAudioPlayAndPause) => {
+      callback(data);
+    });
+  }
+
+  function emitAudioPause(audioPause: EmitAudioPlayAndPause) {
+    socket.emit('audio-pause', audioPause);
+  }
+
+  function audioPauseOff(userId: number) {
+    socket.off(`audio-pause?${userId}`);
+  }
+
+  function onAudioVolume(
+    userId: number,
+    callback: (data: OnAudioVolume) => void
+  ) {
+    socket.on(`audio-volume?${userId}`, (data: OnAudioVolume) => {
+      callback(data);
+    });
+  }
+
+  function emitAudioVolume(audioVolume: EmitAudioVolume) {
+    socket.emit('audio-volume', audioVolume);
+  }
+
+  function audioVolumeOff(userId: number) {
+    socket.off(`audio-volume?${userId}`);
+  }
+
   return (
     <SocketContext.Provider
       value={{
@@ -317,6 +404,15 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({
         onRollDice,
         emitRollDice,
         rollDiceOff,
+        onAudioPlay,
+        emitAudioPlay,
+        audioPlayOff,
+        onAudioPause,
+        emitAudioPause,
+        audioPauseOff,
+        onAudioVolume,
+        emitAudioVolume,
+        audioVolumeOff,
       }}
     >
       {children}

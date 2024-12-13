@@ -1,16 +1,9 @@
 import { useDisabled } from '@/app/context/DisabledContext';
 import { Button } from '@nextui-org/button';
-import {
-  Divider,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  useDisclosure,
-} from '@nextui-org/react';
+import { useDisclosure } from '@nextui-org/react';
 import { FormEvent } from 'react';
 import { BiTrash } from 'react-icons/bi';
+import ModalDelete from './modals/ModalDelete';
 
 export default function DeleteButton({
   onPress,
@@ -27,36 +20,15 @@ export default function DeleteButton({
 
   return (
     <>
-      <Modal
-        backdrop='blur'
-        hideCloseButton
+      <ModalDelete
         isOpen={isOpen}
+        onClose={onClose}
         onOpenChange={onOpenChange}
-      >
-        <ModalContent>
-          <form onSubmit={onPress}>
-            <ModalHeader className='flex justify-between'>
-              Tem certeza que deseja excluir?
-            </ModalHeader>
-            <Divider />
-            <ModalBody>
-              <p className='py-4'>Essa ação não pode ser desfeita.</p>
-            </ModalBody>
-            <Divider />
-            <ModalFooter>
-              <Button onPress={onClose} variant='flat' color='danger'>
-                Não, cancelar
-              </Button>
-              <Button type='submit' color='primary'>
-                Sim, excluir
-              </Button>
-            </ModalFooter>
-          </form>
-        </ModalContent>
-      </Modal>
+        onPress={onPress}
+      />
       <Button
         onPress={onOpen}
-        className='min-w-1'
+        className='min-w-0'
         variant='light'
         size='sm'
         isDisabled={disabled}
