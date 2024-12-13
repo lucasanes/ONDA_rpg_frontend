@@ -25,13 +25,11 @@ export function SoundControl({
 
   const { emitAudioPause, emitAudioPlay, emitAudioVolume } = useSocket();
 
-  const musicPercentageLocalStorage = localStorage.getItem(
-    '@registroparanormal:musicPercentage'
-  );
+  const musicPercentageLocalStorage = localStorage.getItem('@ONDA:volume');
 
   const musicPercentage = musicPercentageLocalStorage
-    ? parseFloat(musicPercentageLocalStorage)
-    : 10;
+    ? 11 - Number(musicPercentageLocalStorage)
+    : 1;
 
   const formatTime = (time: number): string => {
     const minutes = Math.floor(time / 60);
