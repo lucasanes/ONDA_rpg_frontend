@@ -80,7 +80,7 @@ export default function Session() {
     <Spinner size='lg' color='current' className='mt-6' />
   ) : (
     <>
-      <div className='flex flex-col p-4 gap-4'>
+      <div className='flex flex-col p-4 gap-4 overflow-y-auto overflow-x-hidden'>
         <SoundContainer
           userIds={characters.map((character) => character.userId)}
         />

@@ -189,7 +189,7 @@ export function SoundContainer({
   const cleanPath = path.replace(' > ', '/');
 
   return (
-    <div className='border-2 rounded-md border-gray-300 flex flex-col p-4 gap-2 overflow-x-hidden'>
+    <div className='h-max border-2 rounded-md border-gray-300 flex flex-col p-4 gap-2 overflow-x-clip'>
       <ModalAddSound
         isOpen={isOpen}
         onClose={onClose}

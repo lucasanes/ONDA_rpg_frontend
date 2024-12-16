@@ -41,8 +41,8 @@ export default function Menu() {
           onClose={onClose}
           onOpenChange={onOpenChange}
         />
-        <div className='fixedw-full h-14 bg-menu flex justify-between items-center px-4 sm:px-16'>
-          <div className='md:w-1/3 hidden md:flex flex-none gap-2 justify-start items-center'>
+        <div className='w-full min-h-14 bg-menu flex justify-between items-center px-4 sm:px-16'>
+          <div className='md:w-1/3 hidden lg:flex flex-none gap-2 justify-start items-center'>
             <img className='size-12' src='/favicon.webp' />
             <h1 className={`text-3xl ${protestRevolution.className}`}>
               ONDA RPG
