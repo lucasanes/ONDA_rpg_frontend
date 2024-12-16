@@ -14,6 +14,41 @@ module.exports = {
         xxs: '400px',
       },
       keyframes: {
+        shake: {
+          '0%': {
+            transform: 'translate(1px, 1px) rotate(0deg)',
+          },
+          '10%': {
+            transform: 'translate(-1px, -1px) rotate(-0.5deg)',
+          },
+          '20%': {
+            transform: 'translate(-1px, 1px) rotate(.5deg)',
+          },
+          '30%': {
+            transform: 'translate(1px, 1px) rotate(0deg)',
+          },
+          '40%': {
+            transform: 'translate(-1px, -1px) rotate(.5deg)',
+          },
+          '50%': {
+            transform: 'translate(1px, -1px) rotate(-.5deg)',
+          },
+          '60%': {
+            transform: 'translate(1px, 1px) rotate(0deg)',
+          },
+          '70%': {
+            transform: 'translate(-1px, -1px) rotate(-0.5deg)',
+          },
+          '80%': {
+            transform: 'translate(-1px, -1px) rotate(.5deg)',
+          },
+          '90%': {
+            transform: 'translate(1px, 1px) rotate(0deg)',
+          },
+          '100%': {
+            transform: 'translate(1px, 1px) rotate(.5deg)',
+          },
+        },
         breathing: {
           '0%, 100%': {
             transform: 'scale(1) rotate(0deg) translateY(0)',
@@ -123,6 +158,7 @@ module.exports = {
           'criticalTextDice ease-in-out 10s, criticalTextDice2 .5s linear infinite',
         disasterTextDice: 'disasterTextDice ease-in-out 10s',
         textDice: 'textDice ease-in-out 10s',
+        shake: 'shake 0.5s infinite',
       },
       colors: {
         background: {

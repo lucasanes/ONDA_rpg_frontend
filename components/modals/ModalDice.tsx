@@ -6,6 +6,7 @@ import {
   ModalContent,
   ModalFooter,
   ModalHeader,
+  Spinner,
 } from '@nextui-org/react';
 import { useEffect, useState } from 'react';
 
@@ -54,6 +55,8 @@ export default function ModalDice({
     bonus: '',
     rollDices: [],
   });
+
+  const [rolling, setRolling] = useState(true);
 
   const { emitRollDice } = useSocket();
 
@@ -170,6 +173,10 @@ export default function ModalDice({
         dice: diceValue,
       });
     }
+
+    setTimeout(() => {
+      setRolling(false);
+    }, 3200);
   }
 
   useEffect(() => {
@@ -184,28 +191,39 @@ export default function ModalDice({
       isOpen={isOpen}
       onOpenChange={onOpenChange}
     >
-      <ModalContent>
+      <ModalContent
+        className={`${!rolling && (diceValue.isCritical || diceValue.isDisaster) ? 'animate-shake' : ''}`}
+      >
         <ModalHeader className='flex justify-between'>
           <h1 className='text-2xl'>Resultado</h1>
         </ModalHeader>
         <Divider />
-        <ModalBody className='p-5'>
-          <h2
-            className={`text-xl ${diceValue.isCritical && 'text-green-400'} ${diceValue.isDisaster && 'text-red-500'}`}
-          >
-            {diceValue.rollDices.map((roll) => roll.total).join('+')}
-            {`+${diceValue.bonus}`} = {diceValue.total}
-          </h2>
-        </ModalBody>
-        <Divider />
-        <ModalFooter className='flex flex-col justify-start'>
-          {diceValue.rollDices.map((roll, i) => (
-            <span key={i} className='text-lg'>
-              {roll.quantity}d{roll.faces}:{' '}
-              {roll.rolls.map((r) => r).join(', ')}
-            </span>
-          ))}
-        </ModalFooter>
+        {rolling ? (
+          <div className='flex justify-center items-center gap-4 p-5'>
+            <Spinner />
+            <span>Rolando...</span>
+          </div>
+        ) : (
+          <>
+            <ModalBody className='p-5'>
+              <h2
+                className={`text-xl ${diceValue.isCritical && 'text-green-400'} ${diceValue.isDisaster && 'text-red-500'}`}
+              >
+                {diceValue.rollDices.map((roll) => roll.total).join('+')}
+                {`+${diceValue.bonus}`} = {diceValue.total}
+              </h2>
+            </ModalBody>
+            <Divider />
+            <ModalFooter className={`flex flex-col justify-start`}>
+              {diceValue.rollDices.map((roll, i) => (
+                <span key={i} className='text-lg'>
+                  {roll.quantity}d{roll.faces}:{' '}
+                  {roll.rolls.map((r) => r).join(', ')}
+                </span>
+              ))}
+            </ModalFooter>
+          </>
+        )}
       </ModalContent>
     </Modal>
   );
