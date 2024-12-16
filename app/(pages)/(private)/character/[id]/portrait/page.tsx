@@ -336,7 +336,7 @@ function NameOrStatus({
       >
         <p
           style={{
-            textShadow: '0 0 1rem #7be4ef, 0 0 1rem #7be4ef',
+            textShadow: '0 0 5px #7be4ef, 0 0 7px #7be4ef, 0 0 10px #7be4ef',
           }}
           className={`text-9xl italic rotate-3 mb-2 capitalize ${imFellEnglish.className}`}
         >
@@ -344,7 +344,7 @@ function NameOrStatus({
         </p>
         <p
           style={{
-            textShadow: '0 0 1rem #7be4ef, 0 0 1rem #7be4ef',
+            textShadow: '0 0 5px #7be4ef, 0 0 7px #7be4ef, 0 0 10px #7be4ef',
           }}
           className={`text-9xl italic rotate-3 mt-2 capitalize ${imFellEnglish.className}`}
         >
@@ -357,7 +357,7 @@ function NameOrStatus({
       >
         <span
           style={{
-            textShadow: '0 0 1rem #951818, 0 0 1rem #951818',
+            textShadow: '0 0 5px #951818, 0 0 7px #951818, 0 0 10px #951818',
           }}
           className={`text-9xl italic text-red-500 rotate-6 shadow-white ${specialElite.className}`}
         >
@@ -365,7 +365,7 @@ function NameOrStatus({
         </span>
         <span
           style={{
-            textShadow: '0 0 1rem #2828c9, 0 0 1rem #2828c9',
+            textShadow: '0 0 5px #2828c9, 0 0 7px #2828c9, 0 0 10px #2828c9',
           }}
           className={`text-9xl italic text-blue-500 rotate-6 ${specialElite.className}`}
         >
