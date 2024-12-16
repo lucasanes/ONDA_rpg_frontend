@@ -14,6 +14,7 @@ import { InventoryInterface } from '@/types/inventory';
 import { Button, Divider, Spinner, useDisclosure } from '@nextui-org/react';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { GiShardSword } from 'react-icons/gi';
 import { toast } from 'react-toastify';
 
 export default function Session() {
@@ -79,7 +80,7 @@ export default function Session() {
     <Spinner size='lg' color='current' className='mt-6' />
   ) : (
     <>
-      <div className='flex flex-col p-4 gap-4 overflow-y-auto overflow-x-hidden'>
+      <div className='flex flex-col p-4 gap-4'>
         <SoundContainer
           userIds={characters.map((character) => character.userId)}
         />
@@ -150,10 +151,12 @@ function CharacterContainer({
       />
       <div className='flex justify-between items-center'>
         <Button
-          className={`border-2 border-green-400 text-gray-200 ${fighting ? 'bg-green-300 bg-opacity-30' : 'bg-transparent'}`}
+          size='sm'
+          variant='light'
+          className={`${fighting ? 'text-green-500' : 'text-danger'} min-w-1`}
           onPress={() => handleFighting(!fighting)}
         >
-          Combate
+          <GiShardSword size={20} />
         </Button>
         <h1 className='text-xl'>Personagens</h1>
         <AddButton onPress={onOpen} />

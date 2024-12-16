@@ -198,6 +198,7 @@ export function SoundControl({
         <Slider
           aria-label='time'
           color='secondary'
+          className='w-1/2 xs:w-full'
           size='md'
           minValue={0}
           value={currentTime}

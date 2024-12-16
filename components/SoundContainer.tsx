@@ -49,7 +49,7 @@ export function SoundContainer({
 
   const { emitAudioPause, emitAudioPlay } = useSocket();
 
-  const prod = process.env.NODE_ENV === 'production';
+  const prod = process.env.NEXT_PUBLIC_NODE_ENV === 'production';
 
   async function fetchData(): Promise<void> {
     setLoading(true);
@@ -189,7 +189,7 @@ export function SoundContainer({
   const cleanPath = path.replace(' > ', '/');
 
   return (
-    <div className='border-2 rounded-md border-gray-300 flex flex-col p-4 gap-2'>
+    <div className='border-2 rounded-md border-gray-300 flex flex-col p-4 gap-2 overflow-x-hidden'>
       <ModalAddSound
         isOpen={isOpen}
         onClose={onClose}
@@ -222,10 +222,10 @@ export function SoundContainer({
           </>
         )}
 
-        <div className='w-full flex flex-wrap gap-2'>
+        <div className='w-full grid grid-cols-[repeat(auto-fit,_minmax(150px,0.5fr))] gap-2 items-stretch'>
           {folderOpened && folderOpened.name !== 'sounds' && (
             <Button
-              className='min-w-0 w-auto h-full pb-2 flex flex-col justify-between'
+              className='min-w-0 w-full h-full pb-2 flex flex-col justify-between'
               onPress={() => handleOpenFolder('prev', folderOpened)}
             >
               <FcOpenedFolder size={50} />
@@ -236,7 +236,7 @@ export function SoundContainer({
           {folderOpened?.prefixes &&
             folderOpened.prefixes.map((folder, i) => (
               <Button
-                className='min-w-0 w-auto h-full pb-2 flex flex-col justify-between'
+                className='min-w-0 w-full h-full pb-2 flex flex-col justify-between'
                 key={i}
                 onPress={() => handleOpenFolder('next', folder)}
               >
@@ -247,7 +247,7 @@ export function SoundContainer({
 
           {folderOpened?.items &&
             folderOpened.items.map((item, i) => (
-              <div key={i} className='relative'>
+              <div key={i} className='h-full'>
                 <ModalDelete
                   onPress={(e) => deleteFile(e, item)}
                   isOpen={deleteIsOpen}
@@ -255,14 +255,14 @@ export function SoundContainer({
                   onOpenChange={onDeleteOpenChange}
                 />
                 <Button
-                  className='min-w-0 w-auto h-full pb-3 flex flex-col justify-between'
+                  className='min-w-0 w-full h-full pb-2 flex flex-col justify-between'
                   onPress={() => handleOpenItem(item)}
                   onContextMenu={handleContextMenu}
                 >
                   <TbPlayerPlay color='#2C7A7B' size={50} />
-                  <p className='relative top-1 capitalize text-white'>
+                  <span className='capitalize text-white text-wrap'>
                     {item.name}
-                  </p>
+                  </span>
                 </Button>
               </div>
             ))}
