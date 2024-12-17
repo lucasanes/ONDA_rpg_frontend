@@ -64,7 +64,7 @@ export default function Menu() {
         <Navbar
           isMenuOpen={isMenuOpen}
           onMenuOpenChange={setIsMenuOpen}
-          className='bg-menu'
+          className='bg-menu navbar'
         >
           <NavbarContent>
             <NavbarMenuToggle
