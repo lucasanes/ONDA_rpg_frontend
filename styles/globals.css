@@ -25,6 +25,13 @@ main {
   min-height: 100vh;
 }
 
+.navbar {
+  header {
+    max-width: 100%;
+    width: 100%;
+  }
+}
+
 .transparent:hover {
   background-color: transparent !important;
 }

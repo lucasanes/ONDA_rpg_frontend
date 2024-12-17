@@ -12,12 +12,10 @@ export function ModalChangeVolume({
   onClose: () => void;
   onOpenChange: () => void;
 }) {
-  const [volume, setVolume] = useState(1);
+  const [volume, setVolume] = useState(5);
 
   function handleSubmit() {
     localStorage.setItem('@ONDA:volume', String(volume));
-
-    setVolume(1);
 
     onClose();
   }
