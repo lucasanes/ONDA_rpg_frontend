@@ -217,7 +217,8 @@ export function SoundContainer({
             />
 
             <h1 className='mt-8 mb-2 text-lg capitalize'>
-              {path} {itemOpened ? ` > ${itemOpened.name}.mp3` : null}
+              {path}{' '}
+              {itemOpened ? ` > ${itemOpened.name.split('.')[0]}.mp3` : null}
             </h1>
           </>
         )}
@@ -261,7 +262,7 @@ export function SoundContainer({
                 >
                   <TbPlayerPlay color='#2C7A7B' size={50} />
                   <span className='capitalize text-white text-wrap'>
-                    {item.name}
+                    {item.name.split('.')[0]}
                   </span>
                 </Button>
               </div>
