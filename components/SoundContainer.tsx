@@ -222,7 +222,7 @@ export function SoundContainer({
           </>
         )}
 
-        <div className='w-full grid grid-cols-[repeat(auto-fit,_minmax(150px,0.5fr))] gap-2 items-stretch'>
+        <div className='w-full grid grid-cols-[repeat(auto-fit,_minmax(150px,150px))] gap-2 justify-center xs:justify-start'>
           {folderOpened && folderOpened.name !== 'sounds' && (
             <Button
               className='min-w-0 w-full h-full pb-2 flex flex-col justify-between'
