@@ -1,7 +1,6 @@
 'use client';
 
 import { useSocket } from '@/app/context/SocketContext';
-import { Image } from '@nextui-org/react';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
@@ -28,8 +27,13 @@ export default function Images() {
   }, []);
 
   return (
-    <div className='w-full h-full'>
-      <Image src={image} width='100%' height='100%' />
+    <div className='flex w-full h-full justify-center items-center'>
+      {image && (
+        <img
+          src={image}
+          className='max-w-full max-h-full w-full h-full object-contain'
+        />
+      )}
     </div>
   );
 }
