@@ -105,18 +105,6 @@ export default function ModalEditMain({
 
       toast.success('Personagem editado com sucesso');
 
-      setName('');
-      setAge(0);
-      setXp(0);
-      setWeightLimit(0);
-      setMainCharacterClass('');
-      setRace('');
-      setOrigin('');
-      setDivinity('');
-      setTs(0);
-      setTc(0);
-      setTo(0);
-
       onClose();
     } catch (error) {
       console.error(error);
