@@ -6,7 +6,14 @@ import {
   StatusCharacterInterface,
 } from '@/types/character';
 import { xpToLevel, xpToNextLevel } from '@/utils/xp-level';
-import { Button, Chip, Divider, useDisclosure } from '@nextui-org/react';
+import {
+  Button,
+  Chip,
+  Divider,
+  Tab,
+  Tabs,
+  useDisclosure,
+} from '@nextui-org/react';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import EditButton from './EditButton';
@@ -35,6 +42,7 @@ export function StatusContainer({
     xp,
     mun,
     currentMun,
+    moldure: initialMoldure,
     portrait,
     dying,
     fighting,
@@ -48,6 +56,8 @@ export function StatusContainer({
   const { disabled } = useDisabled();
 
   const { onOpen, isOpen, onClose, onOpenChange } = useDisclosure();
+
+  const [moldure, setMoldure] = useState(initialMoldure);
 
   const {
     emitStatusCharacter,
@@ -224,6 +234,21 @@ export function StatusContainer({
     }
   }
 
+  async function handleMoldure(value: number) {
+    try {
+      await api.put(`/characters/${id}/status`, {
+        moldure: value,
+        cd,
+        defense,
+        portrait,
+      });
+
+      setMoldure(value);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   return (
     <div className='border-2 rounded-md border-gray-300 flex flex-col p-4 gap-2'>
       <ModalEditStatus
@@ -280,47 +305,56 @@ export function StatusContainer({
             </Button>
           </div>
         </div>
-        <Link
-          href={`/character/${id}/portrait`}
-          className='relative min-w-64 min-h-64 max-w-64 max-h-64 rounded-full cursor-pointer'
-        >
-          {/* <div className='z-10 absolute min-w-64 min-h-64 max-w-64 max-h-64 rounded-full aspect-square object-cover border-2'></div> */}
-          <img
-            style={{
-              width: 350,
-              height: 350,
-            }}
-            src='/blood2.png'
-            className={`absolute z-20 -bottom-12 rounded-full rotate-90 transition duration-700 ease-in-out ${dying ? 'opacity-90' : 'opacity-0'} ${unconscious ? 'blur-sm' : ''}`}
-          />
-          <img
-            style={{
-              width: 250,
-              height: 250,
-            }}
-            src='/blood1.png'
-            className={`absolute z-20 left-2 bottom-3 rounded-full rotate-90 transition duration-700 ease-in-out ${hurted ? 'opacity-80' : `opacity-0`} ${unconscious ? 'blur-sm' : ''}`}
-          />
-          <img
-            className={`z-0 w-64 h-64 rounded-full aspect-square object-cover transition duration-700 ease-in-out ${unconscious ? 'brightness-0 blur-sm' : 'brightness-100 blur-0'} ${tired ? 'grayscale' : ''}`}
-            src={portrait || '/noportrait.png'}
-          />
-          <div
-            ref={xpRef}
-            className='absolute w-64 h-64 z-30 inset-0 rounded-full'
-            style={{
-              background: 'conic-gradient(#43ff5c 0deg, white 0deg 360deg)',
-              maskImage:
-                'radial-gradient(closest-side, transparent 97%, black 0%)',
-              WebkitMaskImage:
-                'radial-gradient(closest-side, transparent 97%, black 0%)',
-            }}
-          ></div>
-          {/* <img
+        <div className='flex flex-col justify-center items-center gap-6'>
+          <Tabs
+            selectedKey={moldure.toString()}
+            onSelectionChange={(key) => handleMoldure(Number(key))}
+          >
+            <Tab key='1' title='1' />
+            <Tab key='2' title='2' />
+          </Tabs>
+          <Link
+            href={`/character/${id}/portrait`}
+            className='relative min-w-64 min-h-64 max-w-64 max-h-64 rounded-full cursor-pointer'
+          >
+            {/* <div className='z-10 absolute min-w-64 min-h-64 max-w-64 max-h-64 rounded-full aspect-square object-cover border-2'></div> */}
+            <img
+              style={{
+                width: 350,
+                height: 350,
+              }}
+              src='/blood2.png'
+              className={`absolute z-20 -bottom-12 rounded-full rotate-90 transition duration-700 ease-in-out ${dying ? 'opacity-90' : 'opacity-0'} ${unconscious ? 'blur-sm' : ''}`}
+            />
+            <img
+              style={{
+                width: 250,
+                height: 250,
+              }}
+              src='/blood1.png'
+              className={`absolute z-20 left-2 bottom-3 rounded-full rotate-90 transition duration-700 ease-in-out ${hurted ? 'opacity-80' : `opacity-0`} ${unconscious ? 'blur-sm' : ''}`}
+            />
+            <img
+              className={`z-0 w-64 h-64 rounded-full aspect-square object-cover transition duration-700 ease-in-out ${unconscious ? 'brightness-0 blur-sm' : 'brightness-100 blur-0'} ${tired ? 'grayscale' : ''}`}
+              src={portrait || '/noportrait.png'}
+            />
+            <div
+              ref={xpRef}
+              className='absolute w-64 h-64 z-30 inset-0 rounded-full'
+              style={{
+                background: 'conic-gradient(#43ff5c 0deg, white 0deg 360deg)',
+                maskImage:
+                  'radial-gradient(closest-side, transparent 97%, black 0%)',
+                WebkitMaskImage:
+                  'radial-gradient(closest-side, transparent 97%, black 0%)',
+              }}
+            ></div>
+            {/* <img
             className={`z-0 min-w-64 min-h-64 max-w-64 max-h-64 rounded-full aspect-square object-cover transition duration-700 ease-in-out ${unconscious ? 'brightness-0 blur-sm' : 'brightness-100 blur-0'} ${tired ? 'grayscale' : ''}`}
             src={portrait || '/noportrait.png'}
           /> */}
-        </Link>
+          </Link>
+        </div>
       </div>
 
       <span className='mt-3 text-center'>Vida</span>
