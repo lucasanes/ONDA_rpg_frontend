@@ -1,15 +1,15 @@
 export function convertMoney({
   to,
+  tc,
   tp,
-  ts,
 }: {
   to: number;
+  tc: number;
   tp: number;
-  ts: number;
 }) {
-  const toValue = 100;
-  const tpValue = 10;
+  const tcValue = 0.1;
   const tsValue = 1;
+  const toValue = 10;
 
-  return to * toValue + tp * tpValue + ts * tsValue;
+  return to * toValue + tc * tcValue + tp * tsValue;
 }

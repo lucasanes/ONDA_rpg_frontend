@@ -31,8 +31,8 @@ export default function ModalEditMain({
   const [race, setRace] = useState(mainCharacter.race);
   const [origin, setOrigin] = useState(mainCharacter.origin);
   const [divinity, setDivinity] = useState(mainCharacter.divinity);
-  const [ts, setTs] = useState(mainCharacter.ts);
-  const [tp, setTp] = useState(mainCharacter.tp);
+  const [tp, setTs] = useState(mainCharacter.tp);
+  const [tc, setTc] = useState(mainCharacter.tc);
   const [to, setTo] = useState(mainCharacter.to);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -58,8 +58,8 @@ export default function ModalEditMain({
         race,
         divinity,
         weightLimit,
-        ts,
         tp,
+        tc,
         to,
       });
 
@@ -73,21 +73,21 @@ export default function ModalEditMain({
         race,
         divinity,
         weightLimit,
-        ts,
         tp,
+        tc,
         to,
       }));
 
       if (
-        ts != mainCharacter.ts ||
         tp != mainCharacter.tp ||
+        tc != mainCharacter.tc ||
         to != mainCharacter.to
       ) {
         emitStatusCharacter(
           {
             characterId: Number(id),
             key: 'money',
-            value: convertMoney({ ts, tp, to }),
+            value: convertMoney({ tp, tc, to }),
           },
           () => {}
         );
@@ -114,7 +114,7 @@ export default function ModalEditMain({
       setOrigin('');
       setDivinity('');
       setTs(0);
-      setTp(0);
+      setTc(0);
       setTo(0);
 
       onClose();
@@ -225,12 +225,12 @@ export default function ModalEditMain({
           <Input
             isRequired
             required
-            label='Tibar'
+            label='Tibar de Cobre'
             labelPlacement='outside'
             placeholder='100'
             type='number'
-            value={ts.toString()}
-            onChange={(e) => setTs(Number(e.target.value))}
+            value={tc.toString()}
+            onChange={(e) => setTc(Number(e.target.value))}
           />
 
           <Input
@@ -241,7 +241,7 @@ export default function ModalEditMain({
             placeholder='10'
             type='number'
             value={tp.toString()}
-            onChange={(e) => setTp(Number(e.target.value))}
+            onChange={(e) => setTs(Number(e.target.value))}
           />
 
           <Input
