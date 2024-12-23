@@ -45,8 +45,8 @@ export function SessionCharacterCard({
       race,
       weightLimit,
       to,
+      tc,
       tp,
-      ts,
       xp,
     },
     statusCharacter: {
@@ -324,7 +324,7 @@ export function SessionCharacterCard({
           size='md'
           disabled
           label='$ TS $'
-          value={ts.toString()}
+          value={tp.toString()}
         />
         <Input
           startContent={<BiCoin className='mb-0.5' />}
@@ -332,7 +332,7 @@ export function SessionCharacterCard({
           size='md'
           disabled
           label='$ TP $'
-          value={tp.toString()}
+          value={tc.toString()}
         />
         <Input
           startContent={<BiCoin className='mb-0.5' />}

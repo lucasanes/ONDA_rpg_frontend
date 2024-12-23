@@ -19,7 +19,7 @@ export function MainContainer({
   const [mainCharacter, setMainCharacter] =
     useState<MainCharacterInterface>(initialMainCharacter);
 
-  const { name, xp, divinity, origin, race, weightLimit, ts, to, tp, age } =
+  const { name, xp, divinity, origin, race, weightLimit, tp, to, tc, age } =
     mainCharacter;
 
   const { onOpen, isOpen, onClose, onOpenChange } = useDisclosure();
@@ -105,8 +105,8 @@ export function MainContainer({
         variant='bordered'
         size='md'
         disabled
-        label='$ Tibar $'
-        value={ts.toString()}
+        label='$ Tibar de Cobre $'
+        value={tc.toString()}
       />
       <Input
         startContent={<BiCoin className='mb-0.5' />}

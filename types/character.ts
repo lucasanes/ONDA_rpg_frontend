@@ -7,8 +7,8 @@ export interface CharactersInterface {
   mp: number;
   currentMp: number;
   to: number;
-  ts: number;
   tp: number;
+  tc: number;
   mun: number;
   portrait: string | null;
   currentMun: number;
@@ -55,8 +55,8 @@ export interface MainCharacterInterface {
   weightLimit: number;
   xp: number;
   to: number;
-  ts: number;
   tp: number;
+  tc: number;
 }
 
 export interface StatusCharacterInterface {
