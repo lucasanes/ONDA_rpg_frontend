@@ -6,9 +6,7 @@ import { api } from '@/providers/api';
 import { CharacterPortraitInterface } from '@/types/character';
 import { convertMoney } from '@/utils/convertMoney';
 import {
-  MOLDURE_1_IMAGE_POSITION,
   MOLDURE_1_IMAGE_SIZE,
-  MOLDURE_2_IMAGE_POSITION,
   MOLDURE_2_IMAGE_SIZE,
   PORTRAIT_SIZE,
 } from '@/utils/image';
@@ -80,7 +78,9 @@ export default function Portrait() {
 
   return (
     !loading && (
-      <div className='w-full h-full overflow-auto p-10'>
+      <div
+        className={`w-full h-full overflow-auto p-10 ${character.moldure === 2 ? 'px-5' : ''}`}
+      >
         <div className='relative flex justify-start items-center'>
           <div className='relative'>
             <Dice characterId={Number(id)} />
@@ -294,9 +294,6 @@ function PortraitImage({
   tired: boolean;
   moldure: number;
 }) {
-  const imagePosition =
-    moldure === 2 ? MOLDURE_2_IMAGE_POSITION : MOLDURE_1_IMAGE_POSITION;
-
   const imageSize = moldure === 2 ? MOLDURE_2_IMAGE_SIZE : MOLDURE_1_IMAGE_SIZE;
 
   return (
