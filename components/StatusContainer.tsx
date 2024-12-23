@@ -237,6 +237,7 @@ export function StatusContainer({
   async function handleMoldure(value: number) {
     try {
       await api.put(`/characters/${id}/status`, {
+        ...statusCharacter,
         moldure: value,
         cd,
         defense,
