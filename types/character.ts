@@ -66,6 +66,7 @@ export interface StatusCharacterInterface {
   mp: number;
   currentMp: number;
   mun: number;
+  moldure: number;
   portrait: string | null;
   cd: number;
   defense: number;
