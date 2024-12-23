@@ -225,6 +225,7 @@ export function StatusContainer({
       await api.put(`/characters/${id}/status`, {
         ...statusCharacter,
         [key]: value,
+        moldure,
         cd,
         defense,
         portrait,
