@@ -306,7 +306,13 @@ function PortraitImage({
           width: imageSize,
           height: imageSize,
         }}
-        className={`absolute ${imagePosition} aspect-square object-cover rounded-full transition duration-700 ease-in-out ${unconscious ? 'brightness-0 blur-sm' : 'brightness-100 blur-0  animate-breathing'} ${tired ? 'grayscale' : ''}`}
+        className={`
+          absolute 
+          ${moldure === 2 ? 'top-14 left-14' : 'top-6 left-6'} 
+          aspect-square object-cover rounded-full transition duration-700 ease-in-out 
+          ${unconscious ? 'brightness-0 blur-sm' : 'brightness-100 blur-0 animate-breathing'} 
+          ${tired ? 'grayscale' : ''}
+        `}
         src={portrait || '/noportrait.png'}
       />
       <img
