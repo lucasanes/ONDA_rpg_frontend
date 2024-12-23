@@ -57,10 +57,6 @@ export default function ModalEditStatus({
 
       toast.success('Personagem editado com sucesso');
 
-      setDefense(0);
-      setCd(0);
-      setPortrait('');
-
       onClose();
     } catch (error) {
       console.error(error);

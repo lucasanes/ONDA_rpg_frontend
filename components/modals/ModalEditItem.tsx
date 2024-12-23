@@ -59,11 +59,6 @@ export default function ModalEditItem({
 
       toast.success('Item editado com sucesso');
 
-      setName('');
-      setDescription('');
-      setWeight(0);
-      setImage('');
-
       onClose();
     } catch (error) {
       console.error(error);
