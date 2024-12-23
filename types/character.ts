@@ -26,6 +26,7 @@ export interface CharacterPortraitInterface {
   mp: number;
   currentMp: number;
   money: number;
+  moldure: number;
   portrait: string | null;
   sessionId?: number;
   unconscious: boolean;

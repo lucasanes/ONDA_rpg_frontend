@@ -5,7 +5,13 @@ import { imFellEnglish, specialElite } from '@/config/fonts';
 import { api } from '@/providers/api';
 import { CharacterPortraitInterface } from '@/types/character';
 import { convertMoney } from '@/utils/convertMoney';
-import { IMAGE_SIZE } from '@/utils/image';
+import {
+  MOLDURE_1_IMAGE_POSITION,
+  MOLDURE_1_IMAGE_SIZE,
+  MOLDURE_2_IMAGE_POSITION,
+  MOLDURE_2_IMAGE_SIZE,
+  PORTRAIT_SIZE,
+} from '@/utils/image';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
@@ -88,8 +94,8 @@ export default function Portrait() {
             />
             <div
               style={{
-                top: `${IMAGE_SIZE - 125}px`,
-                left: `${IMAGE_SIZE - 50}px`,
+                top: `${PORTRAIT_SIZE - 125}px`,
+                left: `${PORTRAIT_SIZE - 50}px`,
               }}
               className='absolute z-40 flex flex-col gap-2 justify-center items-start'
             >
@@ -100,6 +106,7 @@ export default function Portrait() {
               portrait={character.portrait}
               unconscious={character.unconscious}
               tired={character.tired}
+              moldure={character.moldure}
             />
           </div>
           <NameOrStatus
@@ -151,8 +158,8 @@ function Dice({ characterId }: { characterId: number | null }) {
       <div key={key} className='relative'>
         <span
           style={{
-            top: `${IMAGE_SIZE - 320}px`,
-            left: `${IMAGE_SIZE - 370}px`,
+            top: `${PORTRAIT_SIZE - 320}px`,
+            left: `${PORTRAIT_SIZE - 370}px`,
             WebkitTextStroke: `2px ${isD20 ? '#00b4dc' : '#ff6200'}`,
             textShadow: `
             ${isD20 ? '#00b4dc' : '#ff6200'} 0 0 30px, 
@@ -175,8 +182,8 @@ function Dice({ characterId }: { characterId: number | null }) {
         </span>
         <video
           style={{
-            width: IMAGE_SIZE + 50,
-            height: IMAGE_SIZE + 50,
+            width: PORTRAIT_SIZE + 50,
+            height: PORTRAIT_SIZE + 50,
           }}
           src={`/video/${dice}-dice.webm`}
           autoPlay
@@ -248,8 +255,8 @@ function Hurted({
   return (
     <img
       style={{
-        width: IMAGE_SIZE - 50,
-        height: IMAGE_SIZE - 50,
+        width: PORTRAIT_SIZE - 50,
+        height: PORTRAIT_SIZE - 50,
       }}
       src='/blood1.png'
       className={`absolute left-12 top-12 z-20 rotate-90 transition duration-700 ease-in-out ${hurted ? 'opacity-60' : 'opacity-0'} ${unconscious ? 'blur-sm' : ''}`}
@@ -267,8 +274,8 @@ function Dying({
   return (
     <img
       style={{
-        width: IMAGE_SIZE + 50,
-        height: IMAGE_SIZE + 50,
+        width: PORTRAIT_SIZE + 50,
+        height: PORTRAIT_SIZE + 50,
       }}
       src='/blood2.png'
       className={`absolute z-20 rotate-90 transition duration-700 ease-in-out ${dying ? 'opacity-75' : 'opacity-0'} ${unconscious ? 'blur-sm' : ''}`}
@@ -280,28 +287,35 @@ function PortraitImage({
   portrait,
   unconscious,
   tired,
+  moldure,
 }: {
   portrait: string | null;
   unconscious: boolean;
   tired: boolean;
+  moldure: number;
 }) {
+  const imagePosition =
+    moldure === 2 ? MOLDURE_2_IMAGE_POSITION : MOLDURE_1_IMAGE_POSITION;
+
+  const imageSize = moldure === 2 ? MOLDURE_2_IMAGE_SIZE : MOLDURE_1_IMAGE_SIZE;
+
   return (
     <>
       <img
         style={{
-          width: IMAGE_SIZE,
-          height: IMAGE_SIZE,
+          width: imageSize,
+          height: imageSize,
         }}
-        className={`absolute left-6 top-6 aspect-square object-cover rounded-full transition duration-700 ease-in-out ${unconscious ? 'brightness-0 blur-sm' : 'brightness-100 blur-0  animate-breathing'} ${tired ? 'grayscale' : ''}`}
+        className={`absolute ${imagePosition} aspect-square object-cover rounded-full transition duration-700 ease-in-out ${unconscious ? 'brightness-0 blur-sm' : 'brightness-100 blur-0  animate-breathing'} ${tired ? 'grayscale' : ''}`}
         src={portrait || '/noportrait.png'}
       />
       <img
-        src={'/moldure1.png'}
+        src={`/moldure${moldure}.png`}
         style={{
-          minWidth: IMAGE_SIZE + 50,
-          minHeight: IMAGE_SIZE + 50,
-          maxWidth: IMAGE_SIZE + 50,
-          maxHeight: IMAGE_SIZE + 50,
+          minWidth: PORTRAIT_SIZE + 50,
+          minHeight: PORTRAIT_SIZE + 50,
+          maxWidth: PORTRAIT_SIZE + 50,
+          maxHeight: PORTRAIT_SIZE + 50,
         }}
         className='relative z-10'
       ></img>
