@@ -40,6 +40,7 @@ export default function ModalEditStatus({
         portrait: portrait ? portrait : null,
         defense,
         cd,
+        moldure: statusCharacter.moldure,
         hp: statusCharacter.hp,
         currentHp: statusCharacter.currentHp,
         mp: statusCharacter.mp,
