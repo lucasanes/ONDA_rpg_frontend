@@ -48,6 +48,8 @@ export default function RollsContainer({
     setRolls(rolls);
 
     onRollDice(sessionId, null, (data) => {
+      console.log(sessionId, data);
+
       const createdAt = new Date().toLocaleTimeString('pt-BR', {
         hour: '2-digit',
         minute: '2-digit',

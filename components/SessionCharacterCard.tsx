@@ -17,7 +17,7 @@ import {
 } from '@nextui-org/react';
 import { FormEvent, useEffect, useRef, useState } from 'react';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
-import { BiCoin, BiLinkExternal, BiUnlink, BiUserCircle } from 'react-icons/bi';
+import { BiLinkExternal, BiUnlink, BiUserCircle } from 'react-icons/bi';
 import { GiShardSword } from 'react-icons/gi';
 import { toast } from 'react-toastify';
 import DeleteButton from './DeleteButton';
@@ -68,8 +68,7 @@ export function SessionCharacterCard({
     },
   } = character;
 
-  const [section, setSection] = useState<'main' | 'status'>('main');
-  const [teste, setTeste] = useState({} as SessionCharactersInterface);
+  const [section, setSection] = useState<'main' | 'status'>('status');
   const xpRef = useRef<HTMLDivElement>(null);
 
   const {
@@ -317,30 +316,6 @@ export function SessionCharacterCard({
           disabled
           label='Limite de Peso'
           value={weightLimit.toString()}
-        />
-        <Input
-          startContent={<BiCoin className='mb-0.5' />}
-          variant='bordered'
-          size='md'
-          disabled
-          label='$ TS $'
-          value={tp.toString()}
-        />
-        <Input
-          startContent={<BiCoin className='mb-0.5' />}
-          variant='bordered'
-          size='md'
-          disabled
-          label='$ TP $'
-          value={tc.toString()}
-        />
-        <Input
-          startContent={<BiCoin className='mb-0.5' />}
-          variant='bordered'
-          size='md'
-          disabled
-          label='$ TO $'
-          value={to.toString()}
         />
 
         <div className='flex flex-wrap justify-center items-center col-span-full mt-3 px-3 gap-3'>
