@@ -298,16 +298,14 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({
     characterId: number | null,
     callback: (data: OnRollDice) => void
   ) {
-    if (!sessionId && !characterId) return;
-
-    if (!sessionId) {
-      socket.on(`roll-dice?${characterId}`, (data: OnRollDice) => {
+    if (characterId) {
+      socket.on(`roll-dice-character?${characterId}`, (data: OnRollDice) => {
         callback(data);
       });
     }
 
-    if (!characterId) {
-      socket.on(`roll-dice?${sessionId}`, (data: OnRollDice) => {
+    if (sessionId) {
+      socket.on(`roll-dice-session?${sessionId}`, (data: OnRollDice) => {
         callback(data);
       });
     }
