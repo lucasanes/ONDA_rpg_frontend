@@ -318,12 +318,12 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({
   function rollDiceOff(sessionId: number | null, characterId: number | null) {
     if (!sessionId && !characterId) return;
 
-    if (!sessionId) {
-      socket.off(`roll-dice?${characterId}`);
+    if (characterId) {
+      socket.off(`roll-dice-character?${characterId}`);
     }
 
-    if (!characterId) {
-      socket.off(`roll-dice?${sessionId}`);
+    if (sessionId) {
+      socket.off(`roll-dice-session?${sessionId}`);
     }
   }
 

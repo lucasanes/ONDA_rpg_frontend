@@ -53,7 +53,7 @@ export default function Session() {
 
   async function updateInventory(senderName: string) {
     try {
-      const response = await api.get(`/items/character/${id}`);
+      const response = await api.get(`/items/session/${id}`);
 
       setInventory(response.data);
 
