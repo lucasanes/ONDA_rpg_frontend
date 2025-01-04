@@ -39,6 +39,10 @@ export function SoundContainer({
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
+  const [itemToDelete, setItemToDelete] = useState<StorageReference | null>(
+    null
+  );
+
   const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
   const {
     isOpen: deleteIsOpen,
@@ -166,23 +170,31 @@ export function SoundContainer({
 
   const deleteFile = async (
     e: FormEvent,
-    item: StorageReference
+    item: StorageReference | null
   ): Promise<void> => {
     e.preventDefault();
+
+    if (!item) return;
 
     const fileRef = ref(storage, item.fullPath);
 
     try {
       await deleteObject(fileRef);
       fetchData();
+
+      onDeleteClose();
     } catch (error) {
       console.error('Erro ao deletar o arquivo:', error);
     }
   };
 
-  const handleContextMenu = (event: React.MouseEvent) => {
+  const handleContextMenu = (
+    event: React.MouseEvent,
+    item: StorageReference
+  ) => {
     event.preventDefault();
 
+    setItemToDelete(item);
     onDeleteOpen();
   };
 
@@ -196,6 +208,12 @@ export function SoundContainer({
         onOpenChange={onOpenChange}
         currentPath={cleanPath}
         fetchData={fetchData}
+      />
+      <ModalDelete
+        onPress={(e) => deleteFile(e, itemToDelete)}
+        isOpen={deleteIsOpen}
+        onClose={onDeleteClose}
+        onOpenChange={onDeleteOpenChange}
       />
 
       <div className='h-10 flex justify-between items-center'>
@@ -220,54 +238,48 @@ export function SoundContainer({
               {path}{' '}
               {itemOpened ? ` > ${itemOpened.name.split('.')[0]}.mp3` : null}
             </h1>
-          </>
-        )}
 
-        <div className='w-full grid grid-cols-[repeat(auto-fit,_minmax(150px,150px))] gap-2 justify-center xs:justify-start'>
-          {folderOpened && folderOpened.name !== 'sounds' && (
-            <Button
-              className='min-w-0 w-full h-full pb-2 flex flex-col justify-between'
-              onPress={() => handleOpenFolder('prev', folderOpened)}
-            >
-              <FcOpenedFolder size={50} />
-              <p>Voltar</p>
-            </Button>
-          )}
-
-          {folderOpened?.prefixes &&
-            folderOpened.prefixes.map((folder, i) => (
-              <Button
-                className='min-w-0 w-full h-full pb-2 flex flex-col justify-between'
-                key={i}
-                onPress={() => handleOpenFolder('next', folder)}
-              >
-                <FcOpenedFolder size={50} />
-                <p className='capitalize'>{folder.name}</p>
-              </Button>
-            ))}
-
-          {folderOpened?.items &&
-            folderOpened.items.map((item, i) => (
-              <div key={i} className='h-full'>
-                <ModalDelete
-                  onPress={(e) => deleteFile(e, item)}
-                  isOpen={deleteIsOpen}
-                  onClose={onDeleteClose}
-                  onOpenChange={onDeleteOpenChange}
-                />
+            <div className='w-full grid grid-cols-[repeat(auto-fit,_minmax(150px,150px))] gap-2 justify-center xs:justify-start'>
+              {folderOpened && folderOpened.name !== 'sounds' && (
                 <Button
                   className='min-w-0 w-full h-full pb-2 flex flex-col justify-between'
-                  onPress={() => handleOpenItem(item)}
-                  onContextMenu={handleContextMenu}
+                  onPress={() => handleOpenFolder('prev', folderOpened)}
                 >
-                  <TbPlayerPlay color='#2C7A7B' size={50} />
-                  <span className='capitalize text-white text-wrap'>
-                    {item.name.split('.')[0]}
-                  </span>
+                  <FcOpenedFolder size={50} />
+                  <p>Voltar</p>
                 </Button>
-              </div>
-            ))}
-        </div>
+              )}
+
+              {folderOpened?.prefixes &&
+                folderOpened.prefixes.map((folder, i) => (
+                  <Button
+                    className='min-w-0 w-full h-full pb-2 flex flex-col justify-between'
+                    key={i}
+                    onPress={() => handleOpenFolder('next', folder)}
+                  >
+                    <FcOpenedFolder size={50} />
+                    <p className='capitalize'>{folder.name}</p>
+                  </Button>
+                ))}
+
+              {folderOpened?.items &&
+                folderOpened.items.map((item, i) => (
+                  <div key={i} className='h-full'>
+                    <Button
+                      className='min-w-0 w-full h-full pb-2 flex flex-col justify-between'
+                      onPress={() => handleOpenItem(item)}
+                      onContextMenu={(e) => handleContextMenu(e, item)}
+                    >
+                      <TbPlayerPlay color='#2C7A7B' size={50} />
+                      <span className='capitalize text-white text-wrap'>
+                        {item.name.split('.')[0]}
+                      </span>
+                    </Button>
+                  </div>
+                ))}
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
