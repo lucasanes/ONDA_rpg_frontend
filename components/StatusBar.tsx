@@ -111,7 +111,6 @@ export default function StatusBar({
               variant='light'
               className='min-w-10'
               onPress={() => {
-                if (currentValue == maxValue) return;
                 onCurrentValueUpdate(currentValue + 1);
               }}
               isDisabled={disabled}
@@ -123,10 +122,6 @@ export default function StatusBar({
               variant='light'
               className='min-w-10 hidden xxs:inline-block'
               onPress={() => {
-                if (currentValue + 5 > maxValue) {
-                  onCurrentValueUpdate(maxValue);
-                  return;
-                }
                 onCurrentValueUpdate(currentValue + 5);
               }}
               isDisabled={disabled}
