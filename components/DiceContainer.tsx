@@ -46,8 +46,7 @@ export default function DiceContainer({
       }
     }
 
-    const regex =
-      /^(\d{1,2}d(20|[1-9]|1[0-9])(\+\d{1,2}d(20|[1-9]|1[0-9])|\+\d+)*)$/;
+    const regex = /^(\d{1,2}d(\d{1,3})(\+\d{1,2}d(\d{1,3})|\+\d+)*)$/;
 
     if (dice.length && !regex.test(dice)) {
       setIsInvalid(true);
