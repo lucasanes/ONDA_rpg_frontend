@@ -28,6 +28,10 @@ export default function StatusBar({
               variant='light'
               className='min-w-10 hidden xs:inline-block md:hidden lg:inline-block'
               onPress={() => {
+                if (currentValue <= 0) {
+                  onCurrentValueUpdate(maxValue * -1);
+                  return;
+                }
                 onCurrentValueUpdate(0);
               }}
               isDisabled={disabled}
@@ -39,10 +43,11 @@ export default function StatusBar({
               variant='light'
               className='min-w-10 hidden xxs:inline-block'
               onPress={() => {
-                if (currentValue - 5 < 0) {
-                  onCurrentValueUpdate(0);
+                if (currentValue - 5 < maxValue * -1) {
+                  onCurrentValueUpdate(maxValue * -1);
                   return;
                 }
+
                 onCurrentValueUpdate(currentValue - 5);
               }}
               isDisabled={disabled}
@@ -54,7 +59,8 @@ export default function StatusBar({
               variant='light'
               className='min-w-10'
               onPress={() => {
-                if (currentValue == 0) return;
+                if (currentValue == maxValue * -1) return;
+
                 onCurrentValueUpdate(currentValue - 1);
               }}
               isDisabled={disabled}
@@ -132,6 +138,10 @@ export default function StatusBar({
               variant='light'
               className='min-w-10 hidden xs:inline-block md:hidden lg:inline-block'
               onPress={() => {
+                if (currentValue < 0) {
+                  onCurrentValueUpdate(0);
+                  return;
+                }
                 onCurrentValueUpdate(maxValue);
               }}
               isDisabled={disabled}
@@ -147,7 +157,8 @@ export default function StatusBar({
             indicator: color,
           }}
           maxValue={maxValue}
-          value={currentValue}
+          value={currentValue < 0 ? currentValue * -1 : currentValue}
+          style={{ transform: currentValue > 0 ? 'scaleX(1)' : 'scaleX(-1)' }}
         />
       )}
     </>
