@@ -23,7 +23,8 @@ export default function DiceContainer({
   characterId: number | null;
   sessionId: number | null;
 }) {
-  const [isD20, setIsD20] = useState(true);
+  const [is1D20, setIs1D20] = useState(true);
+  const [is2D20, setIs2D20] = useState(false);
   const [dice, setDice] = useState('');
   const [criticalMargin, setCriticalMargin] = useState('20');
 
@@ -36,21 +37,21 @@ export default function DiceContainer({
   function handleRollDice(e: FormEvent) {
     e.preventDefault();
 
-    if (isD20) {
+    if (is1D20 || is2D20) {
       const regex = /^\+(\d{1,2})(\+\d{1,2})*$/;
 
       if (dice.length && !regex.test(dice)) {
         setIsInvalid(true);
         return;
       }
-    } else {
-      const regex =
-        /^(\d{1,2}d(20|[1-9]|1[0-9])(\+\d{1,2}d(20|[1-9]|1[0-9])|\+\d+)*)$/;
+    }
 
-      if (dice.length && !regex.test(dice)) {
-        setIsInvalid(true);
-        return;
-      }
+    const regex =
+      /^(\d{1,2}d(20|[1-9]|1[0-9])(\+\d{1,2}d(20|[1-9]|1[0-9])|\+\d+)*)$/;
+
+    if (dice.length && !regex.test(dice)) {
+      setIsInvalid(true);
+      return;
     }
 
     setIsInvalid(false);
@@ -59,8 +60,12 @@ export default function DiceContainer({
   }
 
   function diceMask(dice: string) {
-    if (isD20) {
+    if (is1D20) {
       return `1d20${dice}`;
+    }
+
+    if (is2D20) {
+      return `2d20${dice}`;
     }
 
     return dice;
@@ -76,7 +81,7 @@ export default function DiceContainer({
       return;
     }
 
-    if (isD20) {
+    if (is1D20 || is2D20) {
       const realDice = dice.slice(4);
 
       setDice(realDice);
@@ -94,7 +99,8 @@ export default function DiceContainer({
           portrait={portrait}
           characterId={characterId}
           dice={dice}
-          isD20={isD20}
+          is1D20={is1D20}
+          is2D20={is2D20}
           criticalMargin={criticalMargin}
           sessionId={sessionId}
           isOpen={isOpen}
@@ -116,7 +122,7 @@ export default function DiceContainer({
             size='md'
             label='Valor do Dado'
             labelPlacement='outside'
-            placeholder={isD20 ? '+5' : '1d6+2'}
+            placeholder={is1D20 ? '+5' : '1d6+2'}
             value={diceMask(dice)}
             onChange={(e) => updateDice(e.target.value)}
           />
@@ -127,13 +133,25 @@ export default function DiceContainer({
         <div className='flex gap-4 justify-between items-center'>
           <Checkbox
             size='sm'
-            isSelected={isD20}
+            isSelected={is1D20}
             onChange={() => {
               setDice('');
-              setIsD20(!isD20);
+              setIs1D20(!is1D20);
+              setIs2D20(false);
             }}
           >
-            D20?
+            1d20?
+          </Checkbox>
+          <Checkbox
+            size='sm'
+            isSelected={is2D20}
+            onChange={() => {
+              setDice('');
+              setIs2D20(!is2D20);
+              setIs1D20(false);
+            }}
+          >
+            2d20?
           </Checkbox>
           <Select
             size='sm'

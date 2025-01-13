@@ -30,7 +30,8 @@ export default function ModalDice({
   name,
   portrait,
   dice,
-  isD20,
+  is1D20,
+  is2D20,
   criticalMargin,
   sessionId,
   characterId,
@@ -40,7 +41,8 @@ export default function ModalDice({
   name: string;
   portrait: string | null;
   dice: string;
-  isD20: boolean;
+  is1D20: boolean;
+  is2D20: boolean;
   criticalMargin: string;
   sessionId: number | null;
   characterId: number | null;
@@ -61,11 +63,21 @@ export default function ModalDice({
   const { emitRollDice } = useSocket();
 
   function rollDice(totalDice: string) {
-    if (isD20) {
+    if (is1D20 || is2D20) {
       const dice = totalDice.split('+')[0];
       const bonus = totalDice.split('+').slice(1).join('+');
 
-      const roll = Math.floor(Math.random() * 20 + 1);
+      let rolls = [];
+
+      const firstRoll = Math.floor(Math.random() * 20 + 1);
+      rolls.push(firstRoll);
+
+      if (is2D20) {
+        const secondRoll = Math.floor(Math.random() * 20 + 1);
+        rolls.push(secondRoll);
+      }
+
+      const roll = Math.max(...rolls);
 
       const bonusValue = totalDice
         .split('+')
@@ -84,9 +96,9 @@ export default function ModalDice({
         rollDices: [
           {
             total: roll,
-            quantity: 1,
+            quantity: rolls.length,
             faces: 20,
-            rolls: [roll],
+            rolls,
           },
         ],
       };
@@ -95,7 +107,7 @@ export default function ModalDice({
 
       emitRollDice({
         characterId,
-        isD20,
+        isD20: is1D20 || is2D20,
         sessionId,
         isCritical,
         isDisaster,
@@ -167,7 +179,7 @@ export default function ModalDice({
         portrait,
         characterId,
         sessionId,
-        isD20,
+        isD20: is1D20 || is2D20,
         isCritical,
         isDisaster,
         dice: diceValue,
