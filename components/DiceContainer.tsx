@@ -44,13 +44,13 @@ export default function DiceContainer({
         setIsInvalid(true);
         return;
       }
-    }
+    } else {
+      const regex = /^(\d{1,2}d(\d{1,3})(\+\d{1,2}d(\d{1,3})|\+\d+)*)$/;
 
-    const regex = /^(\d{1,2}d(\d{1,3})(\+\d{1,2}d(\d{1,3})|\+\d+)*)$/;
-
-    if (dice.length && !regex.test(dice)) {
-      setIsInvalid(true);
-      return;
+      if (dice.length && !regex.test(dice)) {
+        setIsInvalid(true);
+        return;
+      }
     }
 
     setIsInvalid(false);
